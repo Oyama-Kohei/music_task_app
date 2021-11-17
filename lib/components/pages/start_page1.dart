@@ -39,7 +39,8 @@ class StartPage1 extends HookWidget{
                   ),
                 ),
               Text(
-                '本アプリは今までにない\nよりシンプルなカレンダーアプリ',
+                //'本アプリは今までにない\nよりシンプルなカレンダーアプリ',
+                'welcome tuskmum project',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.orbitron(
                   color: Colors.blueGrey,
