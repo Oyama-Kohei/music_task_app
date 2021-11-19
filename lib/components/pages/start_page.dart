@@ -1,42 +1,33 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:taskmum_flutter/components/pages/start_page1.dart';
-
-import 'start_page2.dart';
+import 'package:taskmum_flutter/components/pages/start_page2.dart';
 
 void main() {
-  runApp(const StartPage());
+  runApp(MyApp());
 }
 
-class StartPage extends HookWidget{
-  const StartPage({Key? key}) : super(key:key);
-
+class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+    return MaterialApp(
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> {
   late PageController _pageController;
   int _selectedIndex = 0;
 
-  // ボトムメニューの遷移先画面
-  final _pages = [
-    const StartPage1(),
-    const StartPage2(),
+  var _pages = [
+    StartPage1(),
+    StartPage2()
   ];
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //return LoginPage();
 
     return Scaffold(
         body: PageView(

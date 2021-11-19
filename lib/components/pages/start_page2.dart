@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:taskmum_flutter/components/pages/account_create.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
-class StartPage2 extends HookWidget{
+class StartPage2 extends StatelessWidget{
   const StartPage2 ({Key? key}) : super(key:key);
 
   @override

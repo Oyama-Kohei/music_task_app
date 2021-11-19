@@ -1,4 +1,4 @@
-import 'package:hooks_riverpod/all.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 //https://note.com/_hi/n/n7eab343661ff　めっちゃわかりやすい
 
 final signUpStateProvider = StateNotifierProvider((_) => SignUpStateProvider());
