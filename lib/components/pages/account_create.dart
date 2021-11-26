@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:taskmum_flutter/components/state_notifier/signup_provider.dart';
 
-class AccountCreatePage extends ConsumerWidget{
+class AccountCreatePage extends HookWidget{
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordConfirmController = TextEditingController();
+  final mailController = TextEditingController();
   @override
-  Widget build(BuildContext context, ScopedReader watch){
-    final infoText = watch(infoTextProvider).state;
-    final email = watch(emailProvide).state;
-    final password = watch(passwordProvide).state;
-
+  Widget build(BuildContext context){
+    final ssp = useProvider(signUpStateProvider);
+    final signUpState = useProvider(signUpStateProvider.state);
     return Scaffold(
       body: Center(
         child: Container(
@@ -17,17 +21,16 @@ class AccountCreatePage extends ConsumerWidget{
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(labelText: 'メールアドレス'),
-                onChanged: (String value) {
-                  // Providerから値を更新
-                  context.read(emailProvider).state = value;
+                controller: usernameController,
+                onChanged: (text) {
+                  ssp.setText("username", text);
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'パスワード'),
-                obscureText: true,
-                onChanged: (String value) {
-                  // Providerから値を更新
-                  context.read(passwordProvider).state = value;
+                decoration: InputDecoration(labelText: 'password'),
+                controller: passwordController,
+                onChanged: (text) {
+                  ssp.setText("password", text);
                 },
               ),
 
