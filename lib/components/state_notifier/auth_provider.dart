@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -7,7 +8,7 @@ class AuthController{
   AuthController(this.read);
   final Reader read;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User currentUser = FirebaseAuth.currentUser;
+  User? currentUser = FirebaseAuth.currentUser;
 
   Future signUp(username, password, passwordConfirm, mail) async{
     if (username.isEmpty) {

@@ -28,7 +28,7 @@ class App extends StatelessWidget {
         locale,
       ],
       // ここにアプリ起動時に表示するWidgetを宣言する
-      home: const StartPage(),
+      home: MyHomePage(),
       navigatorKey: NavigationHelper.navigatorKey,
     );
 
