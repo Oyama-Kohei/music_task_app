@@ -33,12 +33,10 @@ class AccountCreatePage extends HookWidget{
                   ssp.setText("password", text);
                 },
               ),
-
             ],
           ),
         ),
       )
-    )
-
+    );
   }
 }

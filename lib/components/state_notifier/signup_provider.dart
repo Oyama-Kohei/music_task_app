@@ -1,10 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-//https://note.com/_hi/n/n7eab343661ff　めっちゃわかりやすい
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:taskmum_flutter/components/state_notifier/auth_provider.dart';
 
 final signUpStateProvider = StateNotifierProvider((_) => SignUpStateProvider());
-class SignUpStateProvider extends StateNotifier<SignUpStateProvider>{
-  SignUpStateProvider() : super(SignUpStateProvider());
+class SignUpStateProvider extends StateNotifier<SignUpState> {
+  SignUpStateProvider() : super(SignUpState());
   Reader read;
 
   //widget外からプロバイダーを呼ぶ時はread(authProvider).signUp();
