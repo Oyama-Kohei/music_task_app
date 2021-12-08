@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:taskmum_flutter/components/state_notifier/auth_provider.dart';
+import 'package:taskmum_flutter/components/state_notifier/auth_controllar.dart';
 
 final signUpStateProvider = StateNotifierProvider((_) => SignUpStateProvider());
 class SignUpStateProvider extends StateNotifier<SignUpState> {

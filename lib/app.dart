@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/all.dart';
+import 'package:taskmum_flutter/components/state_notifier/auth_controllar.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 import 'components/wiget/common_colors.dart';
 import 'components/pages/start_page.dart';
@@ -28,9 +31,18 @@ class App extends StatelessWidget {
         locale,
       ],
       // ここにアプリ起動時に表示するWidgetを宣言する
-      home: MyHomePage(),
+      home: HomeScreen(),
       navigatorKey: NavigationHelper.navigatorKey,
     );
 
+  }
+}
+class HomeScreen extends HookWidget {
+  @override
+  Widget build(BuildContext context){
+    final authControllerState = useProvider(authControllerProvider.state);
+    return const Scaffold(
+
+    );
   }
 }
