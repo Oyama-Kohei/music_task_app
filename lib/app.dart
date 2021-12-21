@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/all.dart';
 import 'package:taskmum_flutter/components/state_notifier/auth_controllar.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 import 'components/wiget/common_colors.dart';
-import 'components/pages/start_page.dart';
+import 'components/start_page/start_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);

@@ -12,7 +12,6 @@ final authControllerProvider = StateNotifierProvider<AuthController>(
 class AuthController extends StateNotifier<User?>{
   final Reader _read;
   StreamSubscription<User?> _authStateChangeSubscription;
-
   AuthController(this._read) : super(null) {
     _authStateChangeSubscription.cancel();
     _authStateChangeSubscription = _read(authRepositoryProvider)

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:taskmum_flutter/components/pages/account_create.dart';
+import 'package:taskmum_flutter/components/account_create/account_create.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
 class StartPage2 extends StatelessWidget{
