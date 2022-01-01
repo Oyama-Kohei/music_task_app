@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:taskmum_flutter/components/account_create/account_create_page.dart';
+import 'package:taskmum_flutter/components/login/login_page.dart';
+import 'package:taskmum_flutter/components/wiget/common_button.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
 class StartPage2 extends StatelessWidget{
@@ -9,55 +12,67 @@ class StartPage2 extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-      return true;
-    },
-    child: Scaffold(
-      body: Container(
-        padding: const EdgeInsets.fromLTRB(30,100,30,80),
-        color: Colors.white,
-        child: Column(
-            children: <Widget>[
-                const Expanded(
-                  flex: 1,
+      onWillPop: () async {
+        return true;
+      },
+      child: Scaffold(
+        body: Container(
+          padding: const EdgeInsets.all(20),
+          color: Colors.white,
+          child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
                   child: Text(
-                    '初めての方は「Create Account」\n'
-                        'ログインの方は「Login」をタップ',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                    'tuskMum',
+                    textAlign: TextAlign.end,
+                    style: GoogleFonts.orbitron(
                       color: Colors.blueGrey,
-                      fontSize: 20,
+                      fontSize: 46,
                       fontWeight: FontWeight.bold,
-                    )
+                    ),
                   ),
                 ),
-                Expanded(
-                  flex: 4,
-                  child:OutlineButton(
-                      onPressed: () {
-                        NavigationHelper().push<void>(
-                              (context) => AccountCreatePage(),
-                        );
-                      },
-                      child: const Image(
-                        image: AssetImage("images/boys.jpeg"),
-                        fit: BoxFit.cover,
-                      )
-                  ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("images/memo.jpeg", scale: 1,),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
+                        child:Text(
+                            '本アプリは今までにない\nよりシンプルなカレンダーアプリです',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.orbitron(
+                              color: Colors.blueGrey,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                      ),
+                      CommonButton(
+                        text: 'アカウントをお持ちでない方',
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        useIcon: true,
+                        onPressed: () async {
+                          await NavigationHelper().push<void>(
+                                (context) => AccountCreatePage(),
+                          );
+                        },
+                      ),
+                      CommonButton(
+                        text: 'ログイン',
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        useIcon: true,
+                        onPressed: () async {
+                          await NavigationHelper().push<void>(
+                                (context) => LoginPage(),
+                          );
+                        },
+                      ),
+                    ]
                 ),
-                Expanded(
-                  flex: 4,
-                  child:OutlineButton(
-                      onPressed: () {  },
-                      child: const Image(
-                        image: AssetImage("images/girls.jpeg"),
-                        fit: BoxFit.cover,
-                      )
-                  ),
-                ),
-
-            ]
-          )
+              ]
+          ),
         ),
       ),
     );

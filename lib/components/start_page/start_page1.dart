@@ -17,53 +17,53 @@ class StartPage1 extends StatelessWidget{
           color: Colors.white,
           child: Column(
             children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'tuskMum',
-                          textAlign: TextAlign.end,
-                          style: GoogleFonts.orbitron(
-                            color: Colors.blueGrey,
-                            fontSize: 46,
-                            fontWeight: FontWeight.bold,
-                          ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                        child: Image.asset("images/top.jpeg",scale: 1,),
-                      ),
-                    ]
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                  child: Text(
+                    'tuskMum',
+                    textAlign: TextAlign.end,
+                    style: GoogleFonts.orbitron(
+                      color: Colors.blueGrey,
+                      fontSize: 46,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              Text(
-                //'本アプリは今までにない\nよりシンプルなカレンダーアプリ',
-                'welcome tuskmum project',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.orbitron(
-                  color: Colors.blueGrey,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
-                Padding(
-                  padding: const EdgeInsets.all(50),
-                  child: Row(
-                      children: [
-                        Image.asset("images/swipe.png", scale: 3,),
-                        Text(
-                          "左にスワイプして開始",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.orbitron(
-                            color: Colors.blueGrey,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ]
-                  ),
-                ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
+                      child:Image.asset("images/top.jpeg",scale: 1,),
+                    ),
+                    Text(
+                      'welcome tuskmum project',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.orbitron(
+                        color: Colors.blueGrey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(50),
+                      child: Row(
+                          children: [
+                            Image.asset("images/swipe.png", scale: 3,),
+                            Text(
+                              '左にスワイプして開始',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.orbitron(
+                                color: Colors.blueGrey,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]
+                      ),
+                    ),
+                  ]
+              ),
             ]
           ),
         ),

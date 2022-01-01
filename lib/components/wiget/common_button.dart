@@ -5,23 +5,19 @@ import 'package:taskmum_flutter/components/wiget/common_colors.dart';
 
 class CommonButton extends StatelessWidget{
 
-  //todo: これだとだめなのか？finalでの記載が必要な理由は？
-  // var text;
-  // var onPressed;
-
   const CommonButton({
     Key? key,
     required this.text,
     required this.onPressed,
     required this.padding,
-    this.isStartButton = false,
+    // this.isStartButton = false,
     this.useIcon = false
   }) : super(key: key);
 
   final String text;
   final GestureTapCallback onPressed;
   final EdgeInsetsGeometry padding;
-  final bool isStartButton;
+  // final bool isStartButton;
   final bool useIcon;
 
   @override
@@ -34,12 +30,11 @@ class CommonButton extends StatelessWidget{
         child: OutlinedButton(
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
-            backgroundColor:
-              isStartButton ? CommonColors.primaryColor : Colors.white,
+            backgroundColor: CommonColors.customSwatch.shade300,
             shape: const StadiumBorder(),
-            side: const BorderSide(
-              color: CommonColors.primaryColor,
+            side: BorderSide(
               width: 2,
+              color: CommonColors.customSwatch.shade300,
             ),
           ),
           child: Row(
@@ -48,7 +43,7 @@ class CommonButton extends StatelessWidget{
             children: [
               Visibility(
                 visible: useIcon,
-                //戻るボタンとか
+                //戻るボタン
                 child: const Icon(Icons.arrow_forward,
                 color: Colors.transparent)
               ),
@@ -56,11 +51,13 @@ class CommonButton extends StatelessWidget{
                 child: AutoSizeText(
                   text,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: isStartButton
-                        ? Colors.white
-                        :CommonColors.primaryColor,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    // color: isStartButton
+                    //     ? Colors.white
+                    //     :CommonColors.primaryColor,
                   ),
                 ),
               ),
@@ -68,9 +65,7 @@ class CommonButton extends StatelessWidget{
                 visible: useIcon,
                 child: Icon(
                   Icons.arrow_forward,
-                  color: isStartButton
-                      ? Colors.white
-                      :CommonColors.primaryColor,
+                  color: Colors.white,
                 ),
               ),
             ],

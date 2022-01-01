@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 
-class AccountCreateModel extends ChangeNotifier{
+class LoginModel extends ChangeNotifier{
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -12,32 +11,20 @@ class AccountCreateModel extends ChangeNotifier{
 
   void setEmail(String email){
     this.email = email;
-    notifyListeners();
   }
 
   void setPassword(String email){
     this.email = email;
-    notifyListeners();
   }
 
-  Future<void> signUp() async {
+  void signIn(email, password) {
     this.email = emailController.text;
     this.password = passwordController.text;
 
     //firebase authでユーザー追加
-    final result = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email!, password: password!);
-
-    final user = result.user;
-    final uid = user!.uid;
-
-    final doc = FirebaseFirestore.instance.collection('user').doc(uid);
 
     //firestoreに追加
-    doc.set({
-      'uid': uid,
-      'email': email,
-    });
+
   }
 }
 

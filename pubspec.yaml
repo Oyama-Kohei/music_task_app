@@ -27,9 +27,12 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  #riverpodの使用
-  flutter_hooks: ^0.16.0
-  hooks_riverpod: ^0.14.0+1
+#  #riverpodの使用
+#  flutter_hooks: ^0.16.0
+#  hooks_riverpod: ^0.14.0+1
+
+  #providerの使用
+  provider: ^6.0.1
 
   #googleFontの使用
   google_fonts: ^2.1.0
@@ -41,7 +44,7 @@ dependencies:
 
   # Add the dependency for the Firebase Core Flutter SDK
   firebase_core: ^1.10.0
-  firebase_auth: ^3.2.0
+  firebase_auth: ^3.3.4
   cloud_firestore: ^3.1.0
 
   # The following adds the Cupertino Icons font to your application.

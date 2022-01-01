@@ -9,10 +9,10 @@ class CommonColors {
   static const MaterialColor customSwatch = MaterialColor(
     _primaryValue,
     <int, Color>{
-      50: Color(0xFFEBF6FA),
-      100: Color(0xFFCDE7F3),
-      200: Color(0xFFACD8EB),
-      300: Color(0xFF8AC8E3),
+      50: Color(0xFF626D71),
+      100: Color(0xFFCDCDC0),
+      200: Color(0xFF537072),
+      300: Color(0xFF8E9B97),
       400: Color(0xFF71BCDD),
       500: primaryColor,
       600: Color(0xFF50A9D3),
