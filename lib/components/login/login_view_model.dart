@@ -50,4 +50,3 @@ class LoginModel extends ChangeNotifier{
     });
   }
 }
-

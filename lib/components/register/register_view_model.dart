@@ -1,13 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:taskmum_flutter/components/repository/auth_repository.dart';
 
-final registerViewModelNotifierProvider = ChangeNotifierProvider(
-    (ref) => RegisterViewModel());
-
-class RegisterViewModel extends ChangeNotifier{
+class RegisterModel extends ChangeNotifier{
 
   // RegisterViewModel(ref, {required AuthRepository repository})
 
@@ -68,4 +63,3 @@ class RegisterViewModel extends ChangeNotifier{
     });
   }
 }
-
