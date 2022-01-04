@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:taskmum_flutter/components/account_create/account_create_page.dart';
+import 'package:taskmum_flutter/components/account_create/register_page.dart';
 import 'package:taskmum_flutter/components/login/login_page.dart';
 import 'package:taskmum_flutter/components/wiget/common_button.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
