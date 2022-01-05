@@ -1,52 +1,41 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:taskmum_flutter/components/repository/auth_repository.dart';
+import 'package:taskmum_flutter/utility/locator.dart';
 
-class LoginModel extends ChangeNotifier{
+enum AppState { LOADING, LOADED, ERROR }
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+class LoginViewModel extends ChangeNotifier{
 
-  String? email;
-  String? password;
+  AppState? _state;
+  final AuthRepository _repository = getIt<AuthRepository>();
 
-  bool isloading = false;
+  AppState? get state => _state;
 
-  void startLoading(){
-    isloading = true;
-  }
-
-  void endLoading(){
-    isloading = false;
-  }
-
-  void setEmail(String email){
-    this.email = email;
+  set state(AppState? state){
+    this._state;
     notifyListeners();
   }
 
-  void setPassword(String email){
-    this.email = email;
-    notifyListeners();
+  Future<bool> signIn(String email, String password) async {
+    state = AppState.LOADING;
+
+    var result = await _repository.signUp(email, password);
+    if (result is! User) {
+      state = AppState.ERROR;
+      return false;
+    }
+
+    state = AppState.LOADED;
+    return true;
   }
 
-  Future<void> signUp() async {
-    this.email = emailController.text;
-    this.password = passwordController.text;
-
-    //firebase authでユーザー追加
-    final result = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email!, password: password!);
-
-    final user = result.user;
-    final uid = user!.uid;
-
-    final doc = FirebaseFirestore.instance.collection('user').doc(uid);
-
-    //firestoreに追加
-    doc.set({
-      'uid': uid,
-      'email': email,
-    });
-  }
+// final doc = FirebaseFirestore.instance.collection('user').doc(uid);
+//
+// // //firestoreに追加
+// // doc.set({
+// //   'uid': uid,
+// //   'email': email,
+// //   'nickname': nickname,
+// // });
 }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:taskmum_flutter/components/start_page/start_page1.dart';
 import 'package:taskmum_flutter/components/start_page/start_page2.dart';
 
+void main() {
+  runApp(MyApp());
+}
+
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -49,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
         body: PageView(
             controller: _pageController,
             onPageChanged: _onPageChanged,
-            children: _pages)
-    );
+            children: _pages));
   }
 }

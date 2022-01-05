@@ -1,65 +1,36 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:taskmum_flutter/components/repository/auth_repository.dart';
+import 'package:taskmum_flutter/utility/locator.dart';
 
-class RegisterModel extends ChangeNotifier{
+enum AppState { LOADING, LOADED, ERROR }
 
-  // RegisterViewModel(ref, {required AuthRepository repository})
+class RegisterViewModel extends ChangeNotifier{
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final nicknameController = TextEditingController();
+  AppState? _state;
+  final AuthRepository _repository = getIt<AuthRepository>();
 
-  String? email;
-  String? password;
-  String? nickname;
+  AppState? get state => _state;
 
-  bool isloading = false;
-
-  void startLoading(){
-    isloading = true;
+  set state(AppState? state){
+    this._state;
     notifyListeners();
   }
 
-  void endLoading(){
-    isloading = false;
-    notifyListeners();
-  }
-
-  void setEmail(String email){
-    this.email = email;
-    notifyListeners();
-  }
-
-  void setPassword(String email){
-    this.email = email;
-    notifyListeners();
-  }
-
-  void setNickname(String nickname){
-    this.nickname = nickname;
-    notifyListeners();
-  }
-
-  Future<void> signUp() async {
-    this.email = emailController.text;
-    this.password = passwordController.text;
-    this.nickname = nicknameController.text;
+  Future<bool> signUp(String email, String password) async {
+    state = AppState.LOADING;
 
     //firebase authでユーザー追加
-    final result = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email!, password: password!);
+    // final result = await FirebaseAuth.instance
+    //     .createUserWithEmailAndPassword(email: email!, password: password!);
 
-    final user = result.user;
-    final uid = user!.uid;
+    var result = await _repository.signUp(email, password);
+    if (result is! User) {
+      state = AppState.ERROR;
+      return false;
+    }
 
-    final doc = FirebaseFirestore.instance.collection('user').doc(uid);
-
-    //firestoreに追加
-    doc.set({
-      'uid': uid,
-      'email': email,
-      'nickname': nickname,
-    });
+    state = AppState.LOADED;
+    return true;
   }
 }

@@ -55,7 +55,7 @@ class StartPage2 extends StatelessWidget{
                         useIcon: true,
                         onPressed: () async {
                           await NavigationHelper().push<void>(
-                                (context) => RegisterPage(),
+                                (context) => const RegisterPage(),
                           );
                         },
                       ),
