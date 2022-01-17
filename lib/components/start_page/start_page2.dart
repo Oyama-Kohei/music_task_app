@@ -64,6 +64,7 @@ class StartPage2 extends StatelessWidget{
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                         useIcon: true,
                         onPressed: () async {
+                          print("point");
                           await NavigationHelper().push<void>(
                                 (context) => LoginPage(),
                           );

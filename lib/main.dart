@@ -1,12 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 import 'components/wiget/common_colors.dart';
 import 'components/start_page/start_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
   await Firebase.initializeApp();
   runApp(MyApp());
 }

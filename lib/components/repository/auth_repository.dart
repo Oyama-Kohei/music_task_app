@@ -1,16 +1,16 @@
 import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 
-abstract class AuthRepository {
+class AuthRepository {
 
-  final AuthService _AuthService = getIt<AuthService>();
+  final AuthService _authService = getIt<AuthService>();
 
   Future signUp(String email, String password) async{
-    var result = await _AuthService.signUp(email, password);
+    var result = await _authService.signUp(email, password);
     return result;
   }
   Future signIn(String email, String password) async{
-    var result = await _AuthService.signIn(email, password);
+    var result = await _authService.signIn(email, password);
     return result;
   }
 }

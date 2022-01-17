@@ -1,36 +1,40 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/repository/auth_repository.dart';
+import 'package:taskmum_flutter/components/repository/user_repository.dart';
+import 'package:taskmum_flutter/components/top_page.dart';
+import 'package:taskmum_flutter/utility/dialog_util.dart';
+import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
-
-enum AppState { LOADING, LOADED, ERROR }
+import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
 class RegisterViewModel extends ChangeNotifier{
 
-  AppState? _state;
-  final AuthRepository _repository = getIt<AuthRepository>();
+  final AuthRepository _authRepository = getIt<AuthRepository>();
+  final UserRepository _userRepository = getIt<UserRepository>();
 
-  AppState? get state => _state;
+  Future<void> signUp(
+      String email,
+      String password,
+      String nickname,
+      context
+      ) async {
+    try {
+      showLoadingCircle(context);
+      var user = await _authRepository.signUp(email, password);
+      // var uid = user.uid;
+      // await _userRepository.setNickname(nickname, uid);
+      dismissLoadingCircle(context);
 
-  set state(AppState? state){
-    this._state;
-    notifyListeners();
-  }
-
-  Future<bool> signUp(String email, String password) async {
-    state = AppState.LOADING;
-
-    //firebase authでユーザー追加
-    // final result = await FirebaseAuth.instance
-    //     .createUserWithEmailAndPassword(email: email!, password: password!);
-
-    var result = await _repository.signUp(email, password);
-    if (result is! User) {
-      state = AppState.ERROR;
-      return false;
+      NavigationHelper().push<void>(
+              (context) => const TopPage(),
+      );
+    } on Exception catch(_){
+      dismissLoadingCircle(context);
+      DialogUtil.showPreventPopErrorDialog(
+        context: context,
+        title: "アカウント作成エラー",
+        content: "アカウント作成に失敗しました",
+      );
     }
-
-    state = AppState.LOADED;
-    return true;
   }
 }

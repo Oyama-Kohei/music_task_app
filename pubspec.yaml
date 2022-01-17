@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
 #  #riverpodの使用
-  #flutter_hooks: ^0.16.0
+  flutter_hooks: ^0.16.0
   #hooks_riverpod: ^0.14.0+1
 
   #providerの使用

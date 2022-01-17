@@ -1,41 +1,36 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/repository/auth_repository.dart';
+import 'package:taskmum_flutter/components/repository/user_repository.dart';
+import 'package:taskmum_flutter/components/top_page.dart';
+import 'package:taskmum_flutter/utility/dialog_util.dart';
+import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
-
-enum AppState { LOADING, LOADED, ERROR }
+import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
 class LoginViewModel extends ChangeNotifier{
 
-  AppState? _state;
-  final AuthRepository _repository = getIt<AuthRepository>();
+  final AuthRepository _authRepository = getIt<AuthRepository>();
 
-  AppState? get state => _state;
+  Future<void> signIn(
+      String email,
+      String password,
+      context
+      ) async {
+    try {
+      showLoadingCircle(context);
+      await _authRepository.signIn(email, password);
+      dismissLoadingCircle(context);
 
-  set state(AppState? state){
-    this._state;
-    notifyListeners();
-  }
-
-  Future<bool> signIn(String email, String password) async {
-    state = AppState.LOADING;
-
-    var result = await _repository.signUp(email, password);
-    if (result is! User) {
-      state = AppState.ERROR;
-      return false;
+      NavigationHelper().push<void>(
+            (context) => const TopPage(),
+      );
+    } on Exception catch(_){
+      dismissLoadingCircle(context);
+      DialogUtil.showPreventPopErrorDialog(
+        context: context,
+        title: "ログインエラー",
+        content: "ログインに失敗しました",
+      );
     }
-
-    state = AppState.LOADED;
-    return true;
   }
-
-// final doc = FirebaseFirestore.instance.collection('user').doc(uid);
-//
-// // //firestoreに追加
-// // doc.set({
-// //   'uid': uid,
-// //   'email': email,
-// //   'nickname': nickname,
-// // });
 }
