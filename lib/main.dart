@@ -1,21 +1,31 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:route_observer_mixin/route_observer_mixin.dart';
+import 'package:taskmum_flutter/components/splash/splash_page.dart';
+import 'package:taskmum_flutter/components/splash/splash_view_model.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 import 'components/wiget/common_colors.dart';
-import 'components/start_page/start_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(
+      MultiProvider(
+        providers: [
+          RouteObserverProvider(),
+        ],
+        child: MyApp()
+      ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'taskMum',
       theme: ThemeData(
@@ -23,13 +33,16 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.notoSansTextTheme(
-          Theme.of(context).textTheme,
+          Theme
+              .of(context)
+              .textTheme,
         ),
       ),
-      //Todo: 多言語化宣言
-
-      // ここにアプリ起動時に表示するWidgetを宣言する
-      home: MyHomePage(),
+      home: ChangeNotifierProvider(
+        create: (_) => SplashViewModel(),
+        child: SplashPage(),
+      ),
+      navigatorObservers: [RouteObserverProvider.of(context)],
       navigatorKey: NavigationHelper.navigatorKey,
     );
   }

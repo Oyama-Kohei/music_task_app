@@ -2,30 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:taskmum_flutter/components/start_page/start_page1.dart';
 import 'package:taskmum_flutter/components/start_page/start_page2.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
+class MainStartPage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MainStartPage> {
   late PageController _pageController;
   int _selectedIndex = 0;
 
-  var _pages = [
-    StartPage1(),
-    StartPage2()
+  final _pages = [
+    const StartPage1(),
+    const StartPage2()
   ];
 
   @override
@@ -48,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         body: PageView(
             controller: _pageController,

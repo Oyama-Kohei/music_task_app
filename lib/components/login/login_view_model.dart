@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:taskmum_flutter/components/repository/auth_repository.dart';
-import 'package:taskmum_flutter/components/repository/user_repository.dart';
+import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/top_page.dart';
 import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/loading_circle.dart';
@@ -9,7 +8,7 @@ import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
 class LoginViewModel extends ChangeNotifier{
 
-  final AuthRepository _authRepository = getIt<AuthRepository>();
+  final AuthService _authService = getIt<AuthService>();
 
   Future<void> signIn(
       String email,
@@ -18,7 +17,7 @@ class LoginViewModel extends ChangeNotifier{
       ) async {
     try {
       showLoadingCircle(context);
-      await _authRepository.signIn(email, password);
+      await _authService.signIn(email, password);
       dismissLoadingCircle(context);
 
       NavigationHelper().push<void>(
