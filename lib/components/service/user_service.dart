@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:taskmum_flutter/components/service/service.dart';
 
-class UserService {
+class UserService  extends Service{
 
   final firebaseFireStore = FirebaseFirestore.instance;
 

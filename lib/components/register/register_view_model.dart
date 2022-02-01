@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/service/user_service.dart';
-import 'package:taskmum_flutter/components/top_page.dart';
+import 'package:taskmum_flutter/components/splash/splash_page.dart';
+import 'package:taskmum_flutter/components/splash/splash_view_model.dart';
+import 'package:taskmum_flutter/components/top/top_page.dart';
 import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
@@ -24,9 +26,9 @@ class RegisterViewModel extends ChangeNotifier{
       var uid = user.uid;
       await _userService.setNickname(nickname, uid);
       dismissLoadingCircle(context);
-
-      NavigationHelper().push<void>(
-              (context) => const TopPage(),
+      NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
+        pageBuilder: (_) => SplashPage(),
+        viewModelBuilder: (_) => SplashViewModel(),
       );
     } on Exception catch(_){
       dismissLoadingCircle(context);

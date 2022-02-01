@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:taskmum_flutter/components/login/login_view_model.dart';
 import 'package:taskmum_flutter/components/register/register_page.dart';
 import 'package:taskmum_flutter/components/login/login_page.dart';
+import 'package:taskmum_flutter/components/register/register_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/common_button.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
@@ -54,8 +56,10 @@ class StartPage2 extends StatelessWidget{
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                         useIcon: true,
                         onPressed: () async {
-                          await NavigationHelper().push<void>(
-                                (context) => const RegisterPage(),
+                          NavigationHelper().push<RegisterViewModel>(
+                            context: context,
+                            pageBuilder: (_) => const RegisterPage(),
+                            viewModelBuilder: (context) => RegisterViewModel(),
                           );
                         },
                       ),
@@ -64,9 +68,10 @@ class StartPage2 extends StatelessWidget{
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                         useIcon: true,
                         onPressed: () async {
-                          print("point");
-                          await NavigationHelper().push<void>(
-                                (context) => LoginPage(),
+                          NavigationHelper().push<LoginViewModel>(
+                            context: context,
+                            pageBuilder: (_) => const LoginPage(),
+                            viewModelBuilder: (context) => LoginViewModel(),
                           );
                         },
                       ),

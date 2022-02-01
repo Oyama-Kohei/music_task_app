@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:taskmum_flutter/components/login/login_view_model.dart';
-import 'package:taskmum_flutter/components/start_page/start_page1.dart';
 import 'package:taskmum_flutter/components/wiget/common_button.dart';
-import 'package:taskmum_flutter/utility/navigation_helper.dart';
 import 'package:taskmum_flutter/utility/validator/email_validator.dart';
 import 'package:taskmum_flutter/utility/validator/password_validator.dart';
 

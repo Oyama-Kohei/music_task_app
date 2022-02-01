@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
+import 'package:taskmum_flutter/components/service/auth_service.dart';
+import 'package:taskmum_flutter/components/service/task_service.dart';
+import 'package:taskmum_flutter/components/service/user_service.dart';
 import 'package:taskmum_flutter/components/splash/splash_page.dart';
 import 'package:taskmum_flutter/components/splash/splash_view_model.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
@@ -26,7 +29,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        Provider<TaskService>(
+            create: (_) => TaskService()),
+        Provider<AuthService>(
+            create: (_) => AuthService()),
+        Provider<UserService>(
+            create: (_) => UserService())
+      ],
+    child: MaterialApp(
       title: 'taskMum',
       theme: ThemeData(
         primarySwatch: CommonColors.customSwatch,
@@ -44,6 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       navigatorObservers: [RouteObserverProvider.of(context)],
       navigatorKey: NavigationHelper.navigatorKey,
+    )
     );
   }
 }

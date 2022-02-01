@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/service/auth_service.dart';
-import 'package:taskmum_flutter/components/top_page.dart';
+import 'package:taskmum_flutter/components/splash/splash_page.dart';
+import 'package:taskmum_flutter/components/splash/splash_view_model.dart';
 import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
@@ -20,8 +22,9 @@ class LoginViewModel extends ChangeNotifier{
       await _authService.signIn(email, password);
       dismissLoadingCircle(context);
 
-      NavigationHelper().push<void>(
-            (context) => const TopPage(),
+      NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
+          pageBuilder: (_) => SplashPage(),
+          viewModelBuilder: (_) => SplashViewModel(),
       );
     } on Exception catch(_){
       dismissLoadingCircle(context);

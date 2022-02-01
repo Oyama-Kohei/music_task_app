@@ -1,30 +1,48 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NavigationHelper {
   factory NavigationHelper() {
     return _instance;
   }
-  NavigationHelper._();
-  static final NavigationHelper _instance = NavigationHelper._();
+  NavigationHelper._internal();
+  static final NavigationHelper _instance = NavigationHelper._internal();
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
-  Future<T?> push<T>(WidgetBuilder builder, {String routeName = ''}) async{
-    return Navigator.of(navigatorKey.currentContext!).push<T>(
-      CupertinoPageRoute(
-          settings: RouteSettings(name: routeName),
-          builder: builder
-      )
+  Future<void> push<T extends ChangeNotifier>({
+    required BuildContext context,
+    required WidgetBuilder pageBuilder,
+    required ValueBuilder<T> viewModelBuilder,
+  }) async{
+    Navigator.of(context).push(MaterialPageRoute<Widget>(builder: (context){
+      return ChangeNotifierProvider<T>(
+        create: viewModelBuilder,
+        child: pageBuilder(context),
+      );
+    }),
     );
   }
 
-  Future pushAndRemoveUtil<T>(WidgetBuilder builder) async{
-    return Navigator.of(navigatorKey.currentContext!).pushAndRemoveUntil(
-      CupertinoPageRoute(
-          builder: builder
-      ),
-      (route) => false
+  Future<void> pushAndRemoveUntilRoot<T extends ChangeNotifier>({
+    BuildContext? context,
+    required WidgetBuilder pageBuilder,
+    required ValueBuilder<T> viewModelBuilder,
+  }) async {
+    context ??= navigatorKey.currentState!.overlay!.context;
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<Widget>(
+            builder: (context) {
+              return ChangeNotifierProvider<T>(
+                create: viewModelBuilder,
+                child: pageBuilder(context),
+              );
+            }
+        ),
+        (_) => false,
     );
-
   }
 }
+
+typedef ValueBuilder<T> = T Function(BuildContext context);

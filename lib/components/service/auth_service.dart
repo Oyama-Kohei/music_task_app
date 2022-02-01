@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:taskmum_flutter/components/service/service.dart';
 
-class AuthService {
+class AuthService extends Service{
 
   final firebaseAuthService = FirebaseAuth.instance;
 
