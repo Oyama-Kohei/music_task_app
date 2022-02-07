@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taskmum_flutter/components/start_page/start_page1.dart';
-import 'package:taskmum_flutter/components/start_page/start_page2.dart';
+import 'package:taskmum_flutter/components/page/start_page1.dart';
+import 'package:taskmum_flutter/components/page/start_page2.dart';
 
 class MainStartPage extends StatefulWidget {
   @override

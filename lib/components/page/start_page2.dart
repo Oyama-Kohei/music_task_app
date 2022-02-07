@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:taskmum_flutter/components/login/login_view_model.dart';
-import 'package:taskmum_flutter/components/register/register_page.dart';
-import 'package:taskmum_flutter/components/login/login_page.dart';
-import 'package:taskmum_flutter/components/register/register_view_model.dart';
+import 'package:taskmum_flutter/components/view_model/login_view_model.dart';
+import 'package:taskmum_flutter/components/page/register_page.dart';
+import 'package:taskmum_flutter/components/page/login_page.dart';
+import 'package:taskmum_flutter/components/view_model/register_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/common_button.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 

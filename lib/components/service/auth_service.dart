@@ -24,4 +24,13 @@ class AuthService extends Service{
     }
     return true;
   }
+
+  Future<bool> signOut() async{
+    try{
+      await firebaseAuthService.signOut();
+    }on FirebaseAuthException catch(e){
+      print("AuthException ${e.toString()})");
+    }
+    return true;
+  }
 }

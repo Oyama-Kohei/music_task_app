@@ -41,7 +41,7 @@ class StartPage1 extends StatelessWidget{
                       textAlign: TextAlign.center,
                       style: GoogleFonts.orbitron(
                         color: Colors.blueGrey,
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -55,7 +55,7 @@ class StartPage1 extends StatelessWidget{
                               textAlign: TextAlign.center,
                               style: GoogleFonts.orbitron(
                                 color: Colors.blueGrey,
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

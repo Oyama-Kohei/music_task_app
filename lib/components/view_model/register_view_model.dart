@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/service/user_service.dart';
-import 'package:taskmum_flutter/components/splash/splash_page.dart';
-import 'package:taskmum_flutter/components/splash/splash_view_model.dart';
-import 'package:taskmum_flutter/components/top/top_page.dart';
+import 'package:taskmum_flutter/components/page/splash_page.dart';
+import 'package:taskmum_flutter/components/view_model/splash_view_model.dart';
+import 'package:taskmum_flutter/components/page/top_page.dart';
 import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';

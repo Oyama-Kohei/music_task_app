@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmum_flutter/components/service/album_service.dart';
+import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/service/service.dart';
 import 'package:taskmum_flutter/components/service/task_service.dart';
-import 'package:taskmum_flutter/components/start_page/start_page.dart';
-import 'package:taskmum_flutter/components/top/top_page.dart';
-import 'package:taskmum_flutter/components/top/top_view_model.dart';
+import 'package:taskmum_flutter/components/page/start_page.dart';
+import 'package:taskmum_flutter/components/page/top_page.dart';
+import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
@@ -26,6 +28,9 @@ class SplashViewModel extends ChangeNotifier{
     final TaskService _taskService = getIt<TaskService>();
     final taskList = await _taskService.getTaskList();
 
+    final AlbumService _albumService = getIt<AlbumService>();
+    final albumList = await _albumService.getAlbumList();
+
     NavigationHelper().pushAndRemoveUntilRoot<TopViewModel>(
       context: context,
       pageBuilder: (_) => const TopPage(),
@@ -33,8 +38,10 @@ class SplashViewModel extends ChangeNotifier{
         return TopViewModel(
           services: [
             Service.of<TaskService>(context),
+            Service.of<AuthService>(context),
           ],
-          dataList: taskList!,
+          taskDataList: taskList!,
+          albumDataList: albumList!,
         );
       },
     );
