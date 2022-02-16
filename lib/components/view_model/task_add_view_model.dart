@@ -1,41 +1,34 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:taskmum_flutter/components/service/auth_service.dart';
+import 'package:taskmum_flutter/components/models/album_data.dart';
 import 'package:taskmum_flutter/components/service/task_service.dart';
+import 'package:taskmum_flutter/components/service/user_service.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
+import 'package:image_picker/image_picker.dart';
 
 class TaskAddViewModel extends ChangeNotifier{
-  // TaskAddViewModel({
-  //   List<Service>? services,
-  //   required this.taskDataList,
-  //   required this.albumDataList,
-  // });
-  // List<Service>? services;
-  //
-  // List<TaskData> taskDataList;
-  //
-  // List<AlbumData> albumDataList;
+  TaskAddViewModel({
+    required this.albumData,
+  });
 
-  // findService<T extends Service>(){
-  //   for(Service service in services!){
-  //     if(service is T){
-  //       return service;
-  //     }
-  //   }
-  // }
+  AlbumData albumData;
 
   Future<void> taskAdd(
       String title,
+      String albumId,
       int measure,
       String comment,
       BuildContext context
       ) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
+    final UserService _userService = getIt<UserService>();
+    final currentUserId = await _userService.getUserId();
     final _taskService = getIt<TaskService>();
     await _taskService.addTask(
       title,
-      currentUser!,
+      currentUserId,
+      albumId,
       measure,
       comment,
     );
@@ -48,8 +41,6 @@ class TaskAddViewModel extends ChangeNotifier{
             FlatButton(
               child: const Text("OK"),
               onPressed: () async {
-                final _authService = getIt<AuthService>();
-                await _authService.signOut();
                 Navigator.pop(context);
                 Navigator.pop(context);
               }
@@ -60,7 +51,13 @@ class TaskAddViewModel extends ChangeNotifier{
     );
   }
 
-  Future<void> onTapAddList(BuildContext context) async {
-
+  Future<File?> getImage() async {
+    final imagePicker = ImagePicker();
+    final pickedFile = await imagePicker.getImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+       return File(pickedFile.path);
+    }
+    notifyListeners();
+    return null;
   }
 }

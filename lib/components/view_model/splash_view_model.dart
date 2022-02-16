@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/service/album_service.dart';
 import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/service/service.dart';
 import 'package:taskmum_flutter/components/service/task_service.dart';
 import 'package:taskmum_flutter/components/page/start_page.dart';
 import 'package:taskmum_flutter/components/page/top_page.dart';
+import 'package:taskmum_flutter/components/service/user_service.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
@@ -25,11 +27,21 @@ class SplashViewModel extends ChangeNotifier{
   }
 
   Future<void> showTopPage(BuildContext context) async {
-    final TaskService _taskService = getIt<TaskService>();
-    final taskList = await _taskService.getTaskList();
+    final UserService _userService = getIt<UserService>();
+    final currentUserId = await _userService.getUserId();
 
     final AlbumService _albumService = getIt<AlbumService>();
-    final albumList = await _albumService.getAlbumList();
+    final albumList = await _albumService.getAlbumList(currentUserId);
+
+    final List<TaskData>? taskList;
+
+    final TaskService _taskService = getIt<TaskService>();
+    if(albumList!.isNotEmpty) {
+      taskList = await _taskService.getTaskList(
+          currentUserId, albumList[0].albumId);
+    } else {
+      taskList = null;
+    }
 
     NavigationHelper().pushAndRemoveUntilRoot<TopViewModel>(
       context: context,
@@ -40,8 +52,8 @@ class SplashViewModel extends ChangeNotifier{
             Service.of<TaskService>(context),
             Service.of<AuthService>(context),
           ],
-          taskDataList: taskList!,
-          albumDataList: albumList!,
+          albumDataList: albumList,
+          taskDataList: taskList,
         );
       },
     );

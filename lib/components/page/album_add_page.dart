@@ -1,36 +1,31 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/view_model/task_add_view_model.dart';
+import 'package:taskmum_flutter/components/view_model/album_add_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/common_button.dart';
 import 'package:taskmum_flutter/utility/validator/title_validator.dart';
 
-class TaskAddPage extends StatefulWidget {
-  const TaskAddPage({Key? key}) : super(key: key);
+class AlbumAddPage extends StatefulWidget {
+  const AlbumAddPage({Key? key}) : super(key: key);
 
   @override
-  _TaskAddPageState createState() => _TaskAddPageState();
+  _AlbumAddPageState createState() => _AlbumAddPageState();
 }
-class _TaskAddPageState extends State<TaskAddPage>{
+class _AlbumAddPageState extends State<AlbumAddPage>{
 
-  File? _image;
-  late String _title, _comment;
-  late int _measure;
-
+  late String _albumName, _composer, _comment;
   @override
   Widget build(BuildContext context){
     final _formKey = GlobalKey<FormState>();
     final queryData = MediaQuery.of(context);
-    final width = queryData.size.width;
-    final height = queryData.size.height;
+    // final width = queryData.size.width;
+    // final height = queryData.size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
       ),
       body: Center(
-        child: Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
+        child: Consumer<AlbumAddViewModel>(builder: (context, viewModel, child){
           return Form(
             key: _formKey,
             child: Stack(
@@ -38,23 +33,11 @@ class _TaskAddPageState extends State<TaskAddPage>{
               Padding(padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: Column(
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 2,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() async {
-                          _image = await viewModel.getImage();
-                        });
-                      },
-                      child: Container(
-                        width: width * 0.8,
-                        child: Center(
-                          child: _image == null
-                              ? const Text('No image selected.')
-                              : Image.file(_image!),
-                        ),
-                      ),
-                    )
+                    child: Image(
+                      image: AssetImage("images/newbalance.jpeg"),
+                    ),
                   ),
                   Expanded(
                     flex: 5,
@@ -67,21 +50,18 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           ),
                           validator: TitleValidator.validator(),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: const InputDecoration(hintText: 'タイトル'),
-                          onChanged: (value) => _title = value
+                          decoration: const InputDecoration(hintText: '曲名'),
+                          onChanged: (value) => _albumName = value
                         ),
-                        Container(
-                          width: width * 0.4,
-                          child: TextFormField(
+                        const SizedBox(height: 10),
+                        TextFormField(
                             style: const TextStyle(
                               fontSize: 14,
                             ),
                             validator: TitleValidator.validator(),
-                            keyboardType: TextInputType.number,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(hintText: '小節番号'),
-                            onChanged: (value) => _measure = int.parse(value)
-                          ),
+                            decoration: const InputDecoration(hintText: '作曲者'),
+                            onChanged: (value) => _composer = value
                         ),
                         const SizedBox(height: 10),
                         Container(
@@ -107,17 +87,17 @@ class _TaskAddPageState extends State<TaskAddPage>{
                         ),
                         Padding(padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: CommonButton(
-                            text: 'タスクを追加する',
+                            text: 'アルバムを追加する',
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                             useIcon: true,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                // await (viewModel.taskAdd(
-                                //   _title,
-                                //   _measure,
-                                //   _comment,
-                                //   context
-                                // ));
+                                await (viewModel.albumAdd(
+                                  _albumName,
+                                  _composer,
+                                  _comment,
+                                  context
+                                ));
                               }
                             },
                           )

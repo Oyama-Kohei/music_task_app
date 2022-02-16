@@ -2,6 +2,7 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:provider/provider.dart';
+import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/common_colors.dart';
 import 'package:taskmum_flutter/components/wiget/music_album_item.dart';
@@ -14,11 +15,10 @@ class TopPage extends StatefulWidget {
   _TopPageState createState() => _TopPageState();
 }
 class _TopPageState extends State<TopPage> {
-  late int _currentIndex;
+  int _currentIndex = 0;
 
   @override
   void initState() {
-    _currentIndex = 0;
     super.initState();
   }
 
@@ -45,64 +45,78 @@ class _TopPageState extends State<TopPage> {
                             itemBuilder: (BuildContext context, int index) {
                               return MusicAlbumItem(
                                   dataList: viewModel.albumDataList,
-                                  index: index,);
+                                  index: _currentIndex,);
                             },
                             viewportFraction: 0.8,
                             scale: 0.9,
                             pagination: const SwiperPagination(),
                             onIndexChanged: (int index) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
+                              _currentIndex = index;
+                              if(viewModel.albumDataList.isNotEmpty){
+                                viewModel.getTaskDataList(
+                                    context,
+                                    viewModel.albumDataList[_currentIndex].albumId);
+                              }
                             },
                           ),
                         ),
                         const SizedBox(height: 20),
-                        listView(viewModel, width, height),
+                        listView(viewModel.taskDataList, width, height, context),
                       ]
                   )
               )
           ),
-          floatingActionButton: FloatingButton(viewModel, fabKey),
+          floatingActionButton: FloatingButton(viewModel, fabKey, width, height, _currentIndex),
       );
     }
     );
   }
 }
 
-Widget listView(TopViewModel viewModel, double width, double height) {
-  final List<Widget> taskList = [];
-
-  for(final data in viewModel.taskDataList){
-    taskList.add(TaskListItem(
-      data: data,
-      // onPress: viewModel.onTapListItem,
-      width: width * 0.8,
-      height: height * 0.08,
-    ),
+Widget listView(
+    List<TaskData>? taskDataList,
+    double width,
+    double height,
+    BuildContext context,) {
+  final List<Widget> taskListWidget = [];
+  if(taskDataList == null){
+    return SizedBox(height: 0);
+  } else {
+    for (final data in taskDataList) {
+      taskListWidget.add(TaskListItem(
+        data: data,
+        // onPress: viewModel.onTapListItem,
+        width: width * 0.8,
+        height: height * 0.08,
+      ),
+      );
+    }
+    return Container(
+      width: width,
+      height: height * 0.5,
+      child: SingleChildScrollView(
+        child: Column(
+          children: taskListWidget,
+        ),
+      ),
     );
   }
-  return Container(
-    width: width,
-    height: height * 0.5,
-    child: SingleChildScrollView(
-      child: Column(
-        children: taskList,
-      ),
-    ),
-  );
 }
 
-Widget FloatingButton(TopViewModel viewModel, GlobalKey<FabCircularMenuState> fabKey){
+Widget FloatingButton(
+    TopViewModel viewModel,
+    GlobalKey<FabCircularMenuState> fabKey,
+    double width,
+    double height,
+    int _currentIndex){
   return Builder(
     builder: (context) => FabCircularMenu(
       key: fabKey,
       alignment: Alignment.bottomRight,
       ringColor: Colors.white.withAlpha(25),
-      ringDiameter: 400.0,
-      ringWidth: 150.0,
+      ringDiameter: width * 1.1,
+      ringWidth: width * 0.35,
       fabSize: 64.0,
-      fabElevation: 8.0,
       fabIconBorder: const CircleBorder(),
       fabColor: Colors.white,
       fabOpenIcon: Icon(Icons.menu, color: Colors.blueGrey),
@@ -113,48 +127,49 @@ Widget FloatingButton(TopViewModel viewModel, GlobalKey<FabCircularMenuState> fa
         // _showSnackBar(context, "The menu is ${isOpen ? "open" : "closed"}");
       },
       children: <Widget>[
-        RawMaterialButton(
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(24.0),
-          onPressed: () => viewModel.onTapLogout(context),
-          child: const Icon(
-            Icons.add_to_home_screen,
-            size: 40,
-            color: Colors.white),
-        ),
-        RawMaterialButton(
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(24.0),
-          onPressed: () => viewModel.onTapAddList(context),
-          child: const Icon(
-            Icons.add_task,
-            size: 40,
-            color: Colors.white),
-        ),
-        RawMaterialButton(
-          onPressed: () {},
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(24.0),
-          child: const Icon(
+        TextButton.icon(
+          onPressed: () => viewModel.onTapAddAlbum(context),
+          icon: const Icon(
             Icons.add_to_photos_rounded,
-            size: 40,
+            size: 35,
             color: Colors.white),
-        )
+          label: const Text(
+              "NewMusic",
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white)
+          ),
+        ),
+        TextButton.icon(
+          onPressed: () {
+            final albumList = viewModel.albumDataList;
+            viewModel.onTapAddList(context, albumList[_currentIndex]);
+          },
+          icon: const Icon(
+              Icons.add_task,
+              size: 35,
+              color: Colors.white),
+          label: const Text(
+              "NewTask",
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white)
+          ),
+        ),
+        TextButton.icon(
+          onPressed: () => viewModel.onTapLogout(context),
+          icon: const Icon(
+              Icons.add_to_home_screen,
+              size: 35,
+              color: Colors.white),
+          label: const Text(
+              "Logout",
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white)
+          ),
+        ),
       ],
     ),
   );
 }
-
-
-// floatingActionButton: FloatingActionButton(
-// onPressed: () {
-// FirebaseAuth.instance.signOut();
-// // Navigator.of(context).push(
-// //   MaterialPageRoute(builder: (context){
-// //     return SplashPage();}
-// //   )
-// // );
-// },
-// child: Icon(Icons.mouse),
-// backgroundColor: Colors.green,
-// );

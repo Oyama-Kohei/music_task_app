@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:taskmum_flutter/components/service/service.dart';
 
 class UserService  extends Service{
@@ -11,5 +12,9 @@ class UserService  extends Service{
       "uid": uid,
       "nickname": nickname
     });
+  }
+
+  Future getUserId() async{
+    return FirebaseAuth.instance.currentUser!.uid;
   }
 }

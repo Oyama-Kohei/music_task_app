@@ -4,6 +4,7 @@ class AlbumData{
     required this.userId,
     required this.albumName,
     required this.composer,
+    this.comment,
 });
 
   final String albumId;
@@ -13,4 +14,6 @@ class AlbumData{
   final String albumName;
 
   final String composer;
+  
+  final String? comment;
 }

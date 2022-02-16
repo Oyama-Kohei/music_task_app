@@ -6,10 +6,11 @@ class AlbumService extends Service{
 
   List<AlbumData>? albumDataList;
 
-  Future<List<AlbumData>?> getAlbumList() async{
+  Future<List<AlbumData>?> getAlbumList(String uid) async{
     try{
       final QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection("albums").get();
+          await FirebaseFirestore.instance.collection("albums")
+              .where("userId", isEqualTo: uid).get();
 
       final List<AlbumData> albumDataList = snapshot.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
@@ -17,14 +18,36 @@ class AlbumService extends Service{
         final String userId = data["userId"];
         final String albumName = data["albumName"];
         final String composer = data["composer"];
+        final String comment = data["comment"];
         return AlbumData(
             albumId: albumId,
             userId: userId,
             albumName: albumName,
-            composer: composer);
+            composer: composer,
+            comment: comment);
       }).toList();
       return albumDataList;
   } catch(e) {
+      print(e);
+    }
+  }
+
+  Future<void> addAlbum(
+      String uid,
+      String albumName,
+      String composer,
+      String? comment,
+      ) async{
+    try{
+      var id = FirebaseFirestore.instance.collection("_").doc().id;
+      await FirebaseFirestore.instance.collection("albums").doc(id).set({
+        "albumId": id,
+        "userId": uid,
+        "albumName": albumName,
+        "composer": composer,
+        "comment": comment,
+      });
+    } catch(e) {
       print(e);
     }
   }
