@@ -6,6 +6,7 @@ class TaskData{
     required this.title,
     required this.measureNum,
     this.comment,
+    this.imageUrl,
     required this.createAt,
 });
 
@@ -20,6 +21,8 @@ class TaskData{
   final int measureNum;
 
   final String? comment;
+
+  final String? imageUrl;
 
   final DateTime createAt;
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
-import 'package:taskmum_flutter/components/page/start_page.dart';
 import 'package:taskmum_flutter/components/service/album_service.dart';
 import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/service/task_service.dart';
@@ -58,7 +57,6 @@ class MyApp extends StatelessWidget {
         create: (_) => SplashViewModel(),
         child: SplashPage(),
       ),
-      // home: MainStartPage(),
       navigatorObservers: [RouteObserverProvider.of(context)],
       navigatorKey: NavigationHelper.navigatorKey,
     )

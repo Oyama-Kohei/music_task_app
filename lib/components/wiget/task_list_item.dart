@@ -6,14 +6,14 @@ import 'package:taskmum_flutter/components/models/task_data.dart';
 class TaskListItem extends StatelessWidget{
   const TaskListItem({
     required this.data,
-    // required this.onPress,
+    required this.onPress,
     required this.width,
     required this.height,
   });
 
   final TaskData data;
 
-  // final void Function(TaskData data) onPress;
+  final void Function(TaskData data) onPress;
 
   final double width;
 
@@ -21,7 +21,7 @@ class TaskListItem extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: Stack(
@@ -29,7 +29,9 @@ class TaskListItem extends StatelessWidget{
           leftArea(),
           rightArea(),
           InkWell(
-            // onTap: () => onPress(data),
+            onTap: () => onPress(data),
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
           )
         ],
       ),

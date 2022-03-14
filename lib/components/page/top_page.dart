@@ -22,6 +22,10 @@ class _TopPageState extends State<TopPage> {
     super.initState();
   }
 
+  Future<void> didPopNext() async {
+    await TopViewModel.getTaskDataList(context, []);
+  }
+
   @override
   Widget build(BuildContext context) {
     final queryData = MediaQuery.of(context);
@@ -61,7 +65,7 @@ class _TopPageState extends State<TopPage> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        listView(viewModel.taskDataList, width, height, context),
+                        listView(viewModel, width, height, _currentIndex, context),
                       ]
                   )
               )
@@ -74,18 +78,23 @@ class _TopPageState extends State<TopPage> {
 }
 
 Widget listView(
-    List<TaskData>? taskDataList,
+    TopViewModel viewModel,
     double width,
     double height,
+    int currentIndex,
     BuildContext context,) {
   final List<Widget> taskListWidget = [];
-  if(taskDataList == null){
+  if(viewModel.taskDataList == null){
     return SizedBox(height: 0);
   } else {
-    for (final data in taskDataList) {
+    for (final data in viewModel.taskDataList!) {
       taskListWidget.add(TaskListItem(
         data: data,
-        // onPress: viewModel.onTapListItem,
+        onPress: (data) => viewModel.onTapListItem(
+          context,
+          data,
+          currentIndex,
+        ),
         width: width * 0.8,
         height: height * 0.08,
       ),
@@ -142,8 +151,7 @@ Widget FloatingButton(
         ),
         TextButton.icon(
           onPressed: () {
-            final albumList = viewModel.albumDataList;
-            viewModel.onTapAddList(context, albumList[_currentIndex]);
+            viewModel.onTapAddList(context, _currentIndex);
           },
           icon: const Icon(
               Icons.add_task,

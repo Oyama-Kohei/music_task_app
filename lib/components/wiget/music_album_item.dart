@@ -23,7 +23,10 @@ class MusicAlbumItem extends StatelessWidget {
     return Container(
         height: double.infinity,
         width: double.infinity,
-        color: CommonColors.customSwatch.shade100,
+        decoration: BoxDecoration(
+          color: CommonColors.customSwatch.shade100,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(

@@ -12,6 +12,7 @@ import 'package:taskmum_flutter/components/service/user_service.dart';
 import 'package:taskmum_flutter/components/view_model/album_add_view_model.dart';
 import 'package:taskmum_flutter/components/view_model/splash_view_model.dart';
 import 'package:taskmum_flutter/components/view_model/task_add_view_model.dart';
+import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
 
@@ -26,14 +27,6 @@ class TopViewModel extends ChangeNotifier{
   List<TaskData>? taskDataList;
 
   List<AlbumData> albumDataList;
-
-  // findService<T extends Service>(){
-  //   for(Service service in services!){
-  //     if(service is T){
-  //       return service;
-  //     }
-  //   }
-  // }
 
   Future<void> onTapLogout(BuildContext context) async {
     showDialog(
@@ -66,12 +59,20 @@ class TopViewModel extends ChangeNotifier{
     );
   }
 
-  Future<void> onTapAddList(BuildContext context, AlbumData albumData) async {
-    NavigationHelper().push<TaskAddViewModel>(
-      context: context,
-      pageBuilder: (_) => const TaskAddPage(),
-      viewModelBuilder: (context) => TaskAddViewModel(albumData: albumData),
-    );
+  Future<void> onTapAddList(BuildContext context, int currentIndex) async {
+    if(albumDataList.isNotEmpty) {
+      NavigationHelper().push<TaskAddViewModel>(
+        context: context,
+        pageBuilder: (_) => const TaskAddPage(),
+        viewModelBuilder: (context) => TaskAddViewModel(albumData: albumDataList[currentIndex]),
+      );
+    } else {
+      DialogUtil.showPreventPopErrorDialog(
+        context: context,
+        title: "アルバムがありません",
+        content: "タスクを追加する先の曲を追加してください",
+      );
+    }
   }
 
   Future<void> onTapAddAlbum(BuildContext context) async {
@@ -90,5 +91,16 @@ class TopViewModel extends ChangeNotifier{
     final TaskService _taskService = getIt<TaskService>();
     taskDataList = await _taskService.getTaskList(currentUserId, albumId);
     notifyListeners();
+  }
+
+  Future<void> onTapListItem(BuildContext context, TaskData taskData, int currentIndex) async {
+    NavigationHelper().push<TaskAddViewModel>(
+      context: context,
+      pageBuilder: (_) => const TaskAddPage(),
+      viewModelBuilder: (context) => TaskAddViewModel(
+        albumData: albumDataList[currentIndex],
+        taskData: taskData,
+      ),
+    );
   }
 }

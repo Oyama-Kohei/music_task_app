@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/service/service.dart';
 
@@ -20,6 +23,7 @@ class TaskService extends Service{
         final String title = data["title"];
         final int measureNum = data["measureNum"];
         final String comment = data["comment"];
+        final String? imageUrl = data['imageUrl'];
         final DateTime createAt = data["createAt"].toDate();
         return TaskData(
             taskId: document.id,
@@ -28,6 +32,7 @@ class TaskService extends Service{
             title: title,
             measureNum: measureNum,
             comment: comment,
+            imageUrl: imageUrl,
             createAt: createAt);
       }).toList();
       return taskDataList;
@@ -41,6 +46,7 @@ class TaskService extends Service{
       String albumId,
       int measure,
       String? comment,
+      String? imageUrl,
       ) async{
     try{
       var id = FirebaseFirestore.instance.collection("_").doc().id;
@@ -51,10 +57,19 @@ class TaskService extends Service{
         "title": title,
         "measureNum": measure,
         "comment": comment,
+        "imageUrl": imageUrl,
         "createAt": DateTime.now(),
       });
     } catch(e) {
       print(e);
     }
+  }
+
+  Future<String> uploadPhotoData(String filePath) async {
+    final ref = FirebaseStorage.instance.ref();
+
+    final storedImage = await ref.child('images').putFile(File(filePath));
+    final photoUrl = await storedImage.ref.getDownloadURL();
+    return photoUrl.toString();
   }
 }

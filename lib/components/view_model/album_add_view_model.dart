@@ -31,6 +31,7 @@ class AlbumAddViewModel extends ChangeNotifier{
             FlatButton(
               child: const Text("OK"),
               onPressed: () async {
+                notifyListeners();
                 Navigator.pop(context);
                 Navigator.pop(context);
               }

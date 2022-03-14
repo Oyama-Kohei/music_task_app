@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:taskmum_flutter/components/view_model/task_add_view_model.dart';
@@ -14,13 +12,13 @@ class TaskAddPage extends StatefulWidget {
 }
 class _TaskAddPageState extends State<TaskAddPage>{
 
-  File? _image;
+  final _formKey = GlobalKey<FormState>();
+
   late String _title, _comment;
   late int _measure;
 
   @override
   Widget build(BuildContext context){
-    final _formKey = GlobalKey<FormState>();
     final queryData = MediaQuery.of(context);
     final width = queryData.size.width;
     final height = queryData.size.height;
@@ -29,7 +27,9 @@ class _TaskAddPageState extends State<TaskAddPage>{
         backgroundColor: Colors.white,
         elevation: 0.0,
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
         child: Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
           return Form(
             key: _formKey,
@@ -38,48 +38,78 @@ class _TaskAddPageState extends State<TaskAddPage>{
               Padding(padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: Column(
                 children: [
-                  Expanded(
-                    flex: 2,
+                  SizedBox(
+                    height: height * 0.3,
                     child: InkWell(
-                      onTap: () {
-                        setState(() async {
-                          _image = await viewModel.getImage();
-                        });
+                      onTap: () async {
+                          await viewModel.getImage(context);
                       },
-                      child: Container(
-                        width: width * 0.8,
-                        child: Center(
-                          child: _image == null
-                              ? const Text('No image selected.')
-                              : Image.file(_image!),
-                        ),
+                      child: Center(
+                        child: viewModel.imageFile == null
+                        ? Center(
+                          child: Container(
+                            height: height * 0.25,
+                            width: width * 0.8,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.camera_enhance,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  "画像の追加はこちらをタップ",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white
+                                  )
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                        : viewModel.imageFile!,
                       ),
-                    )
+                    ),
                   ),
-                  Expanded(
-                    flex: 5,
+                  SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
+                          initialValue: viewModel.taskData != null
+                            ? viewModel.taskData!.title
+                            : null,
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 18,
                           ),
                           validator: TitleValidator.validator(),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: const InputDecoration(hintText: 'タイトル'),
                           onChanged: (value) => _title = value
                         ),
-                        Container(
+                        SizedBox(
                           width: width * 0.4,
                           child: TextFormField(
+                            initialValue: viewModel.taskData != null
+                                ? viewModel.taskData!.measureNum.toString()
+                                : null,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 18,
                             ),
                             validator: TitleValidator.validator(),
                             keyboardType: TextInputType.number,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(hintText: '小節番号'),
+                            decoration: const InputDecoration(
+                                prefixText: '小節番号：',
+                            labelText: '小節番号',
+                              floatingLabelBehavior: FloatingLabelBehavior.never,),
                             onChanged: (value) => _measure = int.parse(value)
                           ),
                         ),
@@ -92,15 +122,17 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
                             child: TextFormField(
+                              initialValue: viewModel.taskData != null
+                                  ? viewModel.taskData!.comment
+                                  : null,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 18,
                               ),
                               maxLines: 8,
                               decoration: const InputDecoration(
                                 hintText: '備考',
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent)
-                              )),
+                                border: InputBorder.none,
+                              ),
                               onChanged: (value) => _comment = value
                             ),
                           ),
@@ -112,12 +144,12 @@ class _TaskAddPageState extends State<TaskAddPage>{
                             useIcon: true,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                // await (viewModel.taskAdd(
-                                //   _title,
-                                //   _measure,
-                                //   _comment,
-                                //   context
-                                // ));
+                                await (viewModel.taskAdd(
+                                  _title,
+                                  _measure,
+                                  _comment,
+                                  context
+                                ));
                               }
                             },
                           )
@@ -133,6 +165,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
           );
         }
         )
+      )
       )
     );
   }
