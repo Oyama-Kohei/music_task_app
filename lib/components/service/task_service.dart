@@ -22,7 +22,7 @@ class TaskService extends Service{
         final String albumId = data["albumId"];
         final String title = data["title"];
         final int measureNum = data["measureNum"];
-        final String comment = data["comment"];
+        final String? comment = data["comment"];
         final String? imageUrl = data['imageUrl'];
         final DateTime createAt = data["createAt"].toDate();
         return TaskData(

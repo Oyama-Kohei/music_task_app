@@ -2,11 +2,11 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/common_colors.dart';
 import 'package:taskmum_flutter/components/wiget/music_album_item.dart';
 import 'package:taskmum_flutter/components/wiget/task_list_item.dart';
+import 'package:taskmum_flutter/main.dart';
 
 class TopPage extends StatefulWidget {
   const TopPage({Key? key}) : super(key: key);
@@ -14,16 +14,32 @@ class TopPage extends StatefulWidget {
   @override
   _TopPageState createState() => _TopPageState();
 }
-class _TopPageState extends State<TopPage> {
+class _TopPageState extends State<TopPage> with RouteAware{
   int _currentIndex = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
   }
 
+  @override
   Future<void> didPopNext() async {
-    await TopViewModel.getTaskDataList(context, []);
+    // TODO(): もう少しいい方法がありそう。。。
+    // final viewModel = Provider.of<TopViewModel>(context, listen: false);
+    // await viewModel.getTaskDataList(context, viewModel.albumDataList[_currentIndex].albumId);
+    setState(() {});
   }
 
   @override
@@ -40,7 +56,7 @@ class _TopPageState extends State<TopPage> {
                   padding: const EdgeInsets.fromLTRB(0, 70, 0, 20),
                   child: Column(
                       children: <Widget>[
-                        Container(
+                        SizedBox(
                           height: height * 0.25,
                           child: Swiper(
                             index: _currentIndex,
@@ -54,10 +70,10 @@ class _TopPageState extends State<TopPage> {
                             viewportFraction: 0.8,
                             scale: 0.9,
                             pagination: const SwiperPagination(),
-                            onIndexChanged: (int index) {
+                            onIndexChanged: (int index) async {
                               _currentIndex = index;
                               if(viewModel.albumDataList.isNotEmpty){
-                                viewModel.getTaskDataList(
+                                await viewModel.getTaskDataList(
                                     context,
                                     viewModel.albumDataList[_currentIndex].albumId);
                               }
@@ -84,8 +100,11 @@ Widget listView(
     int currentIndex,
     BuildContext context,) {
   final List<Widget> taskListWidget = [];
+  viewModel.getTaskDataList(
+      context,
+      viewModel.albumDataList[currentIndex].albumId);
   if(viewModel.taskDataList == null){
-    return SizedBox(height: 0);
+    return const SizedBox(height: 0);
   } else {
     for (final data in viewModel.taskDataList!) {
       taskListWidget.add(TaskListItem(
@@ -100,7 +119,7 @@ Widget listView(
       ),
       );
     }
-    return Container(
+    return SizedBox(
       width: width,
       height: height * 0.5,
       child: SingleChildScrollView(
@@ -112,6 +131,7 @@ Widget listView(
   }
 }
 
+// ignore: non_constant_identifier_names
 Widget FloatingButton(
     TopViewModel viewModel,
     GlobalKey<FabCircularMenuState> fabKey,
@@ -128,8 +148,8 @@ Widget FloatingButton(
       fabSize: 64.0,
       fabIconBorder: const CircleBorder(),
       fabColor: Colors.white,
-      fabOpenIcon: Icon(Icons.menu, color: Colors.blueGrey),
-      fabCloseIcon: Icon(Icons.close, color: Colors.blueGrey),
+      fabOpenIcon: const Icon(Icons.menu, color: Colors.blueGrey),
+      fabCloseIcon: const Icon(Icons.close, color: Colors.blueGrey),
       animationDuration: const Duration(milliseconds: 800),
       animationCurve: Curves.easeInOutCirc,
       onDisplayChange: (isOpen) {

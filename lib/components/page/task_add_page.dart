@@ -14,7 +14,8 @@ class _TaskAddPageState extends State<TaskAddPage>{
 
   final _formKey = GlobalKey<FormState>();
 
-  late String _title, _comment;
+  late String _title;
+  String? _comment;
   late int _measure;
 
   @override

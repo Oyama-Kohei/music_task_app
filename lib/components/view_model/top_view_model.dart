@@ -33,7 +33,7 @@ class TopViewModel extends ChangeNotifier{
         context: context,
       builder: (_) {
         return AlertDialog(
-          title: Text("ログアウトしますか？"),
+          title: const Text("ログアウトしますか？"),
           actions: <Widget>[
             // ボタン領域
             FlatButton(

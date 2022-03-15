@@ -6,6 +6,7 @@ import 'package:taskmum_flutter/components/models/album_data.dart';
 import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/service/task_service.dart';
 import 'package:taskmum_flutter/components/service/user_service.dart';
+import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -35,44 +36,58 @@ class TaskAddViewModel extends ChangeNotifier{
       String? comment,
       BuildContext context
       ) async {
-    final UserService userService = getIt<UserService>();
-    final currentUserId = await userService.getUserId();
-    final taskService = getIt<TaskService>();
+    try {
+      showLoadingCircle(context);
+      final UserService userService = getIt<UserService>();
+      final currentUserId = await userService.getUserId();
+      final taskService = getIt<TaskService>();
 
-    final String? imageUrl;
+      final String? imageUrl;
 
-    if(setFilePath != null) {
-      imageUrl = await taskService.uploadPhotoData(setFilePath!);
-    } else {
-      imageUrl = null;
+      if (setFilePath != null) {
+        imageUrl = await taskService.uploadPhotoData(setFilePath!);
+      } else {
+        imageUrl = null;
+      }
+
+      await taskService.addTask(
+        title,
+        currentUserId,
+        albumData.albumId,
+        measure,
+        comment,
+        imageUrl,
+      );
+      dismissLoadingCircle(context);
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: const Text("タスクを追加しました"),
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text("OK"),
+                  onPressed: () async {
+                    notifyListeners();
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }
+              ),
+            ],
+          );
+        },
+      );
+    } catch(_){
+      dismissLoadingCircle(context);
+      showDialog(
+        context: context,
+        builder: (_) {
+          return const AlertDialog(
+            title: Text("タスクの追加に失敗しました"),
+          );
+        },
+      );
     }
-
-    await taskService.addTask(
-      title,
-      currentUserId,
-      albumData.albumId,
-      measure,
-      comment,
-      imageUrl,
-    );
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: const Text("タスクを追加しました"),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text("OK"),
-              onPressed: () async {
-                notifyListeners();
-                Navigator.pop(context);
-                Navigator.pop(context);
-              }
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> getImage(context) async {

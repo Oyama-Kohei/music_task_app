@@ -27,6 +27,8 @@ void main() async {
   );
 }
 
+final RouteObserver routeObserver = RouteObserver();
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class MyApp extends StatelessWidget {
         create: (_) => SplashViewModel(),
         child: SplashPage(),
       ),
-      navigatorObservers: [RouteObserverProvider.of(context)],
+      navigatorObservers: [routeObserver],
       navigatorKey: NavigationHelper.navigatorKey,
     )
     );
