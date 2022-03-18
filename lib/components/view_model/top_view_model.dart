@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/models/album_data.dart';
@@ -32,7 +33,7 @@ class TopViewModel extends ChangeNotifier{
     showDialog(
         context: context,
       builder: (_) {
-        return AlertDialog(
+        return CupertinoAlertDialog(
           title: const Text("ログアウトしますか？"),
           actions: <Widget>[
             // ボタン領域

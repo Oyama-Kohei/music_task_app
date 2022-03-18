@@ -60,6 +60,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                           height: height * 0.25,
                           child: Swiper(
                             index: _currentIndex,
+                            loop: false,
                             itemCount: viewModel.albumDataList.length,
                             layout: SwiperLayout.DEFAULT,
                             itemBuilder: (BuildContext context, int index) {

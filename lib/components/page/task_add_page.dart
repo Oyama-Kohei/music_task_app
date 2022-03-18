@@ -18,6 +18,8 @@ class _TaskAddPageState extends State<TaskAddPage>{
   String? _comment;
   late int _measure;
 
+
+
   @override
   Widget build(BuildContext context){
     final queryData = MediaQuery.of(context);
@@ -27,6 +29,39 @@ class _TaskAddPageState extends State<TaskAddPage>{
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
+        actions: [
+          Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
+            return Visibility(
+              visible: viewModel.taskData != null,
+              child: IconButton(
+              icon: const Icon(Icons.more_horiz),
+              onPressed: () {
+                showModalBottomSheet(context: context, builder: (BuildContext builderContext) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 2),
+                      InkWell(
+                        child: Container(
+                          height: 70,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'このタスクを削除する',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,)
+                          ),
+                        ),
+                        onTap: () => viewModel.taskDelete(context),
+                      ),
+                    ],
+                  );
+                });
+              },
+              )
+            );
+          })
+        ],
       ),
       body: SingleChildScrollView(
         child: GestureDetector(
@@ -47,35 +82,36 @@ class _TaskAddPageState extends State<TaskAddPage>{
                       },
                       child: Center(
                         child: viewModel.imageFile == null
-                        ? Center(
-                          child: Container(
-                            height: height * 0.25,
-                            width: width * 0.8,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.camera_enhance,
-                                  size: 35,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  "画像の追加はこちらをタップ",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white
-                                  )
-                                )
-                              ],
-                            ),
+                        ? Container(
+                          height: height * 0.25,
+                          width: width * 0.9,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(20),
                           ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.camera_enhance,
+                                size: 35,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                "画像の追加はこちらをタップ",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white
+                                )
+                              )
+                            ],
+                          )
                         )
-                        : viewModel.imageFile!,
+                        : ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: viewModel.imageFile!,
+                        )
                       ),
                     ),
                   ),
@@ -140,7 +176,8 @@ class _TaskAddPageState extends State<TaskAddPage>{
                         ),
                         Padding(padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                           child: CommonButton(
-                            text: 'タスクを追加する',
+                            text: viewModel.taskData == null
+                                ? 'タスクを追加する' : 'タスクを更新する',
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                             useIcon: true,
                             onPressed: () async {

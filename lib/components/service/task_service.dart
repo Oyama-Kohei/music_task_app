@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,6 +9,13 @@ import 'package:taskmum_flutter/components/service/service.dart';
 class TaskService extends Service{
 
   List<TaskData>? taskDataList;
+
+  String generateFileName(int length) {
+    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    final randomStr =  List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+    return randomStr;
+  }
 
   Future<List<TaskData>?> getTaskList(String uid, String albumId) async{
     try{
@@ -40,6 +48,7 @@ class TaskService extends Service{
       print(e);
     }
   }
+
   Future<void> addTask(
       String title,
       String uid,
@@ -65,10 +74,17 @@ class TaskService extends Service{
     }
   }
 
+  Future<void> deleteTask(String taskId) async {
+    try{
+      await FirebaseFirestore.instance.collection("tasks").doc(taskId).delete();
+    } catch(e) {
+      print(e);
+    }
+  }
+
   Future<String> uploadPhotoData(String filePath) async {
     final ref = FirebaseStorage.instance.ref();
-
-    final storedImage = await ref.child('images').putFile(File(filePath));
+    final storedImage = await ref.child('images').child(generateFileName(16)).putFile(File(filePath));
     final photoUrl = await storedImage.ref.getDownloadURL();
     return photoUrl.toString();
   }

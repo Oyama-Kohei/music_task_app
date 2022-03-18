@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/models/album_data.dart';
@@ -25,7 +26,7 @@ class TaskAddViewModel extends ChangeNotifier{
   Image? imageFile;
   String? setFilePath;
 
-  static const String selectIcon = "アイコンを選択";
+  static const String selectIcon = "画像の選択方法";
   static const List<String> selectIconOption = ["写真から選択", "写真を撮影"];
   static const int gallery = 0;
   static const int camera = 1;
@@ -62,10 +63,10 @@ class TaskAddViewModel extends ChangeNotifier{
       showDialog(
         context: context,
         builder: (_) {
-          return AlertDialog(
-            title: const Text("タスクを追加しました"),
+          return CupertinoAlertDialog(
+            content: const Text("タスクを追加しました"),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: const Text("OK"),
                   onPressed: () async {
                     notifyListeners();
@@ -82,8 +83,47 @@ class TaskAddViewModel extends ChangeNotifier{
       showDialog(
         context: context,
         builder: (_) {
-          return const AlertDialog(
+          return const CupertinoAlertDialog(
             title: Text("タスクの追加に失敗しました"),
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> taskDelete(BuildContext context) async {
+    try {
+      showLoadingCircle(context);
+      final taskService = getIt<TaskService>();
+
+      await taskService.deleteTask(taskData!.taskId);
+      dismissLoadingCircle(context);
+      showDialog(
+        context: context,
+        builder: (_) {
+          return CupertinoAlertDialog(
+            content: const Text("タスクを削除しました"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () async {
+                  notifyListeners();
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
+              ),
+            ],
+          );
+        },
+      );
+    } catch(_){
+      dismissLoadingCircle(context);
+      showDialog(
+        context: context,
+        builder: (_) {
+          return const CupertinoAlertDialog(
+            title: Text("タスクの削除に失敗しました"),
           );
         },
       );
@@ -107,6 +147,7 @@ class TaskAddViewModel extends ChangeNotifier{
           ) ;
         });
     final imagePicker = ImagePicker();
+    // ignore: non_constant_identifier_names
     final ImageSource? ImgSrc;
     //カメラで撮影
     if (selectType == camera){
