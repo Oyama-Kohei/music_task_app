@@ -28,15 +28,24 @@ class TaskAddViewModel extends ChangeNotifier{
 
   static const String selectIcon = "画像の選択方法";
   static const List<String> selectIconOption = ["写真から選択", "写真を撮影"];
+  static const List<String> movementList = ["楽章なし", "1楽章", "2楽章", "3楽章", "4楽章", "5楽章", "6楽章", "7楽章", "8楽章", "9楽章", "10楽章"];
   static const int gallery = 0;
   static const int camera = 1;
 
   Future<void> taskAdd(
       String title,
       int measure,
+      String movement,
       String? comment,
       BuildContext context
       ) async {
+    var movementNum = 0;
+    for(var i = 0; i < movementList.length; i++){
+      if(movement == movementList[i]){
+        movementNum = i;
+        break;
+      }
+    }
     try {
       showLoadingCircle(context);
       final UserService userService = getIt<UserService>();
@@ -55,6 +64,7 @@ class TaskAddViewModel extends ChangeNotifier{
         title,
         currentUserId,
         albumData.albumId,
+        movementNum,
         measure,
         comment,
         imageUrl,
@@ -63,7 +73,7 @@ class TaskAddViewModel extends ChangeNotifier{
       showDialog(
         context: context,
         builder: (_) {
-          return CupertinoAlertDialog(
+          return AlertDialog(
             content: const Text("タスクを追加しました"),
             actions: <Widget>[
               TextButton(
@@ -96,12 +106,12 @@ class TaskAddViewModel extends ChangeNotifier{
       showLoadingCircle(context);
       final taskService = getIt<TaskService>();
 
-      await taskService.deleteTask(taskData!.taskId);
+      await taskService.deleteTask(taskData!);
       dismissLoadingCircle(context);
       showDialog(
         context: context,
         builder: (_) {
-          return CupertinoAlertDialog(
+          return AlertDialog(
             content: const Text("タスクを削除しました"),
             actions: <Widget>[
               TextButton(
@@ -122,7 +132,7 @@ class TaskAddViewModel extends ChangeNotifier{
       showDialog(
         context: context,
         builder: (_) {
-          return const CupertinoAlertDialog(
+          return const AlertDialog(
             title: Text("タスクの削除に失敗しました"),
           );
         },

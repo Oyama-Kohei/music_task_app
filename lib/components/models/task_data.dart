@@ -4,6 +4,7 @@ class TaskData{
     required this.userId,
     required this.albumId,
     required this.title,
+    required this.movementNum,
     required this.measureNum,
     this.comment,
     this.imageUrl,
@@ -17,6 +18,8 @@ class TaskData{
   final String albumId;
 
   final String title;
+
+  final int movementNum;
 
   final int measureNum;
 

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/service/service.dart';
 
@@ -22,13 +23,13 @@ class TaskService extends Service{
       final QuerySnapshot snapshot =
           await FirebaseFirestore.instance.collection("tasks")
               .where("userId", isEqualTo: uid)
-              .where("albumId", isEqualTo: albumId).orderBy("measureNum").get();
-
+              .where("albumId", isEqualTo: albumId).orderBy("movementNum").orderBy("measureNum").get();
       final List<TaskData> taskDataList = snapshot.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         final String userId = data["userId"];
         final String albumId = data["albumId"];
         final String title = data["title"];
+        final int movementNum = data["movementNum"];
         final int measureNum = data["measureNum"];
         final String? comment = data["comment"];
         final String? imageUrl = data['imageUrl'];
@@ -38,6 +39,7 @@ class TaskService extends Service{
             userId: userId,
             albumId: albumId,
             title: title,
+            movementNum: movementNum,
             measureNum: measureNum,
             comment: comment,
             imageUrl: imageUrl,
@@ -53,7 +55,8 @@ class TaskService extends Service{
       String title,
       String uid,
       String albumId,
-      int measure,
+      int movementNum,
+      int measureNum,
       String? comment,
       String? imageUrl,
       ) async{
@@ -64,7 +67,8 @@ class TaskService extends Service{
         "userId": uid,
         "albumId": albumId,
         "title": title,
-        "measureNum": measure,
+        "movementNum": movementNum,
+        "measureNum": measureNum,
         "comment": comment,
         "imageUrl": imageUrl,
         "createAt": DateTime.now(),
@@ -74,9 +78,12 @@ class TaskService extends Service{
     }
   }
 
-  Future<void> deleteTask(String taskId) async {
+  Future<void> deleteTask(TaskData data) async {
     try{
-      await FirebaseFirestore.instance.collection("tasks").doc(taskId).delete();
+      await FirebaseFirestore.instance.collection("tasks").doc(data.taskId).delete();
+      if(data.imageUrl == null) {
+        await _deletePhotoData(data.imageUrl!);
+      }
     } catch(e) {
       print(e);
     }
@@ -87,5 +94,20 @@ class TaskService extends Service{
     final storedImage = await ref.child('images').child(generateFileName(16)).putFile(File(filePath));
     final photoUrl = await storedImage.ref.getDownloadURL();
     return photoUrl.toString();
+  }
+
+  Future<void> _deletePhotoData(String url) async {
+    try {
+      String filePath = url.replaceAll(
+          RegExp(
+              r'https://firebasestorage.googleapis.com/v0/b/tuskmum-flutter.appspot.com/o/'),
+          '');
+      filePath = filePath.replaceAll(RegExp(r'%2F'), '/');
+      filePath = filePath.replaceAll(RegExp(r'(\?alt).*'), '');
+      final storageReference = FirebaseStorage.instance.ref();
+      await storageReference.child(filePath).delete();
+    } catch (error) {
+      print(error);
+    }
   }
 }

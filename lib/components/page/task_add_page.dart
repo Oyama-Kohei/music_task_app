@@ -15,8 +15,15 @@ class _TaskAddPageState extends State<TaskAddPage>{
   final _formKey = GlobalKey<FormState>();
 
   late String _title;
+  late String _movement = TaskAddViewModel.movementList[0];
   String? _comment;
   late int _measure;
+
+  void _onChanged(String? value) {
+    setState(() {
+      _movement = value!;
+    });
+  }
 
 
 
@@ -67,6 +74,9 @@ class _TaskAddPageState extends State<TaskAddPage>{
         child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
+          _movement = viewModel.taskData != null
+              ? TaskAddViewModel.movementList[viewModel.taskData!.movementNum]
+              : _movement;
           return Form(
             key: _formKey,
             child: Stack(
@@ -131,6 +141,22 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           decoration: const InputDecoration(hintText: 'タイトル'),
                           onChanged: (value) => _title = value
                         ),
+                        DropdownButton(
+                          items: TaskAddViewModel.movementList
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(
+                                  fontSize: 18
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          value: _movement,
+                          onChanged: _onChanged,
+                        ),
                         SizedBox(
                           width: width * 0.4,
                           child: TextFormField(
@@ -185,6 +211,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
                                 await (viewModel.taskAdd(
                                   _title,
                                   _measure,
+                                  _movement,
                                   _comment,
                                   context
                                 ));
