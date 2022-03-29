@@ -81,7 +81,7 @@ class TaskService extends Service{
   Future<void> deleteTask(TaskData data) async {
     try{
       await FirebaseFirestore.instance.collection("tasks").doc(data.taskId).delete();
-      if(data.imageUrl == null) {
+      if(data.imageUrl != null) {
         await _deletePhotoData(data.imageUrl!);
       }
     } catch(e) {
@@ -98,10 +98,7 @@ class TaskService extends Service{
 
   Future<void> _deletePhotoData(String url) async {
     try {
-      String filePath = url.replaceAll(
-          RegExp(
-              r'https://firebasestorage.googleapis.com/v0/b/tuskmum-flutter.appspot.com/o/'),
-          '');
+      String filePath = url.replaceAll(RegExp(r'https://firebasestorage.googleapis.com:443/v0/b/tuskmum-flutter.appspot.com/o/'), '');
       filePath = filePath.replaceAll(RegExp(r'%2F'), '/');
       filePath = filePath.replaceAll(RegExp(r'(\?alt).*'), '');
       final storageReference = FirebaseStorage.instance.ref();
