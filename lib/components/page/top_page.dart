@@ -57,10 +57,10 @@ class _TopPageState extends State<TopPage> with RouteAware{
                   child: Column(
                       children: <Widget>[
                         SizedBox(
-                          height: height * 0.25,
+                          height: height * 0.26,
                           child: Swiper(
                             index: _currentIndex,
-                            loop: false,
+                            loop: true,
                             itemCount: viewModel.albumDataList.length,
                             layout: SwiperLayout.DEFAULT,
                             itemBuilder: (BuildContext context, int index) {
@@ -70,7 +70,6 @@ class _TopPageState extends State<TopPage> with RouteAware{
                             },
                             viewportFraction: 0.8,
                             scale: 0.9,
-                            pagination: const SwiperPagination(),
                             onIndexChanged: (int index) async {
                               _currentIndex = index;
                               if(viewModel.albumDataList.isNotEmpty){

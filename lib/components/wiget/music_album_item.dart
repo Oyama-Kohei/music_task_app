@@ -27,30 +27,64 @@ class MusicAlbumItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(15),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                "title",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.sawarabiMincho(
+                  fontSize: 16,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
               Text(
                 dataList[index].albumName,
                 textAlign: TextAlign.center,
-                maxLines: 2,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.sawarabiMincho(
                   fontSize: 25,
                   color: Colors.black54,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 10),
               Text(
-                dataList[index].composer,
+                "composer",
                 textAlign: TextAlign.center,
-                maxLines: 2,
                 style: GoogleFonts.sawarabiMincho(
-                  fontSize: 20,
+                  fontSize: 16,
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
+              ),
+              Text(
+                dataList[index].composer,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.sawarabiMincho(
+                  fontSize: 20,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "reference",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.sawarabiMincho(
+                  fontSize: 16,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              const Icon(
+                Icons.smart_display_rounded,
+                size: 40,
+                color: Colors.black54,
               ),
             ]
           ),

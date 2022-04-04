@@ -155,7 +155,9 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           }).toList(),
                           value: _movement,
                           onChanged: (value) {
-                            _movement = value.toString();
+                            setState(() {
+                              _movement = value.toString();
+                            });
                             viewModel.updateFlag = true;
                           }
                         ),
