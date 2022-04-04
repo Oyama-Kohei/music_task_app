@@ -32,6 +32,9 @@ class TaskAddViewModel extends ChangeNotifier{
   static const int gallery = 0;
   static const int camera = 1;
 
+  // 画面更新フラグ
+  bool updateFlag = false;
+
   Future<void> taskAdd(
       String title,
       int measure,
@@ -60,21 +63,30 @@ class TaskAddViewModel extends ChangeNotifier{
         imageUrl = null;
       }
 
-      await taskService.addTask(
-        title,
-        currentUserId,
-        albumData.albumId,
-        movementNum,
-        measure,
-        comment,
-        imageUrl,
-      );
+      taskData == null ? await taskService.addTask(
+        title: title,
+        uid: currentUserId,
+        albumId: albumData.albumId,
+        movementNum: movementNum,
+        measureNum: measure,
+        comment: comment,
+        imageUrl: imageUrl,
+      ) :
+      await taskService.updateTask(
+        id: taskData!.taskId,
+        title: title,
+        uid: currentUserId,
+        albumId: albumData.albumId,
+        movementNum: movementNum,
+        measureNum: measure,
+        comment: comment,
+        imageUrl: imageUrl);
       dismissLoadingCircle(context);
       showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
-            content: const Text("タスクを追加しました"),
+            content: Text(taskData == null ? "タスクを追加しました" : "タスクを更新しました"),
             actions: <Widget>[
               TextButton(
                   child: const Text("OK"),
@@ -93,7 +105,7 @@ class TaskAddViewModel extends ChangeNotifier{
       showDialog(
         context: context,
         builder: (_) {
-          return const CupertinoAlertDialog(
+          return const AlertDialog(
             title: Text("タスクの追加に失敗しました"),
           );
         },

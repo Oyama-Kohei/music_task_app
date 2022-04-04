@@ -19,14 +19,6 @@ class _TaskAddPageState extends State<TaskAddPage>{
   String? _comment;
   late int _measure;
 
-  void _onChanged(String? value) {
-    setState(() {
-      _movement = value!;
-    });
-  }
-
-
-
   @override
   Widget build(BuildContext context){
     final queryData = MediaQuery.of(context);
@@ -74,9 +66,13 @@ class _TaskAddPageState extends State<TaskAddPage>{
         child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
-          _movement = viewModel.taskData != null
-              ? TaskAddViewModel.movementList[viewModel.taskData!.movementNum]
-              : _movement;
+          // 更新前のタスクデータを初期表示
+          if(viewModel.taskData != null && viewModel.updateFlag == false){
+            _movement = TaskAddViewModel.movementList[viewModel.taskData!.movementNum];
+            _title = viewModel.taskData!.title;
+            _comment = viewModel.taskData!.comment;
+            _measure = viewModel.taskData!.measureNum;
+          }
           return Form(
             key: _formKey,
             child: Stack(
@@ -139,7 +135,10 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           validator: TitleValidator.validator(),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: const InputDecoration(hintText: 'タイトル'),
-                          onChanged: (value) => _title = value
+                          onChanged: (value) {
+                            _title = value;
+                            viewModel.updateFlag = true;
+                          }
                         ),
                         DropdownButton(
                           items: TaskAddViewModel.movementList
@@ -155,7 +154,10 @@ class _TaskAddPageState extends State<TaskAddPage>{
                             );
                           }).toList(),
                           value: _movement,
-                          onChanged: _onChanged,
+                          onChanged: (value) {
+                            _movement = value.toString();
+                            viewModel.updateFlag = true;
+                          }
                         ),
                         SizedBox(
                           width: width * 0.4,
@@ -173,7 +175,10 @@ class _TaskAddPageState extends State<TaskAddPage>{
                                 prefixText: '小節番号：',
                             labelText: '小節番号',
                               floatingLabelBehavior: FloatingLabelBehavior.never,),
-                            onChanged: (value) => _measure = int.parse(value)
+                            onChanged: (value) {
+                              _measure = int.parse(value);
+                              viewModel.updateFlag = true;
+                            }
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -196,7 +201,10 @@ class _TaskAddPageState extends State<TaskAddPage>{
                                 hintText: '備考',
                                 border: InputBorder.none,
                               ),
-                              onChanged: (value) => _comment = value
+                              onChanged: (value) {
+                                _comment = value;
+                                viewModel.updateFlag = true;
+                              }
                             ),
                           ),
                         ),

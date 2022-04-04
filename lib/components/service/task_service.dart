@@ -51,18 +51,45 @@ class TaskService extends Service{
     }
   }
 
-  Future<void> addTask(
-      String title,
-      String uid,
-      String albumId,
-      int movementNum,
-      int measureNum,
-      String? comment,
-      String? imageUrl,
-      ) async{
+  Future<void> addTask({
+    required String title,
+    required String uid,
+    required String albumId,
+    required int movementNum,
+    required int measureNum,
+    String? comment,
+    String? imageUrl,
+  }) async {
     try{
       var id = FirebaseFirestore.instance.collection("_").doc().id;
-      await FirebaseFirestore.instance.collection("tasks").doc(id).set({
+      await FirebaseFirestore.instance.collection("tasks").doc(id).update({
+        "taskId": id,
+        "userId": uid,
+        "albumId": albumId,
+        "title": title,
+        "movementNum": movementNum,
+        "measureNum": measureNum,
+        "comment": comment,
+        "imageUrl": imageUrl,
+        "createAt": DateTime.now(),
+      });
+    } catch(e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateTask({
+    required String id,
+    required String title,
+    required String uid,
+    required String albumId,
+    required int movementNum,
+    required int measureNum,
+    String? comment,
+    String? imageUrl,
+  }) async {
+    try{
+      await FirebaseFirestore.instance.collection("tasks").doc(id).update({
         "taskId": id,
         "userId": uid,
         "albumId": albumId,
