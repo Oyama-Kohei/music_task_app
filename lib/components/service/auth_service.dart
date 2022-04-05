@@ -11,16 +11,18 @@ class AuthService extends Service{
       if(_userCredential.user != null){
         return _userCredential.user;
       }
-    }on FirebaseAuthException catch(e){
+    }on Exception catch(e){
       print("AuthException ${e.toString()})");
+      rethrow;
     }
   }
 
   Future<bool> signIn(String email, String password) async{
     try{
       await firebaseAuthService.signInWithEmailAndPassword(email: email, password: password);
-    }on FirebaseAuthException catch(e){
+    }on Exception catch(e){
       print("AuthException ${e.toString()})");
+      rethrow;
     }
     return true;
   }

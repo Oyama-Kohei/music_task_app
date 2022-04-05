@@ -35,7 +35,7 @@ class RegisterViewModel extends ChangeNotifier{
       DialogUtil.showPreventPopErrorDialog(
         context: context,
         title: "アカウント作成エラー",
-        content: "アカウント作成に失敗しました",
+        content: "通信状況などを再度ご確認ください",
       );
     }
   }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:taskmum_flutter/components/view_model/register_view_model.dart';
-import 'package:taskmum_flutter/components/page/start_page1.dart';
 import 'package:taskmum_flutter/components/wiget/common_button.dart';
-import 'package:taskmum_flutter/utility/navigation_helper.dart';
 import 'package:taskmum_flutter/utility/validator/email_validator.dart';
 import 'package:taskmum_flutter/utility/validator/nickname_validator.dart';
 import 'package:taskmum_flutter/utility/validator/password_validator.dart';
@@ -29,70 +27,73 @@ class _RegisterPageState extends State<RegisterPage>{
             elevation: 0.0,
           ),
           body: Center(
-              child: Consumer<RegisterViewModel>(builder: (context, viewModel, child){
+            child: Consumer<RegisterViewModel>(builder: (context, viewModel, child){
+              final size = MediaQuery.of(context).size;
+              final deviceHeight = size.height;
                 return Form(
-                    key: _formKey,
-                    child: Stack(
-                        children: <Widget>[
-                          Padding(padding: const EdgeInsets.all(24),
-                              child: Column(
+                  key: _formKey,
+                  child: Stack(
+                    children: <Widget>[
+                      Padding(padding: const EdgeInsets.only(left: 24, right: 24),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: deviceHeight * 0.44,
+                                child: const Image(
+                                  image: AssetImage("images/boys.jpeg"),
+                                ),
+                              ),
+                              SizedBox(
+                                child: Column(
                                   children: [
-                                    const Expanded(
-                                      flex: 1,
-                                      child: Image(
-                                        image: AssetImage("images/boys.jpeg"),
+                                    TextFormField(
+                                      validator: EmailValidator.validator(),
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      decoration: const InputDecoration(hintText: 'email'),
+                                      onChanged: (value) => _email = value
+                                    ),
+                                    TextFormField(
+                                      obscureText: true,
+                                      validator: PasswordValidator.validator(),
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      decoration: const InputDecoration(hintText: 'password'),
+                                      onChanged: (value) => _password = value
+                                    ),
+                                    Padding(padding: const EdgeInsets.only(top: 30),
+                                      child: TextFormField(
+                                        validator: NicknameValidator.validator(),
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        decoration: const InputDecoration(hintText: 'nickname'),
+                                        onChanged: (value) => _nickname = value
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        children: [
-                                          TextFormField(
-                                            validator: EmailValidator.validator(),
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                                            decoration: const InputDecoration(hintText: 'email'),
-                                            onChanged: (value) => _email = value
-                                          ),
-                                          TextFormField(
-                                            obscureText: true,
-                                            validator: PasswordValidator.validator(),
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                                            decoration: const InputDecoration(hintText: 'password'),
-                                            onChanged: (value) => _password = value
-                                          ),
-                                          Padding(padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                                            child: TextFormField(
-                                              validator: NicknameValidator.validator(),
-                                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                                              decoration: const InputDecoration(hintText: 'nickname'),
-                                              onChanged: (value) => _nickname = value
-                                            ),
-                                          ),
-                                          Padding(padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                                              child: CommonButton(
-                                                text: '新規アカウント作成',
-                                                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                                useIcon: true,
-                                                onPressed: () async {
-                                                  if (_formKey.currentState!.validate()) {
-                                                    await viewModel.signUp(
-                                                        _email,
-                                                        _password,
-                                                        _nickname,
-                                                        context,
-                                                    );
-                                                  }
-                                                },
-                                              )
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ]
-                              )
-                          ),
-                        ]
-                    )
+                                    Padding(padding: const EdgeInsets.only(top: 30),
+                                        child: CommonButton(
+                                          text: '新規アカウント作成',
+                                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                          useIcon: true,
+                                          onPressed: () async {
+                                            if (_formKey.currentState!.validate()) {
+                                              await viewModel.signUp(
+                                                  _email,
+                                                  _password,
+                                                  _nickname,
+                                                  context,
+                                              );
+                                            }
+                                          },
+                                        )
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ]
+                          )
+                        ),
+                      ),
+                    ]
+                  )
                 );
               }
               )

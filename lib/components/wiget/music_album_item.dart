@@ -29,47 +29,53 @@ class MusicAlbumItem extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "title",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.sawarabiMincho(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              Text(
-                dataList[index].albumName,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.sawarabiMincho(
-                  fontSize: 25,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.only(left: 7, right: 7),
+                child: Text(
+                  dataList[index].albumName,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.sawarabiMincho(
+                    fontSize: 22,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Text(
                 "composer",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.sawarabiMincho(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              Text(
-                dataList[index].composer,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.sawarabiMincho(
-                  fontSize: 20,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.only(left: 7, right: 7),
+                child: Text(
+                  dataList[index].composer,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.sawarabiMincho(
+                    fontSize: 18,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Text(
@@ -90,6 +96,5 @@ class MusicAlbumItem extends StatelessWidget {
           ),
         ),
       );
-
   }
 }

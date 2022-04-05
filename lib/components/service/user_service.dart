@@ -7,11 +7,16 @@ class UserService  extends Service{
   final firebaseFireStore = FirebaseFirestore.instance;
 
   Future setNickname(String nickname, uid) async{
-    final doc = firebaseFireStore.collection("users").doc(uid);
-    await doc.set({
-      "uid": uid,
-      "nickname": nickname
-    });
+    try {
+      final doc = firebaseFireStore.collection("users").doc(uid);
+      await doc.set({
+        "uid": uid,
+        "nickname": nickname
+      });
+    } on Exception catch(e){
+      print("UserException ${e.toString()})");
+      rethrow;
+    }
   }
 
   Future getUserId() async{

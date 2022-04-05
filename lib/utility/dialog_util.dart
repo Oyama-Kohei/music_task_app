@@ -20,7 +20,7 @@ class DialogUtil {
       builder: (context) =>
       WillPopScope(
         onWillPop: () async => false,
-        child: CupertinoAlertDialog(
+        child: AlertDialog(
           title: title == null ? null : Text(title),
           content: content == null ? null : Text(content),
           actions: actions ?? <Widget>[

@@ -20,66 +20,61 @@ class _LoginPageState extends State<LoginPage>{
     return ChangeNotifierProvider<LoginViewModel>(
       create: (_) => LoginViewModel(),
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0.0,
-          ),
-          body: Center(
-              child: Consumer<LoginViewModel>(builder: (context, viewModel, child){
-                return Form(
-                    key: _formKey,
-                    child: Stack(
-                        children: <Widget>[
-                          Padding(padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                              child: Column(
-                                  children: [
-                                    const Expanded(
-                                      flex: 1,
-                                      child: Image(
-                                        image: AssetImage("images/girls.jpeg"),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        children: [
-                                          TextFormField(
-                                              validator: EmailValidator.validator(),
-                                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                                              decoration: const InputDecoration(hintText: 'email'),
-                                              onChanged: (value) => _email = value
-                                          ),
-                                          TextFormField(
-                                              obscureText: true,
-                                              validator: PasswordValidator.validator(),
-                                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                                              decoration: const InputDecoration(hintText: 'password'),
-                                              onChanged: (value) => _password = value
-                                          ),
-                                          Padding(padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                              child: CommonButton(
-                                                text: 'ログイン',
-                                                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                                useIcon: true,
-                                                onPressed: () async {
-                                                  if (_formKey.currentState!.validate()) {
-                                                    await (viewModel.signIn(_email, _password, context));
-                                                  }
-                                                },
-                                              )
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ]
-                              )
-                          ),
-                        ]
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+        ),
+        body: Center(
+          child: Consumer<LoginViewModel>(builder: (context, viewModel, child){
+            final size = MediaQuery.of(context).size;
+            final deviceHeight = size.height;
+            return Form(
+              key: _formKey,
+              child: Stack(
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.only(left: 24, right: 24),
+                  child: Column(
+                  children: [
+                    SizedBox(
+                      height: deviceHeight * 0.44,
+                      child: const Image(
+                        image: AssetImage("images/girls.jpeg"),
+                      ),
+                    ),
+                    TextFormField(
+                      validator: EmailValidator.validator(),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: const InputDecoration(hintText: 'email'),
+                      onChanged: (value) => _email = value
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      validator: PasswordValidator.validator(),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: const InputDecoration(hintText: 'password'),
+                      onChanged: (value) => _password = value
+                    ),
+                    Padding(padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: CommonButton(
+                        text: 'ログイン',
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        useIcon: true,
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await (viewModel.signIn(_email, _password, context));
+                          }
+                        },
+                      )
                     )
-                );
-              }
+                  ]
+                  )
+                ),
+              ]
               )
+            );
+          }
           )
+        )
       ),
     );
   }

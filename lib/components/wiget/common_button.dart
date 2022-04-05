@@ -25,7 +25,7 @@ class CommonButton extends StatelessWidget{
     return Padding(
       padding: padding,
       child: SizedBox(
-        height: 60,
+        height: 50,
         width: double.infinity,
         child: OutlinedButton(
           onPressed: onPressed,

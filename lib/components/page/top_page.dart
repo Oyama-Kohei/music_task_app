@@ -52,39 +52,37 @@ class _TopPageState extends State<TopPage> with RouteAware{
       return Scaffold(
           backgroundColor: CommonColors.customSwatch.shade50,
           body: Center(
-              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 70, 0, 20),
-                  child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: height * 0.26,
-                          child: Swiper(
-                            index: _currentIndex,
-                            loop: true,
-                            itemCount: viewModel.albumDataList.length,
-                            layout: SwiperLayout.DEFAULT,
-                            itemBuilder: (BuildContext context, int index) {
-                              return MusicAlbumItem(
-                                  dataList: viewModel.albumDataList,
-                                  index: _currentIndex,);
-                            },
-                            viewportFraction: 0.8,
-                            scale: 0.9,
-                            onIndexChanged: (int index) async {
-                              _currentIndex = index;
-                              if(viewModel.albumDataList.isNotEmpty){
-                                await viewModel.getTaskDataList(
-                                    context,
-                                    viewModel.albumDataList[_currentIndex].albumId);
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        listView(viewModel, width, height, _currentIndex, context),
-                      ]
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: height * 0.05),
+                  SizedBox(
+                    height: 200,
+                    child: Swiper(
+                      index: _currentIndex,
+                      loop: true,
+                      itemCount: viewModel.albumDataList.length,
+                      layout: SwiperLayout.DEFAULT,
+                      itemBuilder: (BuildContext context, int index) {
+                        return MusicAlbumItem(
+                            dataList: viewModel.albumDataList,
+                            index: _currentIndex,);
+                      },
+                      viewportFraction: 0.8,
+                      scale: 0.85,
+                      onIndexChanged: (int index) async {
+                        _currentIndex = index;
+                        if(viewModel.albumDataList.isNotEmpty){
+                          await viewModel.getTaskDataList(
+                              context,
+                              viewModel.albumDataList[_currentIndex].albumId);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  listView(viewModel, width, height, _currentIndex, context),
+                ]
                   )
-              )
           ),
           floatingActionButton: FloatingButton(viewModel, fabKey, width, height, _currentIndex),
       );
@@ -115,7 +113,7 @@ Widget listView(
           currentIndex,
         ),
         width: width * 0.8,
-        height: height * 0.08,
+        height: height * 0.1,
       ),
       );
     }
