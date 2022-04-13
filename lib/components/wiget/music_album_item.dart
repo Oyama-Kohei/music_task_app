@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:taskmum_flutter/components/models/album_data.dart';
+import 'package:taskmum_flutter/utility/youtube_thumbnail_generator_util.dart';
 
 import 'common_colors.dart';
 
@@ -19,9 +20,13 @@ class MusicAlbumItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final thumbnailUrl =
+        YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl("https://www.youtube.com/watch?v=V961-YU2Mt4&t=486s");
+    final cardHeight = double.infinity;
+    final cardWidth = double.infinity;
     return Container(
-        height: double.infinity,
-        width: double.infinity,
+        height: cardHeight,
+        width: cardWidth,
         decoration: BoxDecoration(
           color: CommonColors.customSwatch.shade100,
           borderRadius: BorderRadius.circular(20),
@@ -36,7 +41,7 @@ class MusicAlbumItem extends StatelessWidget {
                 "title",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.sawarabiMincho(
-                  fontSize: 14,
+                  fontSize: 12,
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
@@ -49,7 +54,7 @@ class MusicAlbumItem extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.sawarabiMincho(
-                    fontSize: 22,
+                    fontSize: 20,
                     color: Colors.black54,
                     fontWeight: FontWeight.bold,
                   ),
@@ -59,7 +64,7 @@ class MusicAlbumItem extends StatelessWidget {
                 "composer",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.sawarabiMincho(
-                  fontSize: 14,
+                  fontSize: 12,
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
@@ -72,26 +77,39 @@ class MusicAlbumItem extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.sawarabiMincho(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Colors.black54,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              Text(
-                "reference",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.sawarabiMincho(
-                  fontSize: 16,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              const Icon(
-                Icons.smart_display_rounded,
-                size: 40,
-                color: Colors.black54,
-              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "参考音源",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.sawarabiMincho(
+                          fontSize: 16,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.smart_display_rounded,
+                        size: 40,
+                        color: Colors.black54,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  Image.network(thumbnailUrl, width: 180),
+                ],
+              )
             ]
           ),
         ),

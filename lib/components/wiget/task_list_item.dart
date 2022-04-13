@@ -48,7 +48,7 @@ class TaskListItem extends StatelessWidget{
           data.title,
           textAlign: TextAlign.start,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             color: Colors.white,
             // fontWeight: FontWeight.bold,
           ),
@@ -57,13 +57,12 @@ class TaskListItem extends StatelessWidget{
           "小節番号 $measureString",
           textAlign: TextAlign.start,
           style: const TextStyle(
-            fontSize: 12,
+            fontSize: 11,
             color: Colors.white,
             // fontWeight: FontWeight.bold,
           ),
         ),
         const Divider(
-          height: 10,
           color: Colors.grey,)
       ],
     );
@@ -78,7 +77,7 @@ class TaskListItem extends StatelessWidget{
           createAt,
           textAlign: TextAlign.start,
           style: const TextStyle(
-            fontSize: 13,
+            fontSize: 12,
             color: Colors.white,
             // fontWeight: FontWeight.bold,
           ),
@@ -87,21 +86,3 @@ class TaskListItem extends StatelessWidget{
     );
   }
 }
-
-// Text(
-//   data.title,
-//   textAlign: TextAlign.start,
-//   style: const TextStyle(
-//     fontSize: 18,
-//     color: Colors.white,
-//     fontWeight: FontWeight.bold,
-//   ),
-// ),
-// Text(
-//   data.createAt.toString(),
-//   textAlign: TextAlign.end,
-// ),
-// Text(
-//   data.comment,
-//   textAlign: TextAlign.end,
-// ),

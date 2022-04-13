@@ -56,7 +56,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                 children: <Widget>[
                   SizedBox(height: height * 0.05),
                   SizedBox(
-                    height: 200,
+                    height: 235,
                     child: Swiper(
                       index: _currentIndex,
                       loop: true,
@@ -113,7 +113,7 @@ Widget listView(
           currentIndex,
         ),
         width: width * 0.8,
-        height: height * 0.1,
+        height: 65,
       ),
       );
     }
