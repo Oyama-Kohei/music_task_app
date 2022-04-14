@@ -13,12 +13,13 @@ class AlbumAddPage extends StatefulWidget {
 class _AlbumAddPageState extends State<AlbumAddPage>{
 
   final _formKey = GlobalKey<FormState>();
-  late String _albumName, _composer, _comment;
+  late String _albumName, _composer;
+  String? _comment, _youtubeUrl;
   @override
   Widget build(BuildContext context){
     final queryData = MediaQuery.of(context);
-    // final width = queryData.size.width;
     final height = queryData.size.height;
+    final width = queryData.size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -28,6 +29,12 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Consumer<AlbumAddViewModel>(builder: (context, viewModel, child){
+          if(viewModel.albumData != null && viewModel.updateFlag == false){
+            _albumName = viewModel.albumData!.albumName;
+            _composer = viewModel.albumData!.composer;
+            _comment = viewModel.albumData!.comment;
+            _youtubeUrl = viewModel.albumData!.youtubeUrl;
+          }
           return Form(
             key: _formKey,
               child: Stack(
@@ -35,18 +42,62 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                   Padding(padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: height * 0.3,
-                          child: const Image(
-                            image: AssetImage("images/newbalance.jpeg"),
-                          ),
-                        ),
                         Container(
-                          height: height * 0.5,
+                          // height: height * 0.5,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                                viewModel.youtubeThumbnailImage == null
+                                  ? Container(
+                                  height: height * 0.25,
+                                  width: width * 0.9,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: const [
+                                      Icon(
+                                        Icons.smart_display_rounded,
+                                        size: 35,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        "参考演奏のYoutube未設定",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white
+                                        )
+                                      )
+                                    ],
+                                  )
+                              )
+                              : ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: viewModel.youtubeThumbnailImage!,
+                              ),
                               TextFormField(
+                                initialValue: viewModel.albumData != null
+                                    ? _youtubeUrl
+                                    : null,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                                validator: TitleValidator.validator(),
+                                decoration: const InputDecoration(hintText: '参考演奏用YoutubeのUrl'),
+                                onChanged: (value) async {
+                                  _youtubeUrl = value;
+                                  if(_youtubeUrl != null){
+                                    await viewModel.getThumbnailImage(_youtubeUrl!);
+                                  }
+                                }
+                              ),
+                              TextFormField(
+                                initialValue: viewModel.albumData != null
+                                    ? _albumName
+                                    : null,
                                 style: const TextStyle(
                                   fontSize: 14,
                                 ),
@@ -57,13 +108,16 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                               ),
                               const SizedBox(height: 10),
                               TextFormField(
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                  validator: TitleValidator.validator(),
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  decoration: const InputDecoration(hintText: '作曲者'),
-                                  onChanged: (value) => _composer = value
+                                initialValue: viewModel.albumData != null
+                                    ? _composer
+                                    : null,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                                validator: TitleValidator.validator(),
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                decoration: const InputDecoration(hintText: '作曲者'),
+                                onChanged: (value) => _composer = value
                               ),
                               const SizedBox(height: 10),
                               Container(
@@ -74,15 +128,20 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 child: Padding(
                                   padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
                                   child: TextFormField(
+                                    initialValue: viewModel.albumData != null
+                                        ? _comment
+                                        : null,
                                     style: const TextStyle(
                                       fontSize: 14,
                                     ),
-                                    maxLines: 8,
+                                    maxLines: 6,
                                     decoration: const InputDecoration(
                                       hintText: '備考',
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.transparent)
-                                    )),
+                                      border: InputBorder.none,
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent)
+                                      ),
+                                    ),
                                     onChanged: (value) => _comment = value
                                   ),
                                 ),
@@ -98,6 +157,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                         _albumName,
                                         _composer,
                                         _comment,
+                                        _youtubeUrl,
                                         context
                                       ));
                                     }

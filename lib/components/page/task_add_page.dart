@@ -127,7 +127,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
                       children: [
                         TextFormField(
                           initialValue: viewModel.taskData != null
-                            ? viewModel.taskData!.title
+                            ? _title
                             : null,
                           style: const TextStyle(
                             fontSize: 18,
@@ -165,7 +165,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           width: width * 0.4,
                           child: TextFormField(
                             initialValue: viewModel.taskData != null
-                                ? viewModel.taskData!.measureNum.toString()
+                                ? _measure.toString()
                                 : null,
                             style: const TextStyle(
                               fontSize: 18,
@@ -193,7 +193,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
                             padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
                             child: TextFormField(
                               initialValue: viewModel.taskData != null
-                                  ? viewModel.taskData!.comment
+                                  ? _comment
                                   : null,
                               style: const TextStyle(
                                 fontSize: 18,

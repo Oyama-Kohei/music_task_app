@@ -18,13 +18,15 @@ class AlbumService extends Service{
         final String userId = data["userId"];
         final String albumName = data["albumName"];
         final String composer = data["composer"];
-        final String comment = data["comment"];
+        final String? comment = data["comment"];
+        final String? youtubeUrl = data["youtubeUrl"];
         return AlbumData(
             albumId: albumId,
             userId: userId,
             albumName: albumName,
             composer: composer,
-            comment: comment);
+            comment: comment,
+            youtubeUrl: youtubeUrl);
       }).toList();
       return albumDataList;
   } catch(e) {
@@ -32,12 +34,13 @@ class AlbumService extends Service{
     }
   }
 
-  Future<void> addAlbum(
-      String uid,
-      String albumName,
-      String composer,
-      String? comment,
-      ) async{
+  Future<void> addAlbum({
+    required String uid,
+    required String albumName,
+    required String composer,
+    String? comment,
+    String? youtubeUrl,
+  }) async{
     try{
       var id = FirebaseFirestore.instance.collection("_").doc().id;
       await FirebaseFirestore.instance.collection("albums").doc(id).set({
@@ -46,9 +49,34 @@ class AlbumService extends Service{
         "albumName": albumName,
         "composer": composer,
         "comment": comment,
+        "youtubeUrl": youtubeUrl,
       });
     } catch(e) {
       print(e);
     }
   }
+
+  Future<void> updateAlbum({
+    required String id,
+    required String albumName,
+    required String uid,
+    required String composer,
+    String? comment,
+    String? youtubeUrl,
+  }) async{
+    try{
+      await FirebaseFirestore.instance.collection("albums").doc(id).update({
+        "albumId": id,
+        "userId": uid,
+        "albumName": albumName,
+        "composer": composer,
+        "comment": comment,
+        "youtubeUrl": youtubeUrl,
+      });
+    } catch(e) {
+      print(e);
+    }
+  }
+
+
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/models/album_data.dart';
@@ -33,17 +32,17 @@ class TopViewModel extends ChangeNotifier{
     showDialog(
         context: context,
       builder: (_) {
-        return CupertinoAlertDialog(
+        return AlertDialog(
           title: const Text("ログアウトしますか？"),
           actions: <Widget>[
             // ボタン領域
-            FlatButton(
+            TextButton(
               child: const Text("キャンセル"),
               onPressed: () {
                 Navigator.pop(context);
               }
             ),
-            FlatButton(
+            TextButton(
               child: const Text("OK"),
               onPressed: () async {
                 final _authService = getIt<AuthService>();
@@ -92,6 +91,17 @@ class TopViewModel extends ChangeNotifier{
     final TaskService _taskService = getIt<TaskService>();
     taskDataList = await _taskService.getTaskList(currentUserId, albumId);
     notifyListeners();
+  }
+
+  Future<void> onTapAlbumListItem(BuildContext context, int currentIndex) async {
+    print("sduyfbdfjhgbdjfhbg");
+    NavigationHelper().push<AlbumAddViewModel>(
+      context: context,
+      pageBuilder: (_) => const AlbumAddPage(),
+      viewModelBuilder: (context) => AlbumAddViewModel(
+        albumData: albumDataList[currentIndex],
+      ),
+    );
   }
 
   Future<void> onTapListItem(BuildContext context, TaskData taskData, int currentIndex) async {

@@ -2,9 +2,10 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:provider/provider.dart';
+import 'package:taskmum_flutter/components/models/album_data.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/common_colors.dart';
-import 'package:taskmum_flutter/components/wiget/music_album_item.dart';
+import 'package:taskmum_flutter/components/wiget/album_list_item.dart';
 import 'package:taskmum_flutter/components/wiget/task_list_item.dart';
 import 'package:taskmum_flutter/main.dart';
 
@@ -63,9 +64,10 @@ class _TopPageState extends State<TopPage> with RouteAware{
                       itemCount: viewModel.albumDataList.length,
                       layout: SwiperLayout.DEFAULT,
                       itemBuilder: (BuildContext context, int index) {
-                        return MusicAlbumItem(
-                            dataList: viewModel.albumDataList,
-                            index: _currentIndex,);
+                        return AlbumListItem(
+                          dataList: viewModel.albumDataList,
+                          index: _currentIndex,
+                          onTap: () => viewModel.onTapAlbumListItem(context, _currentIndex));
                       },
                       viewportFraction: 0.8,
                       scale: 0.85,
@@ -82,7 +84,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                   const SizedBox(height: 20),
                   listView(viewModel, width, height, _currentIndex, context),
                 ]
-                  )
+              ),
           ),
           floatingActionButton: FloatingButton(viewModel, fabKey, width, height, _currentIndex),
       );
