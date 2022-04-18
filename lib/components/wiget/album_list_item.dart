@@ -7,21 +7,16 @@ import 'common_colors.dart';
 
 class AlbumListItem extends StatelessWidget {
   const AlbumListItem({
-    required this.dataList,
+    required this.data,
     required this.onTap,
-    required this.index,
   });
 
-  final List<AlbumData> dataList;
+  final AlbumData data;
 
   final void Function() onTap;
 
-  final int index;
-
   @override
   Widget build(BuildContext context) {
-    final thumbnailUrl =
-        YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl("https://www.youtube.com/watch?v=V961-YU2Mt4&t=486s");
     const cardHeight = double.infinity;
     const cardWidth = double.infinity;
     return Container(
@@ -50,7 +45,7 @@ class AlbumListItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(left: 7, right: 7),
                   child: Text(
-                    dataList[index].albumName,
+                    data.albumName,
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -73,7 +68,7 @@ class AlbumListItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(left: 7, right: 7),
                   child: Text(
-                    dataList[index].composer,
+                    data.composer,
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -92,10 +87,10 @@ class AlbumListItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "参考音源",
+                          "参考演奏",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.sawarabiMincho(
-                            fontSize: 16,
+                            fontSize: 14,
                             color: Colors.black54,
                             fontWeight: FontWeight.normal,
                           ),
@@ -108,7 +103,39 @@ class AlbumListItem extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(width: 10),
-                    Image.network(thumbnailUrl, width: 180),
+                    data.youtubeUrl != null
+                      ? ClipRRect(
+                        child: Image.network(
+                          YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl(data.youtubeUrl!),
+                          height: 110,
+                          // width: 200,
+                        ),
+                      )
+                      : Container(
+                        height: 110,
+                        width: 200,
+                        decoration: const BoxDecoration(
+                          color: Colors.grey,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.smart_display_rounded,
+                              size: 27,
+                              color: Colors.white54,
+                            ),
+                            Text(
+                              "参考演奏未設定",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white54
+                              )
+                            )
+                          ],
+                        )
+                    )
                   ],
                 )
               ]

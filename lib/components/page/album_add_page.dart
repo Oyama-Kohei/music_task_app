@@ -24,6 +24,38 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
+        actions: [
+          Consumer<AlbumAddViewModel>(builder: (context, viewModel, child){
+            return Visibility(
+                visible: viewModel.albumData != null,
+                child: IconButton(
+                  icon: const Icon(Icons.more_horiz),
+                  onPressed: () {
+                    showModalBottomSheet(context: context, builder: (BuildContext builderContext) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              height: 70,
+                              alignment: Alignment.center,
+                              child: const Text(
+                                  'このアルバムを削除する',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.red,)
+                              ),
+                            ),
+                            onTap: () => viewModel.albumDelete(context),
+                          ),
+                        ],
+                      );
+                    });
+                  },
+                )
+            );
+          })
+        ],
       ),
       body: SingleChildScrollView(
         child: GestureDetector(
@@ -51,6 +83,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                   ? Container(
                                   height: height * 0.25,
                                   width: width * 0.9,
+                                  alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(20),
@@ -65,7 +98,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                         color: Colors.white,
                                       ),
                                       Text(
-                                        "参考演奏のYoutube未設定",
+                                        "Youtube未設定",
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Colors.white
@@ -86,9 +119,12 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                   fontSize: 14,
                                 ),
                                 validator: TitleValidator.validator(),
-                                decoration: const InputDecoration(hintText: '参考演奏用YoutubeのUrl'),
+                                decoration: const InputDecoration(
+                                  hintText: 'https://www.youtube.com〜',
+                                  labelText: "参考演奏など(Youtube)",),
                                 onChanged: (value) async {
                                   _youtubeUrl = value;
+                                  viewModel.updateFlag = true;
                                   if(_youtubeUrl != null){
                                     await viewModel.getThumbnailImage(_youtubeUrl!);
                                   }
@@ -103,10 +139,14 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 ),
                                 validator: TitleValidator.validator(),
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: const InputDecoration(hintText: '曲名'),
-                                onChanged: (value) => _albumName = value
+                                decoration: const InputDecoration(
+                                  hintText: '曲名',
+                                  labelText: "title"),
+                                onChanged: (value) {
+                                  _albumName = value;
+                                  viewModel.updateFlag = true;
+                                },
                               ),
-                              const SizedBox(height: 10),
                               TextFormField(
                                 initialValue: viewModel.albumData != null
                                     ? _composer
@@ -116,8 +156,13 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 ),
                                 validator: TitleValidator.validator(),
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                                decoration: const InputDecoration(hintText: '作曲者'),
-                                onChanged: (value) => _composer = value
+                                decoration: const InputDecoration(
+                                  hintText: '作曲者',
+                                  labelText: "composer"),
+                                onChanged: (value) {
+                                  _composer = value;
+                                  viewModel.updateFlag = true;
+                                },
                               ),
                               const SizedBox(height: 10),
                               Container(
@@ -142,13 +187,16 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                         borderSide: BorderSide(color: Colors.transparent)
                                       ),
                                     ),
-                                    onChanged: (value) => _comment = value
+                                    onChanged: (value) {
+                                      _comment = value;
+                                      viewModel.updateFlag = true;
+                                    }
                                   ),
                                 ),
                               ),
-                              Padding(padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              Padding(padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 child: CommonButton(
-                                  text: 'アルバムを追加する',
+                                  text: viewModel.albumData != null ? 'アルバムを更新する' : 'アルバムを追加する',
                                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                                   useIcon: true,
                                   onPressed: () async {

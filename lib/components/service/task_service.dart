@@ -45,8 +45,9 @@ class TaskService extends Service{
             createAt: createAt);
       }).toList();
       return taskDataList;
-  } catch(e) {
+    } catch(e) {
       print(e);
+      rethrow;
     }
   }
 
@@ -101,6 +102,7 @@ class TaskService extends Service{
       });
     } catch(e) {
       print(e);
+      rethrow;
     }
   }
 
@@ -112,6 +114,7 @@ class TaskService extends Service{
       }
     } catch(e) {
       print(e);
+      rethrow;
     }
   }
 
@@ -128,6 +131,7 @@ class TaskService extends Service{
       await storageReference.delete();
     } catch (error) {
       print(error);
+      rethrow;
     }
   }
 }

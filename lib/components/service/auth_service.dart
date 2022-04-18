@@ -32,6 +32,7 @@ class AuthService extends Service{
       await firebaseAuthService.signOut();
     }on FirebaseAuthException catch(e){
       print("AuthException ${e.toString()})");
+      rethrow;
     }
     return true;
   }

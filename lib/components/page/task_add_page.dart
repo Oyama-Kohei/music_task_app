@@ -39,7 +39,6 @@ class _TaskAddPageState extends State<TaskAddPage>{
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 2),
                       InkWell(
                         child: Container(
                           height: 70,
@@ -80,45 +79,42 @@ class _TaskAddPageState extends State<TaskAddPage>{
               Padding(padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: Column(
                 children: [
-                  SizedBox(
-                    height: height * 0.3,
-                    child: InkWell(
-                      onTap: () async {
-                          await viewModel.getImage(context);
-                      },
-                      child: Center(
-                        child: viewModel.imageFile == null
-                        ? Container(
-                          height: height * 0.25,
-                          width: width * 0.9,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Icon(
-                                Icons.camera_enhance,
-                                size: 35,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                "画像の追加はこちらをタップ",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white
-                                )
-                              )
-                            ],
-                          )
-                        )
-                        : ClipRRect(
+                  InkWell(
+                    onTap: () async {
+                        await viewModel.getImage(context);
+                    },
+                    child: Center(
+                      child: viewModel.imageFile == null
+                      ? Container(
+                        height: height * 0.25,
+                        width: width * 0.9,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
                           borderRadius: BorderRadius.circular(20),
-                          child: viewModel.imageFile!,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.camera_enhance,
+                              size: 35,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "画像の追加はこちらをタップ",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white
+                              )
+                            )
+                          ],
                         )
-                      ),
+                      )
+                      : ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: viewModel.imageFile!,
+                      )
                     ),
                   ),
                   SingleChildScrollView(
@@ -130,11 +126,14 @@ class _TaskAddPageState extends State<TaskAddPage>{
                             ? _title
                             : null,
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                           ),
                           validator: TitleValidator.validator(),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: const InputDecoration(hintText: 'タイトル'),
+                          decoration: const InputDecoration(
+                            hintText: 'タスクタイトル',
+                            labelText: "title",
+                          ),
                           onChanged: (value) {
                             _title = value;
                             viewModel.updateFlag = true;
@@ -148,12 +147,13 @@ class _TaskAddPageState extends State<TaskAddPage>{
                               child: Text(
                                 value,
                                 style: const TextStyle(
-                                  fontSize: 18
+                                  fontSize: 14
                                 ),
                               ),
                             );
                           }).toList(),
                           value: _movement,
+
                           onChanged: (value) {
                             setState(() {
                               _movement = value.toString();
@@ -168,15 +168,14 @@ class _TaskAddPageState extends State<TaskAddPage>{
                                 ? _measure.toString()
                                 : null,
                             style: const TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                             ),
                             validator: TitleValidator.validator(),
                             keyboardType: TextInputType.number,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: const InputDecoration(
                                 prefixText: '小節番号：',
-                            labelText: '小節番号',
-                              floatingLabelBehavior: FloatingLabelBehavior.never,),
+                            labelText: '小節'),
                             onChanged: (value) {
                               _measure = int.parse(value);
                               viewModel.updateFlag = true;
@@ -196,9 +195,9 @@ class _TaskAddPageState extends State<TaskAddPage>{
                                   ? _comment
                                   : null,
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                               ),
-                              maxLines: 8,
+                              maxLines: 6,
                               decoration: const InputDecoration(
                                 hintText: '備考',
                                 border: InputBorder.none,

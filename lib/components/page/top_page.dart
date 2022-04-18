@@ -57,7 +57,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                 children: <Widget>[
                   SizedBox(height: height * 0.05),
                   SizedBox(
-                    height: 235,
+                    height: 240,
                     child: Swiper(
                       index: _currentIndex,
                       loop: true,
@@ -65,8 +65,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                       layout: SwiperLayout.DEFAULT,
                       itemBuilder: (BuildContext context, int index) {
                         return AlbumListItem(
-                          dataList: viewModel.albumDataList,
-                          index: _currentIndex,
+                          data: viewModel.albumDataList[_currentIndex],
                           onTap: () => viewModel.onTapAlbumListItem(context, _currentIndex));
                       },
                       viewportFraction: 0.8,
