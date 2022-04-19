@@ -105,7 +105,6 @@ class TaskService extends Service{
       rethrow;
     }
   }
-
   Future<void> deleteTask(TaskData data) async {
     try{
       await FirebaseFirestore.instance.collection("tasks").doc(data.taskId).delete();
