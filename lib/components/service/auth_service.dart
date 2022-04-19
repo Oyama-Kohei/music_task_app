@@ -12,7 +12,6 @@ class AuthService extends Service{
         return _userCredential.user;
       }
     }on Exception catch(e){
-      print("AuthException ${e.toString()})");
       rethrow;
     }
   }
@@ -21,7 +20,6 @@ class AuthService extends Service{
     try{
       await firebaseAuthService.signInWithEmailAndPassword(email: email, password: password);
     }on Exception catch(e){
-      print("AuthException ${e.toString()})");
       rethrow;
     }
     return true;
@@ -31,7 +29,6 @@ class AuthService extends Service{
     try{
       await firebaseAuthService.signOut();
     }on FirebaseAuthException catch(e){
-      print("AuthException ${e.toString()})");
       rethrow;
     }
     return true;

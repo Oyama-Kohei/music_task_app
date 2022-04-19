@@ -126,7 +126,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                   _youtubeUrl = value;
                                   viewModel.updateFlag = true;
                                   if(_youtubeUrl != null){
-                                    await viewModel.getThumbnailImage(_youtubeUrl!);
+                                    await viewModel.getThumbnailImage(_youtubeUrl!, context);
                                   }
                                 }
                               ),

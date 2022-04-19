@@ -30,7 +30,6 @@ class AlbumService extends Service{
       }).toList();
       return albumDataList;
     } catch(e) {
-      print(e);
       rethrow;
     }
   }
@@ -53,7 +52,6 @@ class AlbumService extends Service{
         "youtubeUrl": youtubeUrl,
       });
     } catch(e) {
-      print(e);
       rethrow;
     }
   }
@@ -76,7 +74,6 @@ class AlbumService extends Service{
         "youtubeUrl": youtubeUrl,
       });
     } catch(e) {
-      print(e);
       rethrow;
     }
   }
@@ -85,7 +82,6 @@ class AlbumService extends Service{
     try{
       await FirebaseFirestore.instance.collection("albums").doc(data.albumId).delete();
     } catch(e) {
-      print(e);
       rethrow;
     }
   }

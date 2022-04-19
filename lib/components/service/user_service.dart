@@ -13,8 +13,7 @@ class UserService  extends Service{
         "uid": uid,
         "nickname": nickname
       });
-    } on Exception catch(e){
-      print("UserException ${e.toString()})");
+    } on Exception catch(_){
       rethrow;
     }
   }

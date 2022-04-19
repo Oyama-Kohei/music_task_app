@@ -46,7 +46,6 @@ class TaskService extends Service{
       }).toList();
       return taskDataList;
     } catch(e) {
-      print(e);
       rethrow;
     }
   }
@@ -74,7 +73,7 @@ class TaskService extends Service{
         "createAt": DateTime.now(),
       });
     } catch(e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -101,7 +100,6 @@ class TaskService extends Service{
         "createAt": DateTime.now(),
       });
     } catch(e) {
-      print(e);
       rethrow;
     }
   }
@@ -112,7 +110,6 @@ class TaskService extends Service{
         await _deletePhotoData(data.imageUrl!);
       }
     } catch(e) {
-      print(e);
       rethrow;
     }
   }
@@ -129,7 +126,6 @@ class TaskService extends Service{
       final storageReference = FirebaseStorage.instance.refFromURL(url);
       await storageReference.delete();
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

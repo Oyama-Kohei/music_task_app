@@ -114,4 +114,15 @@ class TopViewModel extends ChangeNotifier{
       ),
     );
   }
+
+  Future<void> onTapVideoReproductItem(BuildContext context, TaskData taskData, int currentIndex) async {
+    NavigationHelper().push<TaskAddViewModel>(
+      context: context,
+      pageBuilder: (_) => const TaskAddPage(),
+      viewModelBuilder: (context) => TaskAddViewModel(
+        albumData: albumDataList[currentIndex],
+        taskData: taskData,
+      ),
+    );
+  }
 }

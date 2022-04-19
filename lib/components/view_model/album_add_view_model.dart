@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:taskmum_flutter/components/models/album_data.dart';
 import 'package:taskmum_flutter/components/service/album_service.dart';
 import 'package:taskmum_flutter/components/service/user_service.dart';
+import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/loading_circle.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/youtube_thumbnail_generator_util.dart';
@@ -24,14 +25,20 @@ class AlbumAddViewModel extends ChangeNotifier{
   // 画面更新フラグ
   bool updateFlag = false;
 
-  Future<void> getThumbnailImage(String youtubeUrl) async {
+  Future<void> getThumbnailImage(String youtubeUrl, BuildContext context) async {
     try{
+      showLoadingCircle(context);
       final thumbnailUrl =
       YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl(youtubeUrl);
       youtubeThumbnailImage = Image.network(thumbnailUrl);
+      dismissLoadingCircle(context);
       notifyListeners();
     } catch (e) {
-      print(e);
+      dismissLoadingCircle(context);
+      DialogUtil.showPreventPopErrorDialog(
+        context: context,
+        content: "サムネイルの取得に失敗しました"
+      );
     }
 
   }
@@ -44,6 +51,7 @@ class AlbumAddViewModel extends ChangeNotifier{
       BuildContext context
       ) async {
     try{
+      showLoadingCircle(context);
       final UserService _userService = getIt<UserService>();
       final currentUserId = await _userService.getUserId();
       final albumService = getIt<AlbumService>();
@@ -62,35 +70,18 @@ class AlbumAddViewModel extends ChangeNotifier{
         comment: comment,
         youtubeUrl: youtubeUrl,
       );
-      showDialog(
+      dismissLoadingCircle(context);
+      DialogUtil.showPreventPopErrorDialog(
         context: context,
-        builder: (_)
-      {
-        return AlertDialog(
-          title: updateFlag ?
-          const Text("アルバムを更新しました")
-              : const Text("アルバムを追加しました"),
-          actions: <Widget>[
-            TextButton(
-                child: const Text("OK"),
-                onPressed: () async {
-                  notifyListeners();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                }
-            ),
-          ],
-        );
-      }
+        content: updateFlag ? "アルバムを更新しました"
+            : "アルバムを追加しました",
       );
     } catch (e) {
-      showDialog(
+      dismissLoadingCircle(context);
+      DialogUtil.showPreventPopErrorDialog(
         context: context,
-        builder: (_) {
-          return const AlertDialog(
-            title: Text("アルバムの追加に失敗しました"),
-          );
-        },
+        content: updateFlag ? "アルバムの追加に失敗しました"
+            : "アルバムの更新に失敗しました",
       );
     }
   }
@@ -101,34 +92,20 @@ class AlbumAddViewModel extends ChangeNotifier{
       final albumService = getIt<AlbumService>();
       await albumService.deleteAlbum(albumData!);
       dismissLoadingCircle(context);
-      showDialog(
+      DialogUtil.showPreventPopErrorDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-            content: const Text("アルバムを削除しました"),
-            actions: <Widget>[
-              TextButton(
-                  child: const Text("OK"),
-                  onPressed: () async {
-                    notifyListeners();
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
-              ),
-            ],
-          );
-        },
+        content: "アルバムを削除しました",
+        onPressed: () {
+          notifyListeners();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       );
-    } catch(_){
+    } catch(_) {
       dismissLoadingCircle(context);
-      showDialog(
+      DialogUtil.showPreventPopErrorDialog(
         context: context,
-        builder: (_) {
-          return const AlertDialog(
-            title: Text("アルバムの削除に失敗しました"),
-          );
-        },
+        content: "アルバムの削除に失敗しました",
       );
     }
   }

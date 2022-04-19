@@ -51,6 +51,8 @@ dependencies:
 
   image_picker: ^0.8.4+8
 
+  webview_flutter: ^3.0.2
+
   flutter:
     sdk: flutter
 

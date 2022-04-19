@@ -23,8 +23,8 @@ class LoginViewModel extends ChangeNotifier{
       dismissLoadingCircle(context);
 
       NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
-          pageBuilder: (_) => SplashPage(),
-          viewModelBuilder: (_) => SplashViewModel(),
+        pageBuilder: (_) => SplashPage(),
+        viewModelBuilder: (_) => SplashViewModel(),
       );
     } on Exception catch(_){
       dismissLoadingCircle(context);

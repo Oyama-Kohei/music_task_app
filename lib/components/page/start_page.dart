@@ -36,9 +36,9 @@ class _MyHomePageState extends State<MainStartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            children: _pages));
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _pages));
   }
 }
