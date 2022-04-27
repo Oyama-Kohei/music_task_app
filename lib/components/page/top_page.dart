@@ -1,13 +1,10 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/models/album_data.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
-import 'package:taskmum_flutter/components/wiget/common_colors.dart';
 import 'package:taskmum_flutter/components/wiget/album_list_item.dart';
+import 'package:taskmum_flutter/components/wiget/common_colors.dart';
 import 'package:taskmum_flutter/components/wiget/task_list_item.dart';
-import 'package:taskmum_flutter/main.dart';
 
 class TopPage extends StatefulWidget {
   const TopPage({Key? key}) : super(key: key);
@@ -16,32 +13,8 @@ class TopPage extends StatefulWidget {
   _TopPageState createState() => _TopPageState();
 }
 class _TopPageState extends State<TopPage> with RouteAware{
-  int _currentIndex = 0;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
-  }
-
-  @override
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Future<void> didPopNext() async {
-    // TODO(): もう少しいい方法がありそう。。。
-    // final viewModel = Provider.of<TopViewModel>(context, listen: false);
-    // await viewModel.getTaskDataList(context, viewModel.albumDataList[_currentIndex].albumId);
-    setState(() {});
-  }
+  static const pageViewHeight = 235.0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,35 +30,26 @@ class _TopPageState extends State<TopPage> with RouteAware{
                 children: <Widget>[
                   SizedBox(height: height * 0.05),
                   SizedBox(
-                    height: 240,
-                    child: Swiper(
-                      index: _currentIndex,
-                      loop: true,
-                      itemCount: viewModel.albumDataList.length,
-                      layout: SwiperLayout.DEFAULT,
-                      itemBuilder: (BuildContext context, int index) {
-                        return AlbumListItem(
-                          data: viewModel.albumDataList[_currentIndex],
-                          onTap: () => viewModel.onTapAlbumListItem(context, _currentIndex));
-                      },
-                      viewportFraction: 0.8,
-                      scale: 0.85,
-                      onIndexChanged: (int index) async {
-                        _currentIndex = index;
-                        if(viewModel.albumDataList.isNotEmpty){
-                          await viewModel.getTaskDataList(
-                              context,
-                              viewModel.albumDataList[_currentIndex].albumId);
-                        }
-                      },
-                    ),
+                    height: pageViewHeight,
+                    child: PageView(
+                      controller: viewModel.albumPageController,
+                      onPageChanged: (value) => viewModel.onAlbumPageChanged(value),
+                      children: viewModel.albumDataList
+                        .map(
+                          (e) => AlbumListItem(
+                            data:  e,
+                            onTapCard: (data) => viewModel.onTapAlbumListItem(context, data),
+                            onTapVideo: (data) => viewModel.onTapVideoPlayItem(context, data),
+                          ),
+                        ).toList(),
+                    )
                   ),
                   const SizedBox(height: 20),
-                  listView(viewModel, width, height, _currentIndex, context),
+                  listView(viewModel, width, height, context),
                 ]
               ),
           ),
-          floatingActionButton: FloatingButton(viewModel, fabKey, width, height, _currentIndex),
+          floatingActionButton: FloatingButton(viewModel, fabKey, width, height),
       );
     }
     );
@@ -96,12 +60,11 @@ Widget listView(
     TopViewModel viewModel,
     double width,
     double height,
-    int currentIndex,
     BuildContext context,) {
   final List<Widget> taskListWidget = [];
   viewModel.getTaskDataList(
       context,
-      viewModel.albumDataList[currentIndex].albumId);
+      viewModel.albumDataList[viewModel.albumPageNotifier.value].albumId);
   if(viewModel.taskDataList == null){
     return const SizedBox(height: 0);
   } else {
@@ -111,7 +74,7 @@ Widget listView(
         onPress: (data) => viewModel.onTapListItem(
           context,
           data,
-          currentIndex,
+          viewModel.albumPageNotifier.value,
         ),
         width: width * 0.8,
         height: 65,
@@ -135,8 +98,7 @@ Widget FloatingButton(
     TopViewModel viewModel,
     GlobalKey<FabCircularMenuState> fabKey,
     double width,
-    double height,
-    int _currentIndex){
+    double height){
   return Builder(
     builder: (context) => FabCircularMenu(
       key: fabKey,
@@ -170,7 +132,7 @@ Widget FloatingButton(
         ),
         TextButton.icon(
           onPressed: () {
-            viewModel.onTapAddList(context, _currentIndex);
+            viewModel.onTapAddList(context, viewModel.albumPageNotifier.value);
           },
           icon: const Icon(
               Icons.add_task,

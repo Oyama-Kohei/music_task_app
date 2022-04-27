@@ -27,9 +27,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  #riverpodの使用
-  flutter_hooks: ^0.16.0
-  #hooks_riverpod: ^0.14.0+1
 
   #providerの使用
   provider: ^6.0.1
@@ -40,8 +37,6 @@ dependencies:
   auto_size_text: ^3.0.0-nullsafety.0
 
   route_observer_mixin: ^1.6.0
-
-  flutter_swiper_null_safety: ^1.0.2
 
   intl: ^0.17.0
 

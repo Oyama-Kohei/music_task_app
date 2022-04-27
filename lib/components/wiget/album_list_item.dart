@@ -8,27 +8,32 @@ import 'common_colors.dart';
 class AlbumListItem extends StatelessWidget {
   const AlbumListItem({
     required this.data,
-    required this.onTap,
+    required this.onTapCard,
+    required this.onTapVideo,
   });
 
   final AlbumData data;
 
-  final void Function() onTap;
+  final void Function(AlbumData data) onTapCard;
+
+  final void Function(AlbumData data) onTapVideo;
+
+  static const imageHeight = 110.0;
+  static const imageWidth = 200.0;
 
   @override
   Widget build(BuildContext context) {
-    const cardHeight = double.infinity;
-    const cardWidth = double.infinity;
     return Container(
-        height: cardHeight,
-        width: cardWidth,
+        height: double.infinity,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: CommonColors.customSwatch.shade100,
           borderRadius: BorderRadius.circular(20),
         ),
+        margin: const EdgeInsets.only(left: 5, right: 5),
         child: InkWell(
           child: Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,27 +100,36 @@ class AlbumListItem extends StatelessWidget {
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        const Icon(
-                          Icons.smart_display_rounded,
-                          size: 40,
-                          color: Colors.black54,
+                        IconButton(
+                          icon: const Icon(
+                            Icons.smart_display_rounded,
+                            size: 40,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () => onTapVideo(data),
                         ),
                       ],
                     ),
                     const SizedBox(width: 10),
                     data.youtubeUrl != null
-                      ? ClipRRect(
-                        child: Image.network(
-                          YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl(data.youtubeUrl!),
-                          height: 110,
-                          // width: 200,
+                      ? InkWell(
+                        child: ClipRRect(
+                          child: Image.network(
+                            YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl(data.youtubeUrl!),
+                            height: imageHeight,
+                            width: imageWidth,
+                            fit: BoxFit.fill,
+                          ),
+                          borderRadius: BorderRadius.circular(6),
                         ),
+                        onTap: () => onTapVideo(data),
                       )
                       : Container(
-                        height: 110,
-                        width: 200,
-                        decoration: const BoxDecoration(
+                        height: imageHeight,
+                        width: imageWidth,
+                        decoration: BoxDecoration(
                           color: Colors.grey,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +155,7 @@ class AlbumListItem extends StatelessWidget {
               ]
             ),
           ),
-        onTap: () => onTap(),
+        onTap: () => onTapCard(data),
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),

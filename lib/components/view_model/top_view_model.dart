@@ -5,6 +5,7 @@ import 'package:taskmum_flutter/components/models/task_data.dart';
 import 'package:taskmum_flutter/components/page/album_add_page.dart';
 import 'package:taskmum_flutter/components/page/splash_page.dart';
 import 'package:taskmum_flutter/components/page/task_add_page.dart';
+import 'package:taskmum_flutter/components/page/webview_page.dart';
 import 'package:taskmum_flutter/components/service/auth_service.dart';
 import 'package:taskmum_flutter/components/service/service.dart';
 import 'package:taskmum_flutter/components/service/task_service.dart';
@@ -12,6 +13,7 @@ import 'package:taskmum_flutter/components/service/user_service.dart';
 import 'package:taskmum_flutter/components/view_model/album_add_view_model.dart';
 import 'package:taskmum_flutter/components/view_model/splash_view_model.dart';
 import 'package:taskmum_flutter/components/view_model/task_add_view_model.dart';
+import 'package:taskmum_flutter/components/view_model/webview_view_model.dart';
 import 'package:taskmum_flutter/utility/dialog_util.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
@@ -27,6 +29,16 @@ class TopViewModel extends ChangeNotifier{
   List<TaskData>? taskDataList;
 
   List<AlbumData> albumDataList;
+
+  final PageController albumPageController =
+    PageController(viewportFraction: 0.85);
+
+  final albumPageNotifier = ValueNotifier<int>(0);
+
+  void onAlbumPageChanged(int index){
+    albumPageNotifier.value = index;
+    notifyListeners();
+  }
 
   Future<void> onTapLogout(BuildContext context) async {
     showDialog(
@@ -93,13 +105,12 @@ class TopViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> onTapAlbumListItem(BuildContext context, int currentIndex) async {
-    print("sduyfbdfjhgbdjfhbg");
+  Future<void> onTapAlbumListItem(BuildContext context, AlbumData data) async {
     NavigationHelper().push<AlbumAddViewModel>(
       context: context,
       pageBuilder: (_) => const AlbumAddPage(),
       viewModelBuilder: (context) => AlbumAddViewModel(
-        albumData: albumDataList[currentIndex],
+        albumData: data,
       ),
     );
   }
@@ -115,14 +126,30 @@ class TopViewModel extends ChangeNotifier{
     );
   }
 
-  Future<void> onTapVideoReproductItem(BuildContext context, TaskData taskData, int currentIndex) async {
-    NavigationHelper().push<TaskAddViewModel>(
-      context: context,
-      pageBuilder: (_) => const TaskAddPage(),
-      viewModelBuilder: (context) => TaskAddViewModel(
-        albumData: albumDataList[currentIndex],
-        taskData: taskData,
-      ),
+  Future<void> onTapVideoPlayItem(BuildContext context, AlbumData data) async {
+    if(data.youtubeUrl != null) {
+      DialogUtil.showPreventPopSelectDialog(
+        context: context,
+        content: "Youtubeで参考演奏を再生しますか？",
+      ).then((result) async {
+        if (result == DialogAnswer.yes) {
+          NavigationHelper().push<WebviewViewModel>(
+            context: context,
+            pageBuilder: (_) => WebviewPage(),
+            viewModelBuilder: (context) =>
+                WebviewViewModel(
+                  youtubeUrl: data.youtubeUrl!,
+                ),
+          );
+        }
+      }
     );
+    } else {
+      DialogUtil.showPreventPopErrorDialog(
+        context: context,
+        title: "再生エラー",
+        content: "参考演奏が登録されていません",
+      );
+    }
   }
 }

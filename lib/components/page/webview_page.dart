@@ -3,15 +3,27 @@ import 'package:provider/provider.dart';
 import 'package:taskmum_flutter/components/view_model/webview_view_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-// ignore: use_key_in_widget_constructors
-class WebviewPage extends StatelessWidget {
+class WebviewPage extends StatelessWidget{
+  const WebviewPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consumer<WebviewViewModel>(builder: (context, viewModel, child) {
-          return WebView(initialUrl: viewModel.youtubeUrl);
-        }
-      )
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: Consumer<WebviewViewModel>(builder: (context, viewModel, child) {
+        return Column(
+          children: [
+            Expanded(
+              child: WebView(
+                initialUrl: viewModel.youtubeUrl,
+                javascriptMode: JavascriptMode.unrestricted,
+              ),
+            )
+          ],
+        );
+      })
     );
   }
 }

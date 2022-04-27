@@ -8,7 +8,7 @@ enum DialogAnswer{
 
 class DialogUtil {
 
-  static Future<DialogAnswer?> showPreventPopErrorDialog({
+  static Future<DialogAnswer?> showPreventPopDialog({
     required BuildContext context,
     String? title,
     String? content,
@@ -35,6 +35,54 @@ class DialogUtil {
           ],
         ),
       )
+    );
+  }
+  static Future<dynamic> showPreventPopErrorDialog({
+    required BuildContext context,
+    String? title,
+    String? content,
+    List<Widget>? actions,
+    Function()? onPressed,}) {
+    return showPreventPopDialog(
+      context: context,
+      title: title,
+      content: content,
+      actions: actions,
+      onPressed: onPressed,
+    );
+  }
+
+  static Future<DialogAnswer?> showPreventPopSelectDialog({
+    required BuildContext context,
+    String? title,
+    String? content,
+    List<Widget>? actions,
+    Function()? onPressed,}) {
+    return showPreventPopDialog(
+      context: context,
+      title: title,
+      content: content,
+      onPressed: onPressed,
+      actions: <Widget>[
+        SimpleDialogOption(
+          child: const Text(
+            "Cancel",
+            textAlign: TextAlign.center,
+          ),
+          onPressed: () => {
+            Navigator.pop(context, DialogAnswer.no)
+          },
+        ),
+        SimpleDialogOption(
+          child: const Text(
+            "OK",
+            textAlign: TextAlign.center,
+          ),
+          onPressed: () => {
+            Navigator.pop(context, DialogAnswer.yes)
+          },
+        ),
+      ],
     );
   }
 }
