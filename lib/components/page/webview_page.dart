@@ -11,6 +11,9 @@ class WebviewPage extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
+        iconTheme: const IconThemeData(
+            color: Colors.white
+        ),
       ),
       body: Consumer<WebviewViewModel>(builder: (context, viewModel, child) {
         return Column(

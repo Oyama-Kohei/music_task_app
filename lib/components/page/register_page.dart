@@ -39,9 +39,9 @@ class _RegisterPageState extends State<RegisterPage>{
                           child: Column(
                             children: [
                               SizedBox(
-                                height: deviceHeight * 0.44,
+                                height: deviceHeight * 0.40,
                                 child: const Image(
-                                  image: AssetImage("images/boys.jpeg"),
+                                  image: AssetImage("images/HeadPhoneBoy.png"),
                                 ),
                               ),
                               SizedBox(

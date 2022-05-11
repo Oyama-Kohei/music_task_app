@@ -10,10 +10,10 @@ class CommonColors {
     _primaryValue,
     <int, Color>{
       50: Color(0xFF626D71),
-      100: Color(0xFFCDCDC0),
+      100: Color(0xFFDCDCDC),
       200: Color(0xFF537072),
       300: Color(0xFF8E9B97),
-      400: Color(0xFF71BCDD),
+      400: Color(0xFFDCDCDC),
       500: primaryColor,
       600: Color(0xFF50A9D3),
       700: Color(0xFF47A0CD),

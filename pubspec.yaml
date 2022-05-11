@@ -28,10 +28,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
 
-  #providerの使用
   provider: ^6.0.1
 
-  #googleFontの使用
   google_fonts: ^2.1.0
 
   auto_size_text: ^3.0.0-nullsafety.0
@@ -39,6 +37,8 @@ dependencies:
   route_observer_mixin: ^1.6.0
 
   intl: ^0.17.0
+
+  page_view_indicators: ^2.0.0
 
   fab_circular_menu: ^1.0.2
 

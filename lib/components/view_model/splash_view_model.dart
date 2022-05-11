@@ -8,6 +8,7 @@ import 'package:taskmum_flutter/components/service/task_service.dart';
 import 'package:taskmum_flutter/components/page/start_page.dart';
 import 'package:taskmum_flutter/components/page/top_page.dart';
 import 'package:taskmum_flutter/components/service/user_service.dart';
+import 'package:taskmum_flutter/components/view_model/start_view_model.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/utility/locator.dart';
 import 'package:taskmum_flutter/utility/navigation_helper.dart';
@@ -18,11 +19,12 @@ class SplashViewModel extends ChangeNotifier{
   }
 
   void showStartPage(BuildContext context){
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-          builder: (context) => MainStartPage()
-      ),
-      (route) => false
+    NavigationHelper().pushAndRemoveUntilRoot<StartViewModel>(
+      context: context,
+      pageBuilder: (_) => StartPage(),
+      viewModelBuilder: (context) {
+        return StartViewModel();
+      },
     );
   }
 
