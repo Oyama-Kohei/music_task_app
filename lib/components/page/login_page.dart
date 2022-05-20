@@ -33,6 +33,9 @@ class _LoginPageState extends State<LoginPage>{
               child: Stack(
               children: <Widget>[
                 Padding(padding: const EdgeInsets.only(left: 24, right: 24),
+                child: SingleChildScrollView(
+                  child: GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
                   child: Column(
                   children: [
                     SizedBox(
@@ -68,6 +71,8 @@ class _LoginPageState extends State<LoginPage>{
                     )
                   ]
                   )
+                ),
+                ),
                 ),
               ]
               )

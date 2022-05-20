@@ -1,5 +1,6 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
 import 'package:taskmum_flutter/components/wiget/album_list_item.dart';
@@ -29,6 +30,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
               child: Column(
                 children: <Widget>[
                   SizedBox(height: height * 0.05),
+                  viewModel.albumDataList.isNotEmpty ?
                   SizedBox(
                     height: pageViewHeight,
                     child: PageView(
@@ -43,6 +45,61 @@ class _TopPageState extends State<TopPage> with RouteAware{
                           ),
                         ).toList(),
                     )
+                  ) :
+                  Container(
+                    height: height * 0.6,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                    ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'New Music',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.orbitron(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: height * 0.05),
+                                Text(
+                                  'まずは画面下のボタンから\n'
+                                      'アルバムを追加',
+                                  textAlign: TextAlign.start,
+                                  style: GoogleFonts.orbitron(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.white, width: 3),
+                            ),
+                            child: ClipRRect(
+                              child: Image.asset(
+                                "images/Tutorial1.png",
+                                width: width * 0.45,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          )
+                        ]
+                    ),
                   ),
                   const SizedBox(height: 20),
                   listView(viewModel, width, height, context),
@@ -62,12 +119,12 @@ Widget listView(
     double height,
     BuildContext context,) {
   final List<Widget> taskListWidget = [];
-  viewModel.getTaskDataList(
-      context,
-      viewModel.albumDataList[viewModel.albumPageNotifier.value].albumId);
   if(viewModel.taskDataList == null){
     return const SizedBox(height: 0);
   } else {
+    viewModel.getTaskDataList(
+        context,
+        viewModel.albumDataList[viewModel.albumPageNotifier.value].albumId);
     for (final data in viewModel.taskDataList!) {
       taskListWidget.add(TaskListItem(
         data: data,
@@ -81,6 +138,10 @@ Widget listView(
       ),
       );
     }
+    taskListWidget.add(
+      Container(
+        height: height * 0.2
+      ));
     return SizedBox(
       width: width,
       height: height * 0.5,

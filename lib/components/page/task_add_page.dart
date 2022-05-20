@@ -24,7 +24,9 @@ class _TaskAddPageState extends State<TaskAddPage>{
     final queryData = MediaQuery.of(context);
     final width = queryData.size.width;
     final height = queryData.size.height;
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -241,6 +243,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
         )
       )
       )
+      ),
     );
   }
 }

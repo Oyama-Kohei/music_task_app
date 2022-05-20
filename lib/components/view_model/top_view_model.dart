@@ -28,7 +28,7 @@ class TopViewModel extends ChangeNotifier{
 
   List<TaskData>? taskDataList;
 
-  List<AlbumData> albumDataList;
+  List<AlbumData> albumDataList = [];
 
   final PageController albumPageController =
     PageController(viewportFraction: 0.85);
@@ -82,7 +82,7 @@ class TopViewModel extends ChangeNotifier{
       DialogUtil.showPreventPopErrorDialog(
         context: context,
         title: "アルバムがありません",
-        content: "タスクを追加する先の曲を追加してください",
+        content: "タスクを追加する前に紐付け先のアルバムを追加してください",
       );
     }
   }

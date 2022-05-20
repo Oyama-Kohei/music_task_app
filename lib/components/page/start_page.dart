@@ -21,15 +21,16 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     final queryData = MediaQuery.of(context);
     final height = queryData.size.height;
+    final width = queryData.size.width;
     return Consumer<StartViewModel>(builder: (context, viewModel, child) {
       return Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Column(
             children: <Widget>[
-              SizedBox(height: height * 0.08),
+              SizedBox(height: height * 0.1),
               Text(
-                'tuskMum',
+                'skMu',
                 textAlign: TextAlign.end,
                 style: GoogleFonts.orbitron(
                   color: Colors.blueGrey,
@@ -38,8 +39,18 @@ class _StartPageState extends State<StartPage> {
                 ),
               ),
               SizedBox(height: height * 0.02),
+              Text(
+                '楽器/歌の課題管理をシステム化',
+                textAlign: TextAlign.end,
+                style: GoogleFonts.orbitron(
+                  color: Colors.blueGrey,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: height * 0.02),
               SizedBox(
-                  height: height * 0.55,
+                  height: height * 0.5,
                   child: PageView(
                     controller: viewModel.startPageController,
                     onPageChanged: (value) => viewModel.onStartPageChanged(value),
@@ -55,10 +66,10 @@ class _StartPageState extends State<StartPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(right: 15),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'New Music',
@@ -71,10 +82,10 @@ class _StartPageState extends State<StartPage> {
                                   ),
                                   SizedBox(height: height * 0.05),
                                   Text(
-                                    '・画面下のボタンから\n'
+                                    '画面下のボタンから\n'
                                         'アルバムを追加\n\n'
-                                        '・参考演奏も設定可能\n\n'
-                                        '・複数曲の課題を管理',
+                                        '参考演奏も設定可能\n\n'
+                                        '複数曲の課題を管理',
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.orbitron(
                                       color: Colors.blueGrey,
@@ -87,8 +98,8 @@ class _StartPageState extends State<StartPage> {
                             ),
                             ClipRRect(
                               child: Image.asset(
-                                "images/tuto1.png",
-                                height: height * 0.5,
+                                "images/Tutorial1.png",
+                                width: width * 0.45,
                               ),
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -106,10 +117,10 @@ class _StartPageState extends State<StartPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                  padding: const EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.only(right: 15),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'New Task',
@@ -122,9 +133,9 @@ class _StartPageState extends State<StartPage> {
                                       ),
                                       SizedBox(height: height * 0.05),
                                       Text(
-                                        '・画面下のボタンから\n'
+                                        '画面下のボタンから\n'
                                             '課題を追加\n\n'
-                                            '・譜面への書き込みを\n'
+                                            '譜面への書き込みを\n'
                                             '減らしてコンパクトに',
                                         textAlign: TextAlign.start,
                                         style: GoogleFonts.orbitron(
@@ -138,8 +149,8 @@ class _StartPageState extends State<StartPage> {
                               ),
                               ClipRRect(
                                 child: Image.asset(
-                                  "images/tuto2.png",
-                                  height: height * 0.5,
+                                  "images/Tutorial2.png",
+                                  width: width * 0.45,
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -157,10 +168,10 @@ class _StartPageState extends State<StartPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                  padding: const EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.only(right: 15),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Manage',
@@ -173,9 +184,9 @@ class _StartPageState extends State<StartPage> {
                                       ),
                                       SizedBox(height: height * 0.05),
                                       Text(
-                                        '・譜面や情景を追加し\n'
+                                        '譜面や情景を追加し\n'
                                             '曲の理解度を向上\n\n'
-                                            '・画像追加機能を\n'
+                                            '画像追加機能を\n'
                                             '自由に活用しよう',
                                         textAlign: TextAlign.start,
                                         style: GoogleFonts.orbitron(
@@ -189,8 +200,8 @@ class _StartPageState extends State<StartPage> {
                               ),
                               ClipRRect(
                                 child: Image.asset(
-                                  "images/tuto3.png",
-                                  height: height * 0.5,
+                                  "images/Tutorial3.png",
+                                  width: width * 0.45,
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -211,7 +222,7 @@ class _StartPageState extends State<StartPage> {
               const SizedBox(height: 20),
               if(viewModel.startPageNotifier.value == 2)
               CommonButton(
-                text: 'アカウント作成',
+                text: 'アカウント作成はこちら',
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 useIcon: true,
                 onPressed: () async {
@@ -224,7 +235,7 @@ class _StartPageState extends State<StartPage> {
               ),
               if(viewModel.startPageNotifier.value == 2)
               CommonButton(
-                text: 'ログイン',
+                text: 'ログインはこちら',
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                 useIcon: true,
                 onPressed: () async {

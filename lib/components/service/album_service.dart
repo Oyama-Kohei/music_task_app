@@ -80,7 +80,10 @@ class AlbumService extends Service{
 
   Future<void> deleteAlbum(AlbumData data) async {
     try{
+      // アルバムデータの削除
       await FirebaseFirestore.instance.collection("albums").doc(data.albumId).delete();
+      // アルバムデータに紐づいているタスクを削除
+      await FirebaseFirestore.instance.collection("tasks").doc(data.albumId).delete();
     } catch(e) {
       rethrow;
     }

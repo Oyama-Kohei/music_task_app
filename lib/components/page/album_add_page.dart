@@ -11,6 +11,33 @@ class AlbumAddPage extends StatefulWidget {
   _AlbumAddPageState createState() => _AlbumAddPageState();
 }
 class _AlbumAddPageState extends State<AlbumAddPage>{
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() async {
+      if (_focusNode.hasFocus == false) {
+        if(_youtubeUrl != null){
+          final queryData = MediaQuery.of(context);
+          final height = queryData.size.height;
+          final width = queryData.size.width;
+          final viewModel = Provider.of<AlbumAddViewModel>(context, listen: false);
+          await viewModel.getThumbnailImage(
+              youtubeUrl: _youtubeUrl!,
+              context: context,
+              deviceHeight: height,
+              deviceWidth: width);
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   final _formKey = GlobalKey<FormState>();
   late String _albumName, _composer;
@@ -20,7 +47,9 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
     final queryData = MediaQuery.of(context);
     final height = queryData.size.height;
     final width = queryData.size.width;
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -75,37 +104,36 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                     child: Column(
                       children: [
                         Container(
-                          // height: height * 0.5,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                                viewModel.youtubeThumbnailImage == null
-                                  ? Container(
-                                  height: height * 0.25,
-                                  width: width * 0.9,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      Icon(
-                                        Icons.smart_display_rounded,
-                                        size: 35,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        "Youtube未設定",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white
-                                        )
+                              viewModel.youtubeThumbnailImage == null
+                                ? Container(
+                                height: height * 0.25,
+                                width: width * 0.9,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.smart_display_rounded,
+                                      size: 35,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      "Youtube未設定",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white
                                       )
-                                    ],
-                                  )
+                                    )
+                                  ],
+                                )
                               )
                               : ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
@@ -125,10 +153,8 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 onChanged: (value) async {
                                   _youtubeUrl = value;
                                   viewModel.updateFlag = true;
-                                  if(_youtubeUrl != null){
-                                    await viewModel.getThumbnailImage(_youtubeUrl!, context);
-                                  }
-                                }
+                                },
+                                focusNode: _focusNode,
                               ),
                               TextFormField(
                                 initialValue: viewModel.albumData != null
@@ -225,6 +251,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
         )
       )
       )
+      ),
     );
   }
 }
