@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:taskmum_flutter/components/models/task_data.dart';
+import 'package:askMu/components/models/task_data.dart';
 
 class TaskListItem extends StatelessWidget{
   const TaskListItem({

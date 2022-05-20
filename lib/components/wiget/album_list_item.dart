@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:taskmum_flutter/components/models/album_data.dart';
-import 'package:taskmum_flutter/utility/youtube_thumbnail_generator_util.dart';
+import 'package:askMu/components/models/album_data.dart';
+import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
 
 import 'common_colors.dart';
 

@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:taskmum_flutter/components/service/service.dart';
+import 'package:askMu/components/service/service.dart';
 
 class AuthService extends Service{
 

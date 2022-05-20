@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:taskmum_flutter/components/models/album_data.dart';
-import 'package:taskmum_flutter/components/service/service.dart';
+import 'package:askMu/components/models/album_data.dart';
+import 'package:askMu/components/service/service.dart';
 
 class AlbumService extends Service{
 

@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:taskmum_flutter/components/models/task_data.dart';
-import 'package:taskmum_flutter/components/service/album_service.dart';
-import 'package:taskmum_flutter/components/service/auth_service.dart';
-import 'package:taskmum_flutter/components/service/service.dart';
-import 'package:taskmum_flutter/components/service/task_service.dart';
-import 'package:taskmum_flutter/components/page/start_page.dart';
-import 'package:taskmum_flutter/components/page/top_page.dart';
-import 'package:taskmum_flutter/components/service/user_service.dart';
-import 'package:taskmum_flutter/components/view_model/start_view_model.dart';
-import 'package:taskmum_flutter/components/view_model/top_view_model.dart';
-import 'package:taskmum_flutter/utility/locator.dart';
-import 'package:taskmum_flutter/utility/navigation_helper.dart';
+import 'package:askMu/components/models/task_data.dart';
+import 'package:askMu/components/service/album_service.dart';
+import 'package:askMu/components/service/auth_service.dart';
+import 'package:askMu/components/service/service.dart';
+import 'package:askMu/components/service/task_service.dart';
+import 'package:askMu/components/page/start_page.dart';
+import 'package:askMu/components/page/top_page.dart';
+import 'package:askMu/components/service/user_service.dart';
+import 'package:askMu/components/view_model/start_view_model.dart';
+import 'package:askMu/components/view_model/top_view_model.dart';
+import 'package:askMu/utility/locator.dart';
+import 'package:askMu/utility/navigation_helper.dart';
 
 class SplashViewModel extends ChangeNotifier{
   Future<void> initApp(BuildContext context) async {

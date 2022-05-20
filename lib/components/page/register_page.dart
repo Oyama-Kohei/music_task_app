@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/view_model/register_view_model.dart';
-import 'package:taskmum_flutter/components/wiget/common_button.dart';
-import 'package:taskmum_flutter/utility/validator/email_validator.dart';
-import 'package:taskmum_flutter/utility/validator/nickname_validator.dart';
-import 'package:taskmum_flutter/utility/validator/password_validator.dart';
+import 'package:askMu/components/view_model/register_view_model.dart';
+import 'package:askMu/components/wiget/common_button.dart';
+import 'package:askMu/utility/validator/email_validator.dart';
+import 'package:askMu/utility/validator/nickname_validator.dart';
+import 'package:askMu/utility/validator/password_validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);

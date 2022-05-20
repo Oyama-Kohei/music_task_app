@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
-import 'package:taskmum_flutter/components/view_model/splash_view_model.dart';
+import 'package:askMu/components/view_model/splash_view_model.dart';
 
 class SplashPage extends StatefulWidget{
   @override

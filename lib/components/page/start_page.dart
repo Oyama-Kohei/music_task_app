@@ -1,15 +1,16 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/page/login_page.dart';
-import 'package:taskmum_flutter/components/page/register_page.dart';
-import 'package:taskmum_flutter/components/view_model/login_view_model.dart';
-import 'package:taskmum_flutter/components/view_model/register_view_model.dart';
-import 'package:taskmum_flutter/components/view_model/start_view_model.dart';
-import 'package:taskmum_flutter/components/wiget/common_button.dart';
-import 'package:taskmum_flutter/components/wiget/common_colors.dart';
-import 'package:taskmum_flutter/utility/navigation_helper.dart';
+import 'package:askMu/components/page/login_page.dart';
+import 'package:askMu/components/page/register_page.dart';
+import 'package:askMu/components/view_model/login_view_model.dart';
+import 'package:askMu/components/view_model/register_view_model.dart';
+import 'package:askMu/components/view_model/start_view_model.dart';
+import 'package:askMu/components/wiget/common_button.dart';
+import 'package:askMu/components/wiget/common_colors.dart';
+import 'package:askMu/utility/navigation_helper.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -25,32 +26,50 @@ class _StartPageState extends State<StartPage> {
     return Consumer<StartViewModel>(builder: (context, viewModel, child) {
       return Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
+        body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(height: height * 0.1),
+              SizedBox(height: height * 0.07),
               Text(
-                'skMu',
+                'askMu',
                 textAlign: TextAlign.end,
                 style: GoogleFonts.orbitron(
                   color: Colors.blueGrey,
-                  fontSize: 46,
+                  fontSize: 44,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: height * 0.02),
-              Text(
-                '楽器/歌の課題管理をシステム化',
-                textAlign: TextAlign.end,
-                style: GoogleFonts.orbitron(
-                  color: Colors.blueGrey,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: height * 0.02),
+              SizedBox(height: height * 0.01),
               SizedBox(
-                  height: height * 0.5,
+                height: 30,
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      '楽器/歌の課題管理をシステム化',
+                      textAlign: TextAlign.end,
+                      textStyle: GoogleFonts.orbitron(
+                        color: Colors.blueGrey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      speed: const Duration(milliseconds: 200),
+                    )
+                  ],
+                ),
+              ),
+
+              // Text(
+              //   '楽器/歌の課題管理をシステム化',
+              //   textAlign: TextAlign.end,
+              //   style: GoogleFonts.orbitron(
+              //     color: Colors.blueGrey,
+              //     fontSize: 18,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              SizedBox(height: height * 0.01),
+              SizedBox(
+                  height: height * 0.53,
                   child: PageView(
                     controller: viewModel.startPageController,
                     onPageChanged: (value) => viewModel.onStartPageChanged(value),
@@ -223,7 +242,7 @@ class _StartPageState extends State<StartPage> {
               if(viewModel.startPageNotifier.value == 2)
               CommonButton(
                 text: 'アカウント作成はこちら',
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                 useIcon: true,
                 onPressed: () async {
                   NavigationHelper().push<RegisterViewModel>(
@@ -236,7 +255,7 @@ class _StartPageState extends State<StartPage> {
               if(viewModel.startPageNotifier.value == 2)
               CommonButton(
                 text: 'ログインはこちら',
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
                 useIcon: true,
                 onPressed: () async {
                   NavigationHelper().push<LoginViewModel>(

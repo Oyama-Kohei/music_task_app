@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/view_model/login_view_model.dart';
-import 'package:taskmum_flutter/components/wiget/common_button.dart';
-import 'package:taskmum_flutter/utility/validator/email_validator.dart';
-import 'package:taskmum_flutter/utility/validator/password_validator.dart';
+import 'package:askMu/components/view_model/login_view_model.dart';
+import 'package:askMu/components/wiget/common_button.dart';
+import 'package:askMu/utility/validator/email_validator.dart';
+import 'package:askMu/utility/validator/password_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

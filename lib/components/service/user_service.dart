@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:taskmum_flutter/components/service/service.dart';
+import 'package:askMu/components/service/service.dart';
 
 class UserService  extends Service{
 

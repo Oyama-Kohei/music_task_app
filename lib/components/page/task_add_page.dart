@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/view_model/task_add_view_model.dart';
-import 'package:taskmum_flutter/components/wiget/common_button.dart';
-import 'package:taskmum_flutter/utility/validator/title_validator.dart';
+import 'package:askMu/components/view_model/task_add_view_model.dart';
+import 'package:askMu/components/wiget/common_button.dart';
+import 'package:askMu/utility/validator/title_validator.dart';
 
 class TaskAddPage extends StatefulWidget {
   const TaskAddPage({Key? key}) : super(key: key);

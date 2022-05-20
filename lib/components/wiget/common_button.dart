@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:taskmum_flutter/components/wiget/common_colors.dart';
+import 'package:askMu/components/wiget/common_colors.dart';
 
 class CommonButton extends StatelessWidget{
 

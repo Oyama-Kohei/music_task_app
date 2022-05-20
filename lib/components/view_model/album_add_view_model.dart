@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:taskmum_flutter/components/models/album_data.dart';
-import 'package:taskmum_flutter/components/service/album_service.dart';
-import 'package:taskmum_flutter/components/service/user_service.dart';
-import 'package:taskmum_flutter/utility/dialog_util.dart';
-import 'package:taskmum_flutter/utility/loading_circle.dart';
-import 'package:taskmum_flutter/utility/locator.dart';
-import 'package:taskmum_flutter/utility/youtube_thumbnail_generator_util.dart';
+import 'package:askMu/components/models/album_data.dart';
+import 'package:askMu/components/service/album_service.dart';
+import 'package:askMu/components/service/user_service.dart';
+import 'package:askMu/utility/dialog_util.dart';
+import 'package:askMu/utility/loading_circle.dart';
+import 'package:askMu/utility/locator.dart';
+import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
 
 class AlbumAddViewModel extends ChangeNotifier{
   AlbumAddViewModel({

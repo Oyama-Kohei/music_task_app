@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:taskmum_flutter/components/models/task_data.dart';
-import 'package:taskmum_flutter/components/service/service.dart';
+import 'package:askMu/components/models/task_data.dart';
+import 'package:askMu/components/service/service.dart';
 
 class TaskService extends Service{
 

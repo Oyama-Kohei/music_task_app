@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmum_flutter/components/view_model/webview_view_model.dart';
+import 'package:askMu/components/view_model/webview_view_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatelessWidget{

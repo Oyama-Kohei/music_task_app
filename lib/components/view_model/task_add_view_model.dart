@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:taskmum_flutter/components/models/album_data.dart';
-import 'package:taskmum_flutter/components/models/task_data.dart';
-import 'package:taskmum_flutter/components/service/task_service.dart';
-import 'package:taskmum_flutter/components/service/user_service.dart';
-import 'package:taskmum_flutter/utility/loading_circle.dart';
-import 'package:taskmum_flutter/utility/locator.dart';
+import 'package:askMu/components/models/album_data.dart';
+import 'package:askMu/components/models/task_data.dart';
+import 'package:askMu/components/service/task_service.dart';
+import 'package:askMu/components/service/user_service.dart';
+import 'package:askMu/utility/loading_circle.dart';
+import 'package:askMu/utility/locator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TaskAddViewModel extends ChangeNotifier{

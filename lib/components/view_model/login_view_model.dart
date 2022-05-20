@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:taskmum_flutter/components/service/auth_service.dart';
-import 'package:taskmum_flutter/components/page/splash_page.dart';
-import 'package:taskmum_flutter/components/view_model/splash_view_model.dart';
-import 'package:taskmum_flutter/utility/dialog_util.dart';
-import 'package:taskmum_flutter/utility/loading_circle.dart';
-import 'package:taskmum_flutter/utility/locator.dart';
-import 'package:taskmum_flutter/utility/navigation_helper.dart';
+import 'package:askMu/components/service/auth_service.dart';
+import 'package:askMu/components/page/splash_page.dart';
+import 'package:askMu/components/view_model/splash_view_model.dart';
+import 'package:askMu/utility/dialog_util.dart';
+import 'package:askMu/utility/loading_circle.dart';
+import 'package:askMu/utility/locator.dart';
+import 'package:askMu/utility/navigation_helper.dart';
 
 class LoginViewModel extends ChangeNotifier{
 
