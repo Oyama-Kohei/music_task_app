@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.taskmum_flutter">
    <application
-        android:label="taskmum_flutter"
+        android:label="askMu"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
        >

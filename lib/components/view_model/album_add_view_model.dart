@@ -103,6 +103,11 @@ class AlbumAddViewModel extends ChangeNotifier{
         context: context,
         content: albumData == null ? "アルバムを追加しました"
             : "アルバムを更新しました",
+        onPressed: () async {
+          notifyListeners();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       );
     } catch (e) {
       dismissLoadingCircle(context);

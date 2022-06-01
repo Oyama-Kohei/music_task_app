@@ -89,12 +89,12 @@ class TaskAddViewModel extends ChangeNotifier{
             content: Text(taskData == null ? "タスクを追加しました" : "タスクを更新しました"),
             actions: <Widget>[
               TextButton(
-                  child: const Text("OK"),
-                  onPressed: () async {
-                    notifyListeners();
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
+                child: const Text("OK"),
+                onPressed: () async {
+                  notifyListeners();
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
               ),
             ],
           );

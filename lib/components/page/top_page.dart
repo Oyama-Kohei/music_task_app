@@ -1,6 +1,7 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:askMu/components/view_model/top_view_model.dart';
 import 'package:askMu/components/wiget/album_list_item.dart';
@@ -16,6 +17,34 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> with RouteAware{
 
   static const pageViewHeight = 235.0;
+  late BannerAd myBanner;
+
+  @override
+  void initState() {
+    super.initState();
+    myBanner = _createBanner(AdSize.banner);
+  }
+
+  @override
+  void dispose() {
+    myBanner.dispose();
+    super.dispose();
+  }
+
+
+  BannerAd _createBanner(AdSize size) {
+    return BannerAd(
+      size: size,
+      adUnitId: "ca-app-pub-3940256099942544/2934735716",
+      listener: BannerAdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          myBanner.dispose();
+          _createBanner(size);
+        },
+      ),
+      request: const AdRequest(),
+    )..load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +131,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                     ),
                   ),
                   const SizedBox(height: 20),
-                  listView(viewModel, width, height, context),
+                  listView(viewModel, width, height, context, myBanner),
                 ]
               ),
           ),
@@ -117,7 +146,8 @@ Widget listView(
     TopViewModel viewModel,
     double width,
     double height,
-    BuildContext context,) {
+    BuildContext context,
+    BannerAd myBanner) {
   final List<Widget> taskListWidget = [];
   if(viewModel.taskDataList == null){
     return const SizedBox(height: 0);
@@ -138,6 +168,13 @@ Widget listView(
       ),
       );
     }
+    taskListWidget.add(
+      Container(
+        height: 50.0,
+        width: width * 0.8,
+        child: AdWidget(ad: myBanner),
+      ),
+    );
     taskListWidget.add(
       Container(
         height: height * 0.2

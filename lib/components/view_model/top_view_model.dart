@@ -40,6 +40,13 @@ class TopViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
+  // プラットフォーム（iOS / Android）に合わせてデモ用広告IDを返す
+  String getTestAdBannerUnitId() {
+    String testBannerUnitId = "";
+    testBannerUnitId = "ca-app-pub-3940256099942544/2934735716";
+    return testBannerUnitId;
+  }
+
   Future<void> onTapLogout(BuildContext context) async {
     showDialog(
         context: context,

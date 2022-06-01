@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
 import 'package:askMu/components/service/album_service.dart';
@@ -16,6 +17,7 @@ import 'components/wiget/common_colors.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+  MobileAds.instance.initialize();
   await Firebase.initializeApp();
   runApp(
       MultiProvider(
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
             create: (_) => AlbumService()),
       ],
     child: MaterialApp(
-      title: 'taskMum',
+      title: 'askMu',
       theme: ThemeData(
         primarySwatch: CommonColors.customSwatch,
         backgroundColor: Colors.white,
