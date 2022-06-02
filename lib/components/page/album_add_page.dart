@@ -140,16 +140,21 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 child: viewModel.youtubeThumbnailImage!,
                               ),
                               TextFormField(
-                                initialValue: viewModel.albumData != null
-                                    ? _youtubeUrl
-                                    : null,
+                                controller: viewModel.urlTextController,
                                 style: const TextStyle(
                                   fontSize: 14,
                                 ),
-                                validator: TitleValidator.validator(),
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   hintText: 'https://www.youtube.com〜',
-                                  labelText: "参考演奏など(Youtube)",),
+                                  labelText: "参考演奏など(Youtube)",
+                                  suffixIcon: IconButton(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () => viewModel.urlTextController.clear(),
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                  ),
+                                ),
                                 onChanged: (value) async {
                                   _youtubeUrl = value;
                                   viewModel.updateFlag = true;

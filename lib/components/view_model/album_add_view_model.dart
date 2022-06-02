@@ -12,10 +12,12 @@ class AlbumAddViewModel extends ChangeNotifier{
   AlbumAddViewModel({
     this.albumData,
   }) : super() {
+
     if (albumData != null && albumData!.youtubeUrl != null) {
       final thumbnailUrl =
       YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl(albumData!.youtubeUrl!);
       youtubeThumbnailImage = Image.network(thumbnailUrl);
+      urlTextController.text = albumData!.youtubeUrl!;
     }
   }
 
@@ -24,6 +26,8 @@ class AlbumAddViewModel extends ChangeNotifier{
 
   // 画面更新フラグ
   bool updateFlag = false;
+
+  TextEditingController urlTextController = TextEditingController(text: '');
 
   Future<void> getThumbnailImage({
     required String youtubeUrl,

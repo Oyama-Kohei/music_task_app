@@ -43,10 +43,12 @@ class TaskListItem extends StatelessWidget{
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
+        const SizedBox(height: 13),
         Text(
           data.title,
           textAlign: TextAlign.start,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             fontSize: 15,
             color: Colors.white,
@@ -72,10 +74,11 @@ class TaskListItem extends StatelessWidget{
     final createAt = DateFormat("yyyy/MM/dd").format(data.createAt);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
           createAt,
-          textAlign: TextAlign.start,
+          textAlign: TextAlign.end,
           style: const TextStyle(
             fontSize: 12,
             color: Colors.white,

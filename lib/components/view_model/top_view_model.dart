@@ -1,3 +1,4 @@
+import 'package:askMu/components/service/album_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:askMu/components/models/album_data.dart';
@@ -29,6 +30,8 @@ class TopViewModel extends ChangeNotifier{
   List<TaskData>? taskDataList;
 
   List<AlbumData> albumDataList = [];
+
+  static const List<String> movementList = ["楽章なし", "1楽章", "2楽章", "3楽章", "4楽章", "5楽章", "6楽章", "7楽章", "8楽章", "9楽章", "10楽章"];
 
   final PageController albumPageController =
     PageController(viewportFraction: 0.85);
@@ -103,12 +106,20 @@ class TopViewModel extends ChangeNotifier{
   }
 
   Future<void> getTaskDataList(BuildContext context, String albumId) async {
-    // showLoadingCircle(context);
     final UserService _userService = getIt<UserService>();
     final currentUserId = await _userService.getUserId();
 
     final TaskService _taskService = getIt<TaskService>();
     taskDataList = await _taskService.getTaskList(currentUserId, albumId);
+    notifyListeners();
+  }
+
+  Future<void> getAlbumDataList(BuildContext context) async {
+    final UserService _userService = getIt<UserService>();
+    final currentUserId = await _userService.getUserId();
+
+    final AlbumService _albumService = getIt<AlbumService>();
+    albumDataList = (await _albumService.getAlbumList(currentUserId))!;
     notifyListeners();
   }
 

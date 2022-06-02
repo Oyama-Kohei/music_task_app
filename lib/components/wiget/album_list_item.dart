@@ -101,9 +101,10 @@ class AlbumListItem extends StatelessWidget {
                           ),
                         ),
                         IconButton(
+                          alignment: Alignment.center,
                           icon: const Icon(
                             Icons.smart_display_rounded,
-                            size: 40,
+                            size: 44,
                             color: Colors.black54,
                           ),
                           onPressed: () => onTapVideo(data),

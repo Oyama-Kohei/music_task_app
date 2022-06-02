@@ -1,3 +1,5 @@
+import 'package:askMu/main.dart';
+import 'package:askMu/main.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +20,14 @@ class _TopPageState extends State<TopPage> with RouteAware{
 
   static const pageViewHeight = 235.0;
   late BannerAd myBanner;
+  final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
+  bool _isOpen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
 
   @override
   void initState() {
@@ -28,14 +38,20 @@ class _TopPageState extends State<TopPage> with RouteAware{
   @override
   void dispose() {
     myBanner.dispose();
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    _closeMenu();
+  }
 
   BannerAd _createBanner(AdSize size) {
     return BannerAd(
       size: size,
-      adUnitId: "ca-app-pub-3940256099942544/2934735716",
+      adUnitId: "ca-app-pub-8754541206691079/4153658345",
       listener: BannerAdListener(
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           myBanner.dispose();
@@ -51,14 +67,14 @@ class _TopPageState extends State<TopPage> with RouteAware{
     final queryData = MediaQuery.of(context);
     final width = queryData.size.width;
     final height = queryData.size.height;
-    final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
     return Consumer<TopViewModel>(builder: (context, viewModel, child) {
+      viewModel.getAlbumDataList(context);
       return Scaffold(
           backgroundColor: CommonColors.customSwatch.shade50,
           body: Center(
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: height * 0.05),
+                  SizedBox(height: height * 0.06),
                   viewModel.albumDataList.isNotEmpty ?
                   SizedBox(
                     height: pageViewHeight,
@@ -135,10 +151,85 @@ class _TopPageState extends State<TopPage> with RouteAware{
                 ]
               ),
           ),
-          floatingActionButton: FloatingButton(viewModel, fabKey, width, height),
+          floatingActionButton: FloatingButton(viewModel, width, height),
       );
     }
     );
+  }
+  // ignore: non_constant_identifier_names
+  Widget FloatingButton(
+      TopViewModel viewModel,
+      double width,
+      double height){
+    return Builder(
+      builder: (context) => FabCircularMenu(
+        key: fabKey,
+        alignment: Alignment.bottomRight,
+        ringColor: CommonColors.customSwatch.shade300,
+        ringDiameter: width * 1.0,
+        ringWidth: width * 0.35,
+        fabSize: 65.0,
+        fabIconBorder: const CircleBorder(),
+        fabColor: Colors.white,
+        fabOpenIcon: const Icon(Icons.menu, color: Colors.blueGrey),
+        fabCloseIcon: const Icon(Icons.close, color: Colors.blueGrey),
+        animationDuration: const Duration(milliseconds: 800),
+        animationCurve: Curves.easeInOutCirc,
+        onDisplayChange: (bool isOpen) {
+          setState(() {
+            _isOpen = isOpen;
+          });
+        },
+        children: <Widget>[
+          TextButton.icon(
+            onPressed: () => viewModel.onTapAddAlbum(context),
+            icon: const Icon(
+                Icons.add_to_photos_rounded,
+                size: 35,
+                color: Colors.white),
+            label: const Text(
+                "NewMusic",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white)
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              viewModel.onTapAddList(context, viewModel.albumPageNotifier.value);
+            },
+            icon: const Icon(
+                Icons.add_task,
+                size: 35,
+                color: Colors.white),
+            label: const Text(
+                "NewTask",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white)
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () => viewModel.onTapLogout(context),
+            icon: const Icon(
+                Icons.add_to_home_screen,
+                size: 35,
+                color: Colors.white),
+            label: const Text(
+                "Logout",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white)
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  void _closeMenu() {
+    if (fabKey.currentState?.isOpen ?? false) {
+      fabKey.currentState!.close();
+    }
   }
 }
 
@@ -149,6 +240,7 @@ Widget listView(
     BuildContext context,
     BannerAd myBanner) {
   final List<Widget> taskListWidget = [];
+  var movementNum = 0;
   if(viewModel.taskDataList == null){
     return const SizedBox(height: 0);
   } else {
@@ -156,29 +248,45 @@ Widget listView(
         context,
         viewModel.albumDataList[viewModel.albumPageNotifier.value].albumId);
     for (final data in viewModel.taskDataList!) {
-      taskListWidget.add(TaskListItem(
-        data: data,
-        onPress: (data) => viewModel.onTapListItem(
-          context,
-          data,
-          viewModel.albumPageNotifier.value,
+      if(movementNum != data.movementNum){
+        movementNum = data.movementNum;
+        taskListWidget.add(
+          Container(
+            alignment: Alignment.centerLeft,
+            height: 20,
+            width: width * 0.9,
+            child: Text(
+              TopViewModel.movementList[movementNum],
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+      taskListWidget.add(
+        TaskListItem(
+          data: data,
+          onPress: (data) => viewModel.onTapListItem(
+            context,
+            data,
+            viewModel.albumPageNotifier.value,
+          ),
+          width: width * 0.8,
+          height: 69,
         ),
-        width: width * 0.8,
-        height: 65,
-      ),
       );
     }
     taskListWidget.add(
-      Container(
-        height: 50.0,
-        width: width * 0.8,
-        child: AdWidget(ad: myBanner),
-      ),
+      bannerAdWidget(myBanner, width),
     );
     taskListWidget.add(
       Container(
         height: height * 0.2
-      ));
+      ),
+    );
     return SizedBox(
       width: width,
       height: height * 0.5,
@@ -191,72 +299,16 @@ Widget listView(
   }
 }
 
-// ignore: non_constant_identifier_names
-Widget FloatingButton(
-    TopViewModel viewModel,
-    GlobalKey<FabCircularMenuState> fabKey,
-    double width,
-    double height){
-  return Builder(
-    builder: (context) => FabCircularMenu(
-      key: fabKey,
-      alignment: Alignment.bottomRight,
-      ringColor: Colors.white.withAlpha(25),
-      ringDiameter: width * 1.1,
-      ringWidth: width * 0.35,
-      fabSize: 64.0,
-      fabIconBorder: const CircleBorder(),
-      fabColor: Colors.white,
-      fabOpenIcon: const Icon(Icons.menu, color: Colors.blueGrey),
-      fabCloseIcon: const Icon(Icons.close, color: Colors.blueGrey),
-      animationDuration: const Duration(milliseconds: 800),
-      animationCurve: Curves.easeInOutCirc,
-      onDisplayChange: (isOpen) {
-        // _showSnackBar(context, "The menu is ${isOpen ? "open" : "closed"}");
-      },
-      children: <Widget>[
-        TextButton.icon(
-          onPressed: () => viewModel.onTapAddAlbum(context),
-          icon: const Icon(
-            Icons.add_to_photos_rounded,
-            size: 35,
-            color: Colors.white),
-          label: const Text(
-              "NewMusic",
-              style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white)
-          ),
-        ),
-        TextButton.icon(
-          onPressed: () {
-            viewModel.onTapAddList(context, viewModel.albumPageNotifier.value);
-          },
-          icon: const Icon(
-              Icons.add_task,
-              size: 35,
-              color: Colors.white),
-          label: const Text(
-              "NewTask",
-              style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white)
-          ),
-        ),
-        TextButton.icon(
-          onPressed: () => viewModel.onTapLogout(context),
-          icon: const Icon(
-              Icons.add_to_home_screen,
-              size: 35,
-              color: Colors.white),
-          label: const Text(
-              "Logout",
-              style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white)
-          ),
-        ),
-      ],
+Widget bannerAdWidget(myBanner, double width) {
+  return StatefulBuilder(
+    builder: (context, setState) => Container(
+      height: 50.0,
+      width: width * 0.8,
+      child: AdWidget(ad: myBanner),
+      alignment: Alignment.center,
     ),
   );
 }
+
+// ignore: non_constant_identifier_names
+
