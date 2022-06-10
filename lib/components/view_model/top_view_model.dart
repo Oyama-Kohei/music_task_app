@@ -1,4 +1,5 @@
 import 'package:askMu/components/service/album_service.dart';
+import 'package:askMu/utility/loading_circle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:askMu/components/models/album_data.dart';
@@ -38,8 +39,9 @@ class TopViewModel extends ChangeNotifier{
 
   final albumPageNotifier = ValueNotifier<int>(0);
 
-  void onAlbumPageChanged(int index){
+  Future<void> onAlbumPageChanged(BuildContext context, int index) async {
     albumPageNotifier.value = index;
+    await getTaskDataList(context);
     notifyListeners();
   }
 
@@ -105,21 +107,43 @@ class TopViewModel extends ChangeNotifier{
     );
   }
 
-  Future<void> getTaskDataList(BuildContext context, String albumId) async {
-    final UserService _userService = getIt<UserService>();
-    final currentUserId = await _userService.getUserId();
+  Future<void> getTaskDataList(BuildContext context) async {
+    try{
+      final UserService _userService = getIt<UserService>();
+      final currentUserId = await _userService.getUserId();
 
-    final TaskService _taskService = getIt<TaskService>();
-    taskDataList = await _taskService.getTaskList(currentUserId, albumId);
+      final TaskService _taskService = getIt<TaskService>();
+      taskDataList = await _taskService.getTaskList(currentUserId, albumDataList[albumPageNotifier.value].albumId);
+    } catch(e) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return const AlertDialog(
+            title: Text("アルバムの取得に失敗しました。"),
+          );
+        },
+      );
+    }
     notifyListeners();
   }
 
   Future<void> getAlbumDataList(BuildContext context) async {
-    final UserService _userService = getIt<UserService>();
-    final currentUserId = await _userService.getUserId();
+    try{
+      final UserService _userService = getIt<UserService>();
+      final currentUserId = await _userService.getUserId();
 
-    final AlbumService _albumService = getIt<AlbumService>();
-    albumDataList = (await _albumService.getAlbumList(currentUserId))!;
+      final AlbumService _albumService = getIt<AlbumService>();
+      albumDataList = (await _albumService.getAlbumList(currentUserId))!;
+    } catch(e) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return const AlertDialog(
+            title: Text("タスクの取得に失敗しました"),
+          );
+        },
+      );
+    }
     notifyListeners();
   }
 

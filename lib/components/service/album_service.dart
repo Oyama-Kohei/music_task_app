@@ -40,7 +40,7 @@ class AlbumService extends Service{
     required String composer,
     String? comment,
     String? youtubeUrl,
-  }) async{
+  }) async {
     try{
       var id = FirebaseFirestore.instance.collection("_").doc().id;
       await FirebaseFirestore.instance.collection("albums").doc(id).set({
@@ -51,7 +51,7 @@ class AlbumService extends Service{
         "comment": comment,
         "youtubeUrl": youtubeUrl,
       });
-    } catch(e) {
+    } on Exception catch(e) {
       rethrow;
     }
   }
@@ -73,7 +73,7 @@ class AlbumService extends Service{
         "comment": comment,
         "youtubeUrl": youtubeUrl,
       });
-    } catch(e) {
+    } on Exception catch(e) {
       rethrow;
     }
   }

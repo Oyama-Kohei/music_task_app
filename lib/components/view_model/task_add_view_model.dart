@@ -100,7 +100,7 @@ class TaskAddViewModel extends ChangeNotifier{
           );
         },
       );
-    } catch(_){
+    } catch(e) {
       dismissLoadingCircle(context);
       showDialog(
         context: context,
@@ -139,7 +139,7 @@ class TaskAddViewModel extends ChangeNotifier{
           );
         },
       );
-    } catch(_){
+    } catch(e){
       dismissLoadingCircle(context);
       showDialog(
         context: context,

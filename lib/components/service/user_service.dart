@@ -13,12 +13,17 @@ class UserService  extends Service{
         "uid": uid,
         "nickname": nickname
       });
-    } on Exception catch(_){
+    } catch(e) {
       rethrow;
     }
   }
 
-  Future getUserId() async{
-    return FirebaseAuth.instance.currentUser!.uid;
+  Future<String> getUserId() async{
+    try{
+      final result = FirebaseAuth.instance.currentUser!.uid;
+      return result;
+    } catch(e) {
+      rethrow;
+    }
   }
 }

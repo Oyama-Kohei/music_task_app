@@ -56,7 +56,6 @@ class AlbumAddViewModel extends ChangeNotifier{
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.white
-
                 ),
               )
             )
@@ -72,7 +71,6 @@ class AlbumAddViewModel extends ChangeNotifier{
         content: "サムネイルの取得に失敗しました"
       );
     }
-
   }
 
   Future<void> albumAdd(
@@ -113,7 +111,7 @@ class AlbumAddViewModel extends ChangeNotifier{
           Navigator.pop(context);
         }
       );
-    } catch (e) {
+    } on Exception catch (e) {
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
@@ -139,7 +137,7 @@ class AlbumAddViewModel extends ChangeNotifier{
           Navigator.pop(context);
         }
       );
-    } catch(_) {
+    } catch(e) {
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,

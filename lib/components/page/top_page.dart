@@ -1,5 +1,4 @@
 import 'package:askMu/main.dart';
-import 'package:askMu/main.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,6 +44,8 @@ class _TopPageState extends State<TopPage> with RouteAware{
   @override
   void didPopNext() {
     super.didPopNext();
+    Provider.of<TopViewModel>(context, listen: false).getAlbumDataList(context);
+    Provider.of<TopViewModel>(context, listen: false).getTaskDataList(context);
     _closeMenu();
   }
 
@@ -68,7 +69,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
     final width = queryData.size.width;
     final height = queryData.size.height;
     return Consumer<TopViewModel>(builder: (context, viewModel, child) {
-      viewModel.getAlbumDataList(context);
+      // viewModel.getAlbumDataList(context);
       return Scaffold(
           backgroundColor: CommonColors.customSwatch.shade50,
           body: Center(
@@ -80,7 +81,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                     height: pageViewHeight,
                     child: PageView(
                       controller: viewModel.albumPageController,
-                      onPageChanged: (value) => viewModel.onAlbumPageChanged(value),
+                      onPageChanged: (value) => viewModel.onAlbumPageChanged(context, value),
                       children: viewModel.albumDataList
                         .map(
                           (e) => AlbumListItem(
@@ -244,9 +245,6 @@ Widget listView(
   if(viewModel.taskDataList == null){
     return const SizedBox(height: 0);
   } else {
-    viewModel.getTaskDataList(
-        context,
-        viewModel.albumDataList[viewModel.albumPageNotifier.value].albumId);
     for (final data in viewModel.taskDataList!) {
       if(movementNum != data.movementNum){
         movementNum = data.movementNum;
