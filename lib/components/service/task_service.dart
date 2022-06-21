@@ -20,19 +20,19 @@ class TaskService extends Service{
   Future<List<TaskData>?> getTaskList(String uid, String albumId) async{
     try{
       final QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection("tasks")
-              .where("userId", isEqualTo: uid)
-              .where("albumId", isEqualTo: albumId).orderBy("movementNum").orderBy("measureNum").get();
+          await FirebaseFirestore.instance.collection('tasks')
+              .where('userId', isEqualTo: uid)
+              .where('albumId', isEqualTo: albumId).orderBy('movementNum').orderBy('measureNum').get();
       final List<TaskData> taskDataList = snapshot.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        final String userId = data["userId"];
-        final String albumId = data["albumId"];
-        final String title = data["title"];
-        final int movementNum = data["movementNum"];
-        final int measureNum = data["measureNum"];
-        final String? comment = data["comment"];
+        final String userId = data['userId'];
+        final String albumId = data['albumId'];
+        final String title = data['title'];
+        final int movementNum = data['movementNum'];
+        final int measureNum = data['measureNum'];
+        final String? comment = data['comment'];
         final String? imageUrl = data['imageUrl'];
-        final DateTime createAt = data["createAt"].toDate();
+        final DateTime createAt = data['createAt'].toDate();
         return TaskData(
             taskId: document.id,
             userId: userId,
@@ -60,17 +60,17 @@ class TaskService extends Service{
     String? imageUrl,
   }) async {
     try{
-      var id = FirebaseFirestore.instance.collection("_").doc().id;
-      await FirebaseFirestore.instance.collection("tasks").doc(id).set({
-        "taskId": id,
-        "userId": uid,
-        "albumId": albumId,
-        "title": title,
-        "movementNum": movementNum,
-        "measureNum": measureNum,
-        "comment": comment,
-        "imageUrl": imageUrl,
-        "createAt": DateTime.now(),
+      var id = FirebaseFirestore.instance.collection('_').doc().id;
+      await FirebaseFirestore.instance.collection('tasks').doc(id).set({
+        'taskId': id,
+        'userId': uid,
+        'albumId': albumId,
+        'title': title,
+        'movementNum': movementNum,
+        'measureNum': measureNum,
+        'comment': comment,
+        'imageUrl': imageUrl,
+        'createAt': DateTime.now(),
       });
     } catch(e) {
       rethrow;
@@ -88,16 +88,16 @@ class TaskService extends Service{
     String? imageUrl,
   }) async {
     try{
-      await FirebaseFirestore.instance.collection("tasks").doc(id).update({
-        "taskId": id,
-        "userId": uid,
-        "albumId": albumId,
-        "title": title,
-        "movementNum": movementNum,
-        "measureNum": measureNum,
-        "comment": comment,
-        "imageUrl": imageUrl,
-        "createAt": DateTime.now(),
+      await FirebaseFirestore.instance.collection('tasks').doc(id).update({
+        'taskId': id,
+        'userId': uid,
+        'albumId': albumId,
+        'title': title,
+        'movementNum': movementNum,
+        'measureNum': measureNum,
+        'comment': comment,
+        'imageUrl': imageUrl,
+        'createAt': DateTime.now(),
       });
     } catch(e) {
       rethrow;
@@ -105,7 +105,7 @@ class TaskService extends Service{
   }
   Future<void> deleteTask(TaskData data) async {
     try{
-      await FirebaseFirestore.instance.collection("tasks").doc(data.taskId).delete();
+      await FirebaseFirestore.instance.collection('tasks').doc(data.taskId).delete();
       if(data.imageUrl != null) {
         await _deletePhotoData(data.imageUrl!);
       }

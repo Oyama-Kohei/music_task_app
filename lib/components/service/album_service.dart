@@ -9,17 +9,17 @@ class AlbumService extends Service{
   Future<List<AlbumData>?> getAlbumList(String uid) async{
     try{
       final QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection("albums")
-              .where("userId", isEqualTo: uid).get();
+          await FirebaseFirestore.instance.collection('albums')
+              .where('userId', isEqualTo: uid).get();
 
       final List<AlbumData> albumDataList = snapshot.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        final String albumId = data["albumId"];
-        final String userId = data["userId"];
-        final String albumName = data["albumName"];
-        final String composer = data["composer"];
-        final String? comment = data["comment"];
-        final String? youtubeUrl = data["youtubeUrl"];
+        final String albumId = data['albumId'];
+        final String userId = data['userId'];
+        final String albumName = data['albumName'];
+        final String composer = data['composer'];
+        final String? comment = data['comment'];
+        final String? youtubeUrl = data['youtubeUrl'];
         return AlbumData(
             albumId: albumId,
             userId: userId,
@@ -42,14 +42,14 @@ class AlbumService extends Service{
     String? youtubeUrl,
   }) async {
     try{
-      var id = FirebaseFirestore.instance.collection("_").doc().id;
-      await FirebaseFirestore.instance.collection("albums").doc(id).set({
-        "albumId": id,
-        "userId": uid,
-        "albumName": albumName,
-        "composer": composer,
-        "comment": comment,
-        "youtubeUrl": youtubeUrl,
+      var id = FirebaseFirestore.instance.collection('_').doc().id;
+      await FirebaseFirestore.instance.collection('albums').doc(id).set({
+        'albumId': id,
+        'userId': uid,
+        'albumName': albumName,
+        'composer': composer,
+        'comment': comment,
+        'youtubeUrl': youtubeUrl,
       });
     } on Exception catch(e) {
       rethrow;
@@ -65,13 +65,13 @@ class AlbumService extends Service{
     String? youtubeUrl,
   }) async{
     try{
-      await FirebaseFirestore.instance.collection("albums").doc(id).update({
-        "albumId": id,
-        "userId": uid,
-        "albumName": albumName,
-        "composer": composer,
-        "comment": comment,
-        "youtubeUrl": youtubeUrl,
+      await FirebaseFirestore.instance.collection('albums').doc(id).update({
+        'albumId': id,
+        'userId': uid,
+        'albumName': albumName,
+        'composer': composer,
+        'comment': comment,
+        'youtubeUrl': youtubeUrl,
       });
     } on Exception catch(e) {
       rethrow;
@@ -79,11 +79,19 @@ class AlbumService extends Service{
   }
 
   Future<void> deleteAlbum(AlbumData data) async {
-    try{
+    try {
       // アルバムデータの削除
-      await FirebaseFirestore.instance.collection("albums").doc(data.albumId).delete();
+      await FirebaseFirestore.instance.collection('albums')
+          .doc(data.albumId)
+          .delete();
       // アルバムデータに紐づいているタスクを削除
-      await FirebaseFirestore.instance.collection("tasks").doc(data.albumId).delete();
+      final query = await FirebaseFirestore.instance
+          .collection('tasks')
+          .where('albumId', isEqualTo: data.albumId)
+          .get();
+      for (var doc in query.docs) {
+        await doc.reference.delete();
+      }
     } catch(e) {
       rethrow;
     }

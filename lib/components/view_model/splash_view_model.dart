@@ -1,3 +1,7 @@
+import 'package:askMu/components/models/youtube_data.dart';
+import 'package:askMu/utility/dialog_util.dart';
+import 'package:askMu/utility/loading_circle.dart';
+import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:askMu/components/models/task_data.dart';
@@ -29,36 +33,52 @@ class SplashViewModel extends ChangeNotifier{
   }
 
   Future<void> showTopPage(BuildContext context) async {
-    final UserService _userService = getIt<UserService>();
-    final currentUserId = await _userService.getUserId();
+    try{
+      showLoadingCircle(context);
+      final UserService _userService = getIt<UserService>();
+      final currentUserId = await _userService.getUserId();
 
-    final AlbumService _albumService = getIt<AlbumService>();
-    final albumList = await _albumService.getAlbumList(currentUserId);
+      final AlbumService _albumService = getIt<AlbumService>();
+      final albumList = await _albumService.getAlbumList(currentUserId);
 
-    final List<TaskData>? taskList;
+      final List<TaskData>? taskList;
+      YoutubeData? youtubeData;
 
-    final TaskService _taskService = getIt<TaskService>();
-    if(albumList!.isNotEmpty) {
-      taskList = await _taskService.getTaskList(
-          currentUserId, albumList[0].albumId);
-    } else {
-      taskList = null;
+      final TaskService _taskService = getIt<TaskService>();
+      if(albumList!.isNotEmpty) {
+        taskList = await _taskService.getTaskList(
+            currentUserId, albumList[0].albumId);
+        if(albumList[0].youtubeUrl!.isNotEmpty) {
+          youtubeData = await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(albumList[0].youtubeUrl!);
+        } else {
+          youtubeData = null;
+        }
+      } else {
+        taskList = null;
+      }
+      dismissLoadingCircle(context);
+      NavigationHelper().pushAndRemoveUntilRoot<TopViewModel>(
+        context: context,
+        pageBuilder: (_) => const TopPage(),
+        viewModelBuilder: (context) {
+          return TopViewModel(
+            services: [
+              Service.of<TaskService>(context),
+              Service.of<AuthService>(context),
+            ],
+            albumDataList: albumList,
+            taskDataList: taskList,
+            youtubeData: youtubeData,
+          );
+        },
+      );
+    } on Exception catch(_) {
+      dismissLoadingCircle(context);
+      DialogUtil.showPreventPopErrorDialog(
+        context: context,
+        content: 'ホーム画面表示中にエラーが発生しました',
+      );
     }
-
-    NavigationHelper().pushAndRemoveUntilRoot<TopViewModel>(
-      context: context,
-      pageBuilder: (_) => const TopPage(),
-      viewModelBuilder: (context) {
-        return TopViewModel(
-          services: [
-            Service.of<TaskService>(context),
-            Service.of<AuthService>(context),
-          ],
-          albumDataList: albumList,
-          taskDataList: taskList,
-        );
-      },
-    );
   }
 
   Future<void> gotoNextScreen(BuildContext context) async {
@@ -66,7 +86,6 @@ class SplashViewModel extends ChangeNotifier{
       const Duration(milliseconds: 3000),
         () async{
           if (FirebaseAuth.instance.currentUser != null) {
-            final user = FirebaseAuth.instance.currentUser;
             showTopPage(context);
           } else{
             showStartPage(context);

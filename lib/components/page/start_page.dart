@@ -117,7 +117,7 @@ class _StartPageState extends State<StartPage> {
                             ),
                             ClipRRect(
                               child: Image.asset(
-                                "images/Tutorial1.png",
+                                'images/Tutorial1.png',
                                 width: width * 0.45,
                               ),
                               borderRadius: BorderRadius.circular(20),
@@ -168,7 +168,7 @@ class _StartPageState extends State<StartPage> {
                               ),
                               ClipRRect(
                                 child: Image.asset(
-                                  "images/Tutorial2.png",
+                                  'images/Tutorial2.png',
                                   width: width * 0.45,
                                 ),
                                 borderRadius: BorderRadius.circular(20),
@@ -219,7 +219,7 @@ class _StartPageState extends State<StartPage> {
                               ),
                               ClipRRect(
                                 child: Image.asset(
-                                  "images/Tutorial3.png",
+                                  'images/Tutorial3.png',
                                   width: width * 0.45,
                                 ),
                                 borderRadius: BorderRadius.circular(20),

@@ -1,4 +1,7 @@
+import 'package:askMu/components/page/popup_terms_page.dart';
+import 'package:askMu/components/view_model/popup_terms_view_model.dart';
 import 'package:askMu/main.dart';
+import 'package:askMu/utility/navigation_helper.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,9 +20,10 @@ class TopPage extends StatefulWidget {
 }
 class _TopPageState extends State<TopPage> with RouteAware{
 
-  static const pageViewHeight = 235.0;
+  static const pageViewHeight = 215.0;
   late BannerAd myBanner;
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
+  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey();
   bool _isOpen = false;
 
   @override
@@ -52,7 +56,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
   BannerAd _createBanner(AdSize size) {
     return BannerAd(
       size: size,
-      adUnitId: "ca-app-pub-8754541206691079/4153658345",
+      adUnitId: 'ca-app-pub-8754541206691079/4153658345',
       listener: BannerAdListener(
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           myBanner.dispose();
@@ -71,88 +75,130 @@ class _TopPageState extends State<TopPage> with RouteAware{
     return Consumer<TopViewModel>(builder: (context, viewModel, child) {
       // viewModel.getAlbumDataList(context);
       return Scaffold(
-          backgroundColor: CommonColors.customSwatch.shade50,
-          body: Center(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: height * 0.06),
-                  viewModel.albumDataList.isNotEmpty ?
-                  SizedBox(
-                    height: pageViewHeight,
-                    child: PageView(
-                      controller: viewModel.albumPageController,
-                      onPageChanged: (value) => viewModel.onAlbumPageChanged(context, value),
-                      children: viewModel.albumDataList
-                        .map(
-                          (e) => AlbumListItem(
-                            data:  e,
-                            onTapCard: (data) => viewModel.onTapAlbumListItem(context, data),
-                            onTapVideo: (data) => viewModel.onTapVideoPlayItem(context, data),
-                          ),
-                        ).toList(),
-                    )
-                  ) :
-                  Container(
-                    height: height * 0.6,
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'New Music',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.orbitron(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.05),
-                                Text(
-                                  'まずは画面下のボタンから\n'
-                                      'アルバムを追加',
-                                  textAlign: TextAlign.start,
-                                  style: GoogleFonts.orbitron(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.white, width: 3),
-                            ),
-                            child: ClipRRect(
-                              child: Image.asset(
-                                "images/Tutorial1.png",
-                                width: width * 0.45,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          )
-                        ]
-                    ),
+        key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              const DrawerHeader(
+                child: Text(
+                  'MenuBar',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 20),
-                  listView(viewModel, width, height, context, myBanner),
-                ]
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey,
+                ),
               ),
+              ListTile(
+                title: const Text('利用規約・プライバシーポリシー'),
+                onTap: () {
+                  NavigationHelper().pushNonMaterialRoute<PopupTermsViewModel>(
+                    context: context,
+                    pageBuilder: (_) => PopupTermsPage(),
+                    viewModelBuilder: (context) => PopupTermsViewModel(agreeFlag: false),
+                  );
+                },
+              ),
+              ListTile(
+                title: const Text('ログアウト'),
+                onTap: () {
+                  viewModel.onTapLogout(context);
+                },
+              ),
+              ListTile(
+                title: const Text('退会'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
-          floatingActionButton: FloatingButton(viewModel, width, height),
+        ),
+        backgroundColor: CommonColors.customSwatch.shade50,
+        body: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: height * 0.06),
+                viewModel.albumDataList.isNotEmpty ?
+                SizedBox(
+                  height: pageViewHeight,
+                  child: PageView(
+                    controller: viewModel.albumPageController,
+                    onPageChanged: (value) => viewModel.onAlbumPageChanged(context, value),
+                    children: viewModel.albumDataList
+                      .map(
+                        (e) => AlbumListItem(
+                          data:  e,
+                          onTapCard: (data) => viewModel.onTapAlbumListItem(context, data),
+                          onTapVideo: (data) => viewModel.onTapVideoPlayItem(context, data),
+                          youtubeData: viewModel.youtubeData!,
+                        ),
+                      ).toList(),
+                  )
+                ) :
+                Container(
+                  height: height * 0.6,
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'New Music',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.orbitron(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: height * 0.05),
+                              Text(
+                                'まずは画面下のボタンから\n'
+                                    'アルバムを追加',
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.orbitron(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white, width: 3),
+                          ),
+                          child: ClipRRect(
+                            child: Image.asset(
+                              'images/Tutorial1.png',
+                              width: width * 0.45,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        )
+                      ]
+                  ),
+                ),
+                const SizedBox(height: 20),
+                listView(viewModel, width, height, context, myBanner),
+              ]
+            ),
+        ),
+        floatingActionButton: FloatingButton(viewModel, width, height),
       );
     }
     );
@@ -189,7 +235,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
                 size: 35,
                 color: Colors.white),
             label: const Text(
-                "NewMusic",
+                'NewMusic',
                 style: TextStyle(
                     fontSize: 12,
                     color: Colors.white)
@@ -204,20 +250,21 @@ class _TopPageState extends State<TopPage> with RouteAware{
                 size: 35,
                 color: Colors.white),
             label: const Text(
-                "NewTask",
+                'NewTask',
                 style: TextStyle(
                     fontSize: 12,
                     color: Colors.white)
             ),
           ),
           TextButton.icon(
-            onPressed: () => viewModel.onTapLogout(context),
+            // onPressed: () => viewModel.onTapLogout(context),
+            onPressed: () => scaffoldKey.currentState?.openDrawer(),
             icon: const Icon(
-                Icons.add_to_home_screen,
+                Icons.menu,
                 size: 35,
                 color: Colors.white),
             label: const Text(
-                "Logout",
+                'Menu',
                 style: TextStyle(
                     fontSize: 12,
                     color: Colors.white)
@@ -277,9 +324,9 @@ Widget listView(
         ),
       );
     }
-    taskListWidget.add(
-      bannerAdWidget(myBanner, width),
-    );
+    // taskListWidget.add(
+    //   bannerAdWidget(myBanner, width),
+    // );
     taskListWidget.add(
       Container(
         height: height * 0.2

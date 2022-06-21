@@ -43,6 +43,25 @@ class NavigationHelper {
         (_) => false,
     );
   }
+
+  Future<void> pushNonMaterialRoute<T extends ChangeNotifier>({
+    required BuildContext context,
+    required WidgetBuilder pageBuilder,
+    required ValueBuilder<T> viewModelBuilder,
+  }) async {
+    Navigator.push(
+      context,
+      PageRouteBuilder<Widget>(
+        opaque: false,
+        pageBuilder: (context, animation1, animation2){
+          return ChangeNotifierProvider<T>(
+            create: viewModelBuilder,
+            child: pageBuilder(context),
+          );
+        },
+      ),
+    );
+  }
 }
 
 typedef ValueBuilder<T> = T Function(BuildContext context);

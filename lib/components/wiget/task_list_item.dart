@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:askMu/components/models/task_data.dart';
 
@@ -56,7 +55,7 @@ class TaskListItem extends StatelessWidget{
           ),
         ),
         Text(
-          "小節番号 $measureString",
+          '小節番号 $measureString',
           textAlign: TextAlign.start,
           style: const TextStyle(
             fontSize: 11,
@@ -71,7 +70,7 @@ class TaskListItem extends StatelessWidget{
   }
 
   Widget rightArea() {
-    final createAt = DateFormat("yyyy/MM/dd").format(data.createAt);
+    final createAt = DateFormat('yyyy/MM/dd').format(data.createAt);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,

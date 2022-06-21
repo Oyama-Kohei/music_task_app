@@ -104,7 +104,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
                               color: Colors.white,
                             ),
                             Text(
-                              "画像の追加はこちらをタップ",
+                              '画像の追加はこちらをタップ',
                               style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white
@@ -134,7 +134,7 @@ class _TaskAddPageState extends State<TaskAddPage>{
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: const InputDecoration(
                             hintText: 'タスクタイトル',
-                            labelText: "title",
+                            labelText: 'title',
                           ),
                           onChanged: (value) {
                             _title = value;

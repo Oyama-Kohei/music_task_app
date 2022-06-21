@@ -8,10 +8,10 @@ class UserService  extends Service{
 
   Future setNickname(String nickname, uid) async{
     try {
-      final doc = firebaseFireStore.collection("users").doc(uid);
+      final doc = firebaseFireStore.collection('users').doc(uid);
       await doc.set({
-        "uid": uid,
-        "nickname": nickname
+        'uid': uid,
+        'nickname': nickname
       });
     } catch(e) {
       rethrow;

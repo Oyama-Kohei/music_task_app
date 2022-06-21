@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:askMu/utility/dialog_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:askMu/components/models/album_data.dart';
 import 'package:askMu/components/models/task_data.dart';
 import 'package:askMu/components/service/task_service.dart';
@@ -26,9 +25,9 @@ class TaskAddViewModel extends ChangeNotifier{
   Image? imageFile;
   String? setFilePath;
 
-  static const String selectIcon = "画像の選択方法";
-  static const List<String> selectIconOption = ["写真から選択", "写真を撮影"];
-  static const List<String> movementList = ["楽章なし", "1楽章", "2楽章", "3楽章", "4楽章", "5楽章", "6楽章", "7楽章", "8楽章", "9楽章", "10楽章"];
+  static const String selectIcon = '画像の選択方法';
+  static const List<String> selectIconOption = ['写真から選択', '写真を撮影'];
+  static const List<String> movementList = ['楽章なし', '1楽章', '2楽章', '3楽章', '4楽章', '5楽章', '6楽章', '7楽章', '8楽章', '9楽章', '10楽章'];
   static const int gallery = 0;
   static const int camera = 1;
 
@@ -86,10 +85,10 @@ class TaskAddViewModel extends ChangeNotifier{
         context: context,
         builder: (_) {
           return AlertDialog(
-            content: Text(taskData == null ? "タスクを追加しました" : "タスクを更新しました"),
+            content: Text(taskData == null ? 'タスクを追加しました' : 'タスクを更新しました'),
             actions: <Widget>[
               TextButton(
-                child: const Text("OK"),
+                child: const Text('OK'),
                 onPressed: () async {
                   notifyListeners();
                   Navigator.pop(context);
@@ -102,13 +101,9 @@ class TaskAddViewModel extends ChangeNotifier{
       );
     } catch(e) {
       dismissLoadingCircle(context);
-      showDialog(
+      DialogUtil.showPreventPopErrorDialog(
         context: context,
-        builder: (_) {
-          return const AlertDialog(
-            title: Text("タスクの追加に失敗しました"),
-          );
-        },
+        content: 'タスクの追加に失敗しました',
       );
     }
   }
@@ -124,10 +119,10 @@ class TaskAddViewModel extends ChangeNotifier{
         context: context,
         builder: (_) {
           return AlertDialog(
-            content: const Text("タスクを削除しました"),
+            content: const Text('タスクを削除しました'),
             actions: <Widget>[
               TextButton(
-                child: const Text("OK"),
+                child: const Text('OK'),
                 onPressed: () async {
                   notifyListeners();
                   Navigator.pop(context);
@@ -145,7 +140,7 @@ class TaskAddViewModel extends ChangeNotifier{
         context: context,
         builder: (_) {
           return const AlertDialog(
-            title: Text("タスクの削除に失敗しました"),
+            title: Text('タスクの削除に失敗しました'),
           );
         },
       );

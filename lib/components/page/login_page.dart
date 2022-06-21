@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage>{
                     SizedBox(
                       height: deviceHeight * 0.4,
                       child: const Image(
-                        image: AssetImage("images/HeadPhoneGirl.png"),
+                        image: AssetImage('images/HeadPhoneGirl.png'),
                       ),
                     ),
                     TextFormField(

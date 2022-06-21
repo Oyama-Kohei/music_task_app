@@ -30,8 +30,8 @@ class LoginViewModel extends ChangeNotifier{
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
-        title: "ログインエラー",
-        content: "通信状況やメールアドレス及び\nパスワードをご確認ください",
+        title: 'ログインエラー',
+        content: '通信状況やメールアドレス及び\nパスワードをご確認ください',
       );
     }
   }

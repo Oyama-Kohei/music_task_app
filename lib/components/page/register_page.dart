@@ -1,3 +1,7 @@
+import 'package:askMu/components/page/popup_terms_page.dart';
+import 'package:askMu/components/view_model/popup_terms_view_model.dart';
+import 'package:askMu/main.dart';
+import 'package:askMu/utility/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:askMu/components/view_model/register_view_model.dart';
@@ -12,9 +16,38 @@ class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
-class _RegisterPageState extends State<RegisterPage>{
+class _RegisterPageState extends State<RegisterPage> with RouteAware{
 
   late String _email, _password, _nickname;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    super.didPush();
+    Future(() async {
+      await NavigationHelper().pushNonMaterialRoute<PopupTermsViewModel>(
+        context: context,
+        pageBuilder: (_) => PopupTermsPage(),
+        viewModelBuilder: (context) => PopupTermsViewModel(agreeFlag: true),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context){
@@ -43,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage>{
                             SizedBox(
                               height: deviceHeight * 0.40,
                               child: const Image(
-                                image: AssetImage("images/HeadPhoneBoy.png"),
+                                image: AssetImage('images/HeadPhoneBoy.png'),
                               ),
                             ),
                             SizedBox(

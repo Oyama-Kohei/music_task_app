@@ -16,7 +16,7 @@ class _SplashPageState extends State<SplashPage> with RouteAware, RouteObserverM
       onWillPop: () async => false,
       child: Scaffold(
         body: Center(
-          child: Image.asset("images/Splash.png"),
+          child: Image.asset('images/Splash.png'),
         ),
       ),
     );

@@ -63,7 +63,7 @@ class CommonButton extends StatelessWidget{
               ),
               Visibility(
                 visible: useIcon,
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_forward,
                   color: Colors.white,
                 ),

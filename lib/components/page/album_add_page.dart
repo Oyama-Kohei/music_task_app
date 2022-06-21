@@ -126,7 +126,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                       color: Colors.white,
                                     ),
                                     Text(
-                                      "Youtube未設定",
+                                      'Youtube未設定',
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.white
@@ -146,7 +146,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 ),
                                 decoration: InputDecoration(
                                   hintText: 'https://www.youtube.com〜',
-                                  labelText: "参考演奏など(Youtube)",
+                                  labelText: '参考演奏など(Youtube)',
                                   suffixIcon: IconButton(
                                     padding: const EdgeInsets.only(top: 16),
                                     icon: const Icon(Icons.clear),
@@ -172,7 +172,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
                                 decoration: const InputDecoration(
                                   hintText: '曲名',
-                                  labelText: "title"),
+                                  labelText: 'title'),
                                 onChanged: (value) {
                                   _albumName = value;
                                   viewModel.updateFlag = true;
@@ -189,7 +189,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
                                 decoration: const InputDecoration(
                                   hintText: '作曲者',
-                                  labelText: "composer"),
+                                  labelText: 'composer'),
                                 onChanged: (value) {
                                   _composer = value;
                                   viewModel.updateFlag = true;

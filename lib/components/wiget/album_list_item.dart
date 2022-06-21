@@ -1,7 +1,8 @@
+import 'package:askMu/components/models/youtube_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:askMu/components/models/album_data.dart';
-import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
+import 'package:marquee/marquee.dart';
 
 import 'common_colors.dart';
 
@@ -10,6 +11,7 @@ class AlbumListItem extends StatelessWidget {
     required this.data,
     required this.onTapCard,
     required this.onTapVideo,
+    required this.youtubeData,
   });
 
   final AlbumData data;
@@ -18,8 +20,10 @@ class AlbumListItem extends StatelessWidget {
 
   final void Function(AlbumData data) onTapVideo;
 
-  static const imageHeight = 110.0;
-  static const imageWidth = 200.0;
+  final YoutubeData youtubeData;
+
+  static const imageHeight = 70.0;
+  static const imageWidth = 100.0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class AlbumListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "title",
+                  'title',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.sawarabiMincho(
                     fontSize: 12,
@@ -62,7 +66,7 @@ class AlbumListItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "composer",
+                  'composer',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.sawarabiMincho(
                     fontSize: 12,
@@ -87,69 +91,81 @@ class AlbumListItem extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "参考演奏",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.sawarabiMincho(
-                            fontSize: 14,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        IconButton(
-                          alignment: Alignment.center,
-                          icon: const Icon(
-                            Icons.smart_display_rounded,
-                            size: 44,
-                            color: Colors.black54,
-                          ),
-                          onPressed: () => onTapVideo(data),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 10),
                     data.youtubeUrl != null
-                      ? InkWell(
-                        child: ClipRRect(
-                          child: Image.network(
-                            YoutubeThumbnailGeneratorUtil.youtubeThumbnailUrl(data.youtubeUrl!),
-                            height: imageHeight,
-                            width: imageWidth,
-                            fit: BoxFit.fill,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
+                        ? InkWell(
+                      child: ClipRRect(
+                        child: Image.network(
+                          youtubeData.thumbnailUrl,
+                          height: imageHeight,
+                          width: imageWidth,
+                          fit: BoxFit.fill,
                         ),
-                        onTap: () => onTapVideo(data),
-                      )
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      onTap: () => onTapVideo(data),
+                    )
                       : Container(
-                        height: imageHeight,
-                        width: imageWidth,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.smart_display_rounded,
-                              size: 27,
-                              color: Colors.white54,
-                            ),
-                            Text(
-                              "参考演奏未設定",
+                      height: imageHeight,
+                      width: imageWidth,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.smart_display_rounded,
+                            size: 27,
+                            color: Colors.white54,
+                          ),
+                          Text(
+                              '参考演奏未設定',
                               style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.white54
                               )
-                            )
-                          ],
-                        )
+                          )
+                        ],
+                      )
+                    ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 160,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '参考演奏',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.sawarabiMincho(
+                              fontSize: 12,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          InkWell(
+                            onTap: () => onTapVideo(data),
+                            child: SizedBox(
+                              height: 40,
+                              width: 160,
+                              child: Marquee(
+                                text: youtubeData.title,
+                                blankSpace: 20,
+                                velocity: 40,
+                                style: GoogleFonts.sawarabiMincho(
+                                  fontSize: 13,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     )
                   ],
                 )
