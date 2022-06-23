@@ -42,17 +42,11 @@ class SplashViewModel extends ChangeNotifier{
       final albumList = await _albumService.getAlbumList(currentUserId);
 
       final List<TaskData>? taskList;
-      YoutubeData? youtubeData;
 
       final TaskService _taskService = getIt<TaskService>();
       if(albumList!.isNotEmpty) {
         taskList = await _taskService.getTaskList(
             currentUserId, albumList[0].albumId);
-        if(albumList[0].youtubeUrl!.isNotEmpty) {
-          youtubeData = await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(albumList[0].youtubeUrl!);
-        } else {
-          youtubeData = null;
-        }
       } else {
         taskList = null;
       }
@@ -68,7 +62,6 @@ class SplashViewModel extends ChangeNotifier{
             ],
             albumDataList: albumList,
             taskDataList: taskList,
-            youtubeData: youtubeData,
           );
         },
       );

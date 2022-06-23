@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:askMu/components/models/youtube_data.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:html/parser.dart';
 
 class YoutubeThumbnailGeneratorUtil {
   Future<YoutubeData> youtubeThumbnailUrl(String url) async {
+    // ignore: avoid_print
+    print('youtubeThumbnailUrl');
     String title = '';
     String imageUrl = '';
 

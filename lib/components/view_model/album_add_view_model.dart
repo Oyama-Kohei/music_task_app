@@ -1,4 +1,5 @@
 import 'package:askMu/components/models/youtube_data.dart';
+import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
 import 'package:flutter/material.dart';
 import 'package:askMu/components/models/album_data.dart';
 import 'package:askMu/components/service/album_service.dart';
@@ -10,19 +11,20 @@ import 'package:askMu/utility/locator.dart';
 class AlbumAddViewModel extends ChangeNotifier{
   AlbumAddViewModel({
     this.albumData,
-    this.youtubeData,
   }) : super() {
-    if (youtubeData != null) {
-      final thumbnailUrl = youtubeData!.thumbnailUrl;
-      youtubeThumbnailImage = Image.network(thumbnailUrl);
-      urlTextController.text = thumbnailUrl;
+    if (albumData != null) {
+      if(albumData!.thumbnailUrl != null){
+        final thumbnailUrl = albumData!.thumbnailUrl;
+        youtubeThumbnailImage = Image.network(thumbnailUrl!);
+      }
+      if(albumData!.youtubeUrl != null){
+        urlTextController.text = albumData!.youtubeUrl!;
+      }
     }
   }
 
   AlbumData? albumData;
   Image? youtubeThumbnailImage;
-
-  YoutubeData? youtubeData;
 
   // 画面更新フラグ
   bool updateFlag = false;
@@ -36,7 +38,8 @@ class AlbumAddViewModel extends ChangeNotifier{
     required double deviceWidth,}) async {
     try{
       showLoadingCircle(context);
-      final thumbnailUrl = youtubeUrl;
+      YoutubeData youtubeData = await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(youtubeUrl);
+      final thumbnailUrl = youtubeData.thumbnailUrl;
       youtubeThumbnailImage = Image.network(
         thumbnailUrl,
         errorBuilder: (context, error, stackTrace){
@@ -50,7 +53,7 @@ class AlbumAddViewModel extends ChangeNotifier{
                 borderRadius: BorderRadius.circular(20),
               ),
               child: const Text(
-                'Youtubeの読み込みに失敗しました\n'
+                '参考演奏の読み込みに失敗しました\n'
                     'URLを再度ご確認ください',
                 style: TextStyle(
                     fontSize: 16,
@@ -60,6 +63,8 @@ class AlbumAddViewModel extends ChangeNotifier{
             )
           );
         });
+      // ignore: avoid_print
+      print('サムネイル取得');
       dismissLoadingCircle(context);
       notifyListeners();
     } catch(e) {
@@ -69,6 +74,7 @@ class AlbumAddViewModel extends ChangeNotifier{
         context: context,
         content: 'サムネイルの取得に失敗しました'
       );
+      notifyListeners();
     }
   }
 
@@ -81,6 +87,10 @@ class AlbumAddViewModel extends ChangeNotifier{
       ) async {
     try{
       showLoadingCircle(context);
+      YoutubeData? youtubeData;
+      if(youtubeUrl != null){
+        youtubeData = await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(youtubeUrl);
+      }
       final UserService _userService = getIt<UserService>();
       final currentUserId = await _userService.getUserId();
       final albumService = getIt<AlbumService>();
@@ -92,13 +102,18 @@ class AlbumAddViewModel extends ChangeNotifier{
         composer: composer,
         comment: comment,
         youtubeUrl: youtubeUrl,
+        thumbnailUrl: youtubeData?.thumbnailUrl,
+        youtubeTitle: youtubeData?.title,
       ) :
       await albumService.updateAlbum(
-          id: albumData!.albumId,
-          albumName: albumName,
-          uid: currentUserId,
-          composer: composer,
-          youtubeUrl: youtubeUrl);
+        id: albumData!.albumId,
+        albumName: albumName,
+        uid: currentUserId,
+        composer: composer,
+        youtubeUrl: youtubeUrl,
+        thumbnailUrl: youtubeData?.thumbnailUrl,
+        youtubeTitle: youtubeData?.title,
+      );
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,

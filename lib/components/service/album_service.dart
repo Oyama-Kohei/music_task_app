@@ -8,6 +8,8 @@ class AlbumService extends Service{
 
   Future<List<AlbumData>?> getAlbumList(String uid) async{
     try{
+      // ignore: avoid_print
+      print('getAlbum');
       final QuerySnapshot snapshot =
           await FirebaseFirestore.instance.collection('albums')
               .where('userId', isEqualTo: uid).get();
@@ -20,13 +22,17 @@ class AlbumService extends Service{
         final String composer = data['composer'];
         final String? comment = data['comment'];
         final String? youtubeUrl = data['youtubeUrl'];
+        final String? thumbnailUrl = data['thumbnailUrl'];
+        final String? youtubeTitle = data['youtubeTitle'];
         return AlbumData(
             albumId: albumId,
             userId: userId,
             albumName: albumName,
             composer: composer,
             comment: comment,
-            youtubeUrl: youtubeUrl);
+            youtubeUrl: youtubeUrl,
+            thumbnailUrl: thumbnailUrl,
+            youtubeTitle: youtubeTitle);
       }).toList();
       return albumDataList;
     } catch(e) {
@@ -40,8 +46,12 @@ class AlbumService extends Service{
     required String composer,
     String? comment,
     String? youtubeUrl,
+    String? thumbnailUrl,
+    String? youtubeTitle,
   }) async {
     try{
+      // ignore: avoid_print
+      print('addAlbum');
       var id = FirebaseFirestore.instance.collection('_').doc().id;
       await FirebaseFirestore.instance.collection('albums').doc(id).set({
         'albumId': id,
@@ -50,8 +60,10 @@ class AlbumService extends Service{
         'composer': composer,
         'comment': comment,
         'youtubeUrl': youtubeUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'youtubeTitle': youtubeTitle,
       });
-    } on Exception catch(e) {
+    } on Exception catch(_) {
       rethrow;
     }
   }
@@ -63,8 +75,12 @@ class AlbumService extends Service{
     required String composer,
     String? comment,
     String? youtubeUrl,
+    String? thumbnailUrl,
+    String? youtubeTitle,
   }) async{
     try{
+      // ignore: avoid_print
+      print('updateAlbum');
       await FirebaseFirestore.instance.collection('albums').doc(id).update({
         'albumId': id,
         'userId': uid,
@@ -72,8 +88,10 @@ class AlbumService extends Service{
         'composer': composer,
         'comment': comment,
         'youtubeUrl': youtubeUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'youtubeTitle': youtubeTitle,
       });
-    } on Exception catch(e) {
+    } on Exception catch(_) {
       rethrow;
     }
   }

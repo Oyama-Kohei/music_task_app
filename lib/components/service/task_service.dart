@@ -88,6 +88,8 @@ class TaskService extends Service{
     String? imageUrl,
   }) async {
     try{
+      // ignore: avoid_print
+      print('updateTask');
       await FirebaseFirestore.instance.collection('tasks').doc(id).update({
         'taskId': id,
         'userId': uid,
@@ -105,6 +107,8 @@ class TaskService extends Service{
   }
   Future<void> deleteTask(TaskData data) async {
     try{
+      // ignore: avoid_print
+      print('deleteTask');
       await FirebaseFirestore.instance.collection('tasks').doc(data.taskId).delete();
       if(data.imageUrl != null) {
         await _deletePhotoData(data.imageUrl!);
@@ -115,14 +119,22 @@ class TaskService extends Service{
   }
 
   Future<String> uploadPhotoData(String filePath) async {
-    final ref = FirebaseStorage.instance.ref();
-    final storedImage = await ref.child('images').child(generateFileName(16)).putFile(File(filePath));
-    final photoUrl = await storedImage.ref.getDownloadURL();
-    return photoUrl.toString();
+    try{
+      // ignore: avoid_print
+      print('uploadPhotoData');
+      final ref = FirebaseStorage.instance.ref();
+      final storedImage = await ref.child('images').child(generateFileName(16)).putFile(File(filePath));
+      final photoUrl = await storedImage.ref.getDownloadURL();
+      return photoUrl.toString();
+    } catch(e) {
+      rethrow;
+    }
   }
 
   Future<void> _deletePhotoData(String url) async {
     try {
+      // ignore: avoid_print
+      print('_deletePhotoData');
       final storageReference = FirebaseStorage.instance.refFromURL(url);
       await storageReference.delete();
     } catch (error) {

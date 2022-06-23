@@ -6,6 +6,8 @@ class AlbumData{
     required this.composer,
     this.comment,
     this.youtubeUrl,
+    this.thumbnailUrl,
+    this.youtubeTitle,
 });
 
   final String albumId;
@@ -19,4 +21,8 @@ class AlbumData{
   final String? comment;
 
   final String? youtubeUrl;
+
+  final String? thumbnailUrl;
+
+  final String? youtubeTitle;
 }

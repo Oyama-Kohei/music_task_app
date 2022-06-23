@@ -32,6 +32,8 @@ class _TaskAddPageState extends State<TaskAddPage>{
         elevation: 0.0,
         actions: [
           Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
+            // ignore: avoid_print
+            print('タスクページ更新');
             return Visibility(
               visible: viewModel.taskData != null,
               child: IconButton(

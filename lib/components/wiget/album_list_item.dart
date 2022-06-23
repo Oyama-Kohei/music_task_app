@@ -1,4 +1,3 @@
-import 'package:askMu/components/models/youtube_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:askMu/components/models/album_data.dart';
@@ -11,7 +10,6 @@ class AlbumListItem extends StatelessWidget {
     required this.data,
     required this.onTapCard,
     required this.onTapVideo,
-    required this.youtubeData,
   });
 
   final AlbumData data;
@@ -20,13 +18,12 @@ class AlbumListItem extends StatelessWidget {
 
   final void Function(AlbumData data) onTapVideo;
 
-  final YoutubeData youtubeData;
-
   static const imageHeight = 70.0;
   static const imageWidth = 100.0;
 
   @override
   Widget build(BuildContext context) {
+    final thumbnailUrl = data.thumbnailUrl;
     return Container(
         height: double.infinity,
         width: double.infinity,
@@ -91,11 +88,11 @@ class AlbumListItem extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    data.youtubeUrl != null
+                    thumbnailUrl != null
                         ? InkWell(
                       child: ClipRRect(
                         child: Image.network(
-                          youtubeData.thumbnailUrl,
+                          thumbnailUrl,
                           height: imageHeight,
                           width: imageWidth,
                           fit: BoxFit.fill,
@@ -123,7 +120,7 @@ class AlbumListItem extends StatelessWidget {
                           Text(
                               '参考演奏未設定',
                               style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 10,
                                   color: Colors.white54
                               )
                           )
@@ -147,13 +144,14 @@ class AlbumListItem extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 5),
+                          data.youtubeTitle != null ?
                           InkWell(
                             onTap: () => onTapVideo(data),
                             child: SizedBox(
                               height: 40,
                               width: 160,
                               child: Marquee(
-                                text: youtubeData.title,
+                                text: data.youtubeTitle!,
                                 blankSpace: 20,
                                 velocity: 40,
                                 style: GoogleFonts.sawarabiMincho(
@@ -163,7 +161,15 @@ class AlbumListItem extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          )
+                          ) : Text(
+                            '未設定',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.sawarabiMincho(
+                              fontSize: 14,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
                         ],
                       ),
                     )

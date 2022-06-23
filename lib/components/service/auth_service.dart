@@ -7,6 +7,8 @@ class AuthService extends Service{
   final firebaseAuthService = FirebaseAuth.instance;
 
   Future signUp(String email, String password) async{
+    // ignore: avoid_print
+    print('signUp');
     try{
       UserCredential _userCredential = await firebaseAuthService.createUserWithEmailAndPassword(email: email, password: password);
       if(_userCredential.user != null){
@@ -19,6 +21,8 @@ class AuthService extends Service{
 
   Future<bool> signIn(String email, String password) async{
     try{
+      // ignore: avoid_print
+      print('signIn');
       await firebaseAuthService.signInWithEmailAndPassword(email: email, password: password);
     }on Exception catch(e){
       rethrow;
@@ -28,6 +32,8 @@ class AuthService extends Service{
 
   Future<bool> signOut() async{
     try{
+      // ignore: avoid_print
+      print('signOut');
       await firebaseAuthService.signOut();
     }on FirebaseAuthException catch(e){
       rethrow;
@@ -37,7 +43,8 @@ class AuthService extends Service{
 
   Future<bool> unSubscribe(String userId) async{
     try{
-      await firebaseAuthService.signOut();
+      // ignore: avoid_print
+      print('unSubscribe');
       // ユーザデータに紐づいているアルバムを削除
       final queryAlbum = await FirebaseFirestore.instance
           .collection('albums')
@@ -55,8 +62,10 @@ class AuthService extends Service{
         await doc.reference.delete();
       }
       FirebaseFirestore.instance.collection('users').doc(userId).delete();
+      await firebaseAuthService.currentUser?.delete();
+      await firebaseAuthService.signOut();
 
-    }on Exception catch(e){
+    }on Exception catch(_){
       rethrow;
     }
     return true;

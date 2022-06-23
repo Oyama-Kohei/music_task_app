@@ -1,7 +1,5 @@
-import 'package:askMu/components/models/youtube_data.dart';
 import 'package:askMu/components/service/album_service.dart';
 import 'package:askMu/utility/loading_circle.dart';
-import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
 import 'package:flutter/material.dart';
 import 'package:askMu/components/models/album_data.dart';
 import 'package:askMu/components/models/task_data.dart';
@@ -26,7 +24,6 @@ class TopViewModel extends ChangeNotifier{
     List<Service>? services,
     required this.albumDataList,
     required this.taskDataList,
-    required this.youtubeData
   });
 
   List<Service>? services;
@@ -34,8 +31,6 @@ class TopViewModel extends ChangeNotifier{
   List<TaskData>? taskDataList;
 
   List<AlbumData> albumDataList = [];
-
-  YoutubeData? youtubeData;
 
   static const List<String> movementList = ['楽章なし', '1楽章', '2楽章', '3楽章', '4楽章', '5楽章', '6楽章', '7楽章', '8楽章', '9楽章', '10楽章'];
 
@@ -47,9 +42,6 @@ class TopViewModel extends ChangeNotifier{
   Future<void> onAlbumPageChanged(BuildContext context, int index) async {
     albumPageNotifier.value = index;
     await getTaskDataList(context);
-    if(albumDataList[index].youtubeUrl !=  null) {
-      youtubeData = await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(albumDataList[index].youtubeUrl!);
-    }
     notifyListeners();
   }
 
@@ -75,6 +67,8 @@ class TopViewModel extends ChangeNotifier{
                   final _authService = getIt<AuthService>();
                   await _authService.signOut();
                   dismissLoadingCircle(context);
+                  // ignore: avoid_print
+                  print('ログアウト');
                   NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
                     pageBuilder: (_) => SplashPage(),
                     viewModelBuilder: (_) => SplashViewModel(),
@@ -86,6 +80,7 @@ class TopViewModel extends ChangeNotifier{
         },
       );
     } catch(e) {
+      dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
         content: 'ログアウトに失敗しました',
@@ -117,6 +112,8 @@ class TopViewModel extends ChangeNotifier{
                     final _authService = getIt<AuthService>();
                     await _authService.unSubscribe(currentUserId);
                     dismissLoadingCircle(context);
+                    // ignore: avoid_print
+                    print('退会');
                     NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
                       pageBuilder: (_) => SplashPage(),
                       viewModelBuilder: (_) => SplashViewModel(),
@@ -127,10 +124,11 @@ class TopViewModel extends ChangeNotifier{
           );
         },
       );
-    } catch(e) {
+    } catch(_) {
+      dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
-        content: 'ログアウトに失敗しました',
+        content: '退会に失敗しました',
       );
     }
   }
@@ -149,6 +147,8 @@ class TopViewModel extends ChangeNotifier{
         content: 'タスクを追加する前に紐付け先のアルバムを追加してください',
       );
     }
+    // ignore: avoid_print
+    print('リスト追加をタップ');
   }
 
   Future<void> onTapAddAlbum(BuildContext context) async {
@@ -166,11 +166,11 @@ class TopViewModel extends ChangeNotifier{
 
       final TaskService _taskService = getIt<TaskService>();
       taskDataList = await _taskService.getTaskList(currentUserId, albumDataList[albumPageNotifier.value].albumId);
+      // ignore: avoid_print
+      print('タスクデータ取得');
     } catch(e) {
-      DialogUtil.showPreventPopErrorDialog(
-        context: context,
-        content: 'タスクの取得に失敗しました',
-      );
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('タスクデータの取得に失敗しました。通信環境等をご確認ください。')));
     }
     notifyListeners();
   }
@@ -182,30 +182,23 @@ class TopViewModel extends ChangeNotifier{
 
       final AlbumService _albumService = getIt<AlbumService>();
       albumDataList = (await _albumService.getAlbumList(currentUserId))!;
+      // ignore: avoid_print
+      print('アルバムリスト取得');
     } catch(e) {
-      DialogUtil.showPreventPopErrorDialog(
-        context: context,
-        content: 'アルバムの取得に失敗しました',
-      );
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('アルバムの取得に失敗しました。通信環境等をご確認ください。')));
     }
     notifyListeners();
   }
 
   Future<void> onTapAlbumListItem(BuildContext context, AlbumData data) async {
-    showLoadingCircle(context);
-    YoutubeData? youtubeData;
-    if(data.youtubeUrl!.isNotEmpty) {
-      youtubeData = await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(data.youtubeUrl!);
-    } else {
-      youtubeData = null;
-    }
-    dismissLoadingCircle(context);
+    // ignore: avoid_print
+    print('アルバムタップ');
     NavigationHelper().push<AlbumAddViewModel>(
       context: context,
       pageBuilder: (_) => const AlbumAddPage(),
       viewModelBuilder: (context) => AlbumAddViewModel(
         albumData: data,
-        youtubeData: youtubeData,
       ),
     );
   }

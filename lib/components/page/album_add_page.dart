@@ -55,6 +55,8 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
         elevation: 0.0,
         actions: [
           Consumer<AlbumAddViewModel>(builder: (context, viewModel, child){
+            // ignore: avoid_print
+            print('アルバムページ更新');
             return Visibility(
                 visible: viewModel.albumData != null,
                 child: IconButton(
@@ -126,7 +128,7 @@ class _AlbumAddPageState extends State<AlbumAddPage>{
                                       color: Colors.white,
                                     ),
                                     Text(
-                                      'Youtube未設定',
+                                      '参考演奏未設定',
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.white

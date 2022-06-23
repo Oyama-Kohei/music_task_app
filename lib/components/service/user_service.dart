@@ -8,6 +8,8 @@ class UserService  extends Service{
 
   Future setNickname(String nickname, uid) async{
     try {
+      // ignore: avoid_print
+      print('setNickname');
       final doc = firebaseFireStore.collection('users').doc(uid);
       await doc.set({
         'uid': uid,
@@ -20,6 +22,8 @@ class UserService  extends Service{
 
   Future<String> getUserId() async{
     try{
+      // ignore: avoid_print
+      print('getUserId');
       final result = FirebaseAuth.instance.currentUser!.uid;
       return result;
     } catch(e) {

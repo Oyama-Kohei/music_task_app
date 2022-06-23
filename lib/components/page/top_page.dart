@@ -20,7 +20,7 @@ class TopPage extends StatefulWidget {
 }
 class _TopPageState extends State<TopPage> with RouteAware{
 
-  static const pageViewHeight = 215.0;
+  static const pageViewHeight = 200.0;
   late BannerAd myBanner;
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
   final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey();
@@ -73,7 +73,8 @@ class _TopPageState extends State<TopPage> with RouteAware{
     final width = queryData.size.width;
     final height = queryData.size.height;
     return Consumer<TopViewModel>(builder: (context, viewModel, child) {
-      // viewModel.getAlbumDataList(context);
+      // ignore: avoid_print
+      print('トップページ更新');
       return Scaffold(
         key: scaffoldKey,
         drawer: Drawer(
@@ -110,7 +111,7 @@ class _TopPageState extends State<TopPage> with RouteAware{
               ListTile(
                 title: const Text('退会'),
                 onTap: () {
-                  Navigator.pop(context);
+                  viewModel.onTapUnsubscribe(context);
                 },
               ),
             ],
@@ -133,7 +134,6 @@ class _TopPageState extends State<TopPage> with RouteAware{
                           data:  e,
                           onTapCard: (data) => viewModel.onTapAlbumListItem(context, data),
                           onTapVideo: (data) => viewModel.onTapVideoPlayItem(context, data),
-                          youtubeData: viewModel.youtubeData!,
                         ),
                       ).toList(),
                   )
@@ -194,7 +194,8 @@ class _TopPageState extends State<TopPage> with RouteAware{
                   ),
                 ),
                 const SizedBox(height: 20),
-                listView(viewModel, width, height, context, myBanner),
+                viewModel.taskDataList != null ?
+                listView(viewModel, width, height, context, myBanner) : const SizedBox(height: 0,),
               ]
             ),
         ),
@@ -289,59 +290,55 @@ Widget listView(
     BannerAd myBanner) {
   final List<Widget> taskListWidget = [];
   var movementNum = 0;
-  if(viewModel.taskDataList == null){
-    return const SizedBox(height: 0);
-  } else {
-    for (final data in viewModel.taskDataList!) {
-      if(movementNum != data.movementNum){
-        movementNum = data.movementNum;
-        taskListWidget.add(
-          Container(
-            alignment: Alignment.centerLeft,
-            height: 20,
-            width: width * 0.9,
-            child: Text(
-              TopViewModel.movementList[movementNum],
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+  for (final data in viewModel.taskDataList!) {
+    if(movementNum != data.movementNum){
+      movementNum = data.movementNum;
+      taskListWidget.add(
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 20,
+          width: width * 0.9,
+          child: Text(
+            TopViewModel.movementList[movementNum],
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-        );
-      }
-      taskListWidget.add(
-        TaskListItem(
-          data: data,
-          onPress: (data) => viewModel.onTapListItem(
-            context,
-            data,
-            viewModel.albumPageNotifier.value,
-          ),
-          width: width * 0.8,
-          height: 69,
         ),
       );
     }
-    // taskListWidget.add(
-    //   bannerAdWidget(myBanner, width),
-    // );
     taskListWidget.add(
-      Container(
-        height: height * 0.2
-      ),
-    );
-    return SizedBox(
-      width: width,
-      height: height * 0.5,
-      child: SingleChildScrollView(
-        child: Column(
-          children: taskListWidget,
+      TaskListItem(
+        data: data,
+        onPress: (data) => viewModel.onTapListItem(
+          context,
+          data,
+          viewModel.albumPageNotifier.value,
         ),
+        width: width * 0.8,
+        height: 69,
       ),
     );
   }
+  taskListWidget.add(
+    bannerAdWidget(myBanner, width),
+  );
+  taskListWidget.add(
+    Container(
+      height: height * 0.2
+    ),
+  );
+  return SizedBox(
+    height: height * 0.6,
+    width: width,
+    child: SingleChildScrollView(
+      child: Column(
+        children: taskListWidget,
+      ),
+    ),
+  );
 }
 
 Widget bannerAdWidget(myBanner, double width) {
@@ -354,6 +351,3 @@ Widget bannerAdWidget(myBanner, double width) {
     ),
   );
 }
-
-// ignore: non_constant_identifier_names
-
