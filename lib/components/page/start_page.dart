@@ -9,7 +9,6 @@ import 'package:askMu/components/view_model/login_view_model.dart';
 import 'package:askMu/components/view_model/register_view_model.dart';
 import 'package:askMu/components/view_model/start_view_model.dart';
 import 'package:askMu/components/wiget/common_button.dart';
-import 'package:askMu/components/wiget/common_colors.dart';
 import 'package:askMu/utility/navigation_helper.dart';
 
 class StartPage extends StatefulWidget {
@@ -22,6 +21,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     final queryData = MediaQuery.of(context);
     final height = queryData.size.height;
+
     final width = queryData.size.width;
     return Consumer<StartViewModel>(builder: (context, viewModel, child) {
       return Scaffold(
@@ -29,15 +29,9 @@ class _StartPageState extends State<StartPage> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(height: height * 0.07),
-              Text(
-                'askMu',
-                textAlign: TextAlign.end,
-                style: GoogleFonts.orbitron(
-                  color: Colors.blueGrey,
-                  fontSize: 44,
-                  fontWeight: FontWeight.bold,
-                ),
+              SizedBox(height: height * 0.05),
+              Text('.askMu...',
+                style: GoogleFonts.caveat(fontSize: 50, color: Colors.black),
               ),
               SizedBox(height: height * 0.01),
               SizedBox(
@@ -47,8 +41,8 @@ class _StartPageState extends State<StartPage> {
                     TypewriterAnimatedText(
                       '楽器/歌の課題管理をシステム化',
                       textAlign: TextAlign.end,
-                      textStyle: GoogleFonts.orbitron(
-                        color: Colors.blueGrey,
+                      textStyle: GoogleFonts.caveat(
+                        color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -57,16 +51,6 @@ class _StartPageState extends State<StartPage> {
                   ],
                 ),
               ),
-
-              // Text(
-              //   '楽器/歌の課題管理をシステム化',
-              //   textAlign: TextAlign.end,
-              //   style: GoogleFonts.orbitron(
-              //     color: Colors.blueGrey,
-              //     fontSize: 18,
-              //     fontWeight: FontWeight.bold,
-              //   ),
-              // ),
               SizedBox(height: height * 0.01),
               SizedBox(
                   height: height * 0.53,
@@ -77,7 +61,7 @@ class _StartPageState extends State<StartPage> {
                       Container(
                         margin: const EdgeInsets.only(left: 5, right: 5),
                         decoration: BoxDecoration(
-                          color: CommonColors.customSwatch.shade100,
+                          color: Colors.white70,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -93,9 +77,9 @@ class _StartPageState extends State<StartPage> {
                                   Text(
                                     'New Music',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.orbitron(
-                                      color: Colors.blueGrey,
-                                      fontSize: 22,
+                                    style: GoogleFonts.caveat(
+                                      color: Colors.black,
+                                      fontSize: 30,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -103,11 +87,10 @@ class _StartPageState extends State<StartPage> {
                                   Text(
                                     '画面下のボタンから\n'
                                         'アルバムを追加\n\n'
-                                        '参考演奏も設定可能\n\n'
-                                        '複数曲の課題を管理',
+                                        '参考演奏も設定可能\n',
                                     textAlign: TextAlign.start,
-                                    style: GoogleFonts.orbitron(
-                                      color: Colors.blueGrey,
+                                    style: GoogleFonts.caveat(
+                                      color: Colors.black,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -128,7 +111,7 @@ class _StartPageState extends State<StartPage> {
                       Container(
                         margin: const EdgeInsets.only(left: 5, right: 5),
                         decoration: BoxDecoration(
-                          color: CommonColors.customSwatch.shade100,
+                          color: Colors.white70,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -144,9 +127,9 @@ class _StartPageState extends State<StartPage> {
                                       Text(
                                         'New Task',
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.orbitron(
-                                          color: Colors.blueGrey,
-                                          fontSize: 22,
+                                        style: GoogleFonts.caveat(
+                                          color: Colors.black,
+                                          fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -158,7 +141,7 @@ class _StartPageState extends State<StartPage> {
                                             '減らしてコンパクトに',
                                         textAlign: TextAlign.start,
                                         style: GoogleFonts.orbitron(
-                                          color: Colors.blueGrey,
+                                          color: Colors.black,
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -179,7 +162,7 @@ class _StartPageState extends State<StartPage> {
                       Container(
                         margin: const EdgeInsets.only(left: 5, right: 5),
                         decoration: BoxDecoration(
-                          color: CommonColors.customSwatch.shade100,
+                          color: Colors.white70,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -195,9 +178,9 @@ class _StartPageState extends State<StartPage> {
                                       Text(
                                         'Manage',
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.orbitron(
-                                          color: Colors.blueGrey,
-                                          fontSize: 22,
+                                        style: GoogleFonts.caveat(
+                                          color: Colors.black,
+                                          fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -208,8 +191,8 @@ class _StartPageState extends State<StartPage> {
                                             '画像追加機能を\n'
                                             '自由に活用しよう',
                                         textAlign: TextAlign.start,
-                                        style: GoogleFonts.orbitron(
-                                          color: Colors.blueGrey,
+                                        style: GoogleFonts.caveat(
+                                          color: Colors.black,
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -235,7 +218,7 @@ class _StartPageState extends State<StartPage> {
                 size: 10,
                 selectedSize: 12,
                 currentPageNotifier: viewModel.startPageNotifier,
-                selectedDotColor: Colors.lightBlueAccent,
+                selectedDotColor: Colors.black,
                 dotColor: Colors.grey,
                 itemCount: 3),
               const SizedBox(height: 20),

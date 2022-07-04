@@ -31,38 +31,34 @@ class _TaskAddPageState extends State<TaskAddPage>{
         backgroundColor: Colors.white,
         elevation: 0.0,
         actions: [
-          Consumer<TaskAddViewModel>(builder: (context, viewModel, child){
-            // ignore: avoid_print
-            print('タスクページ更新');
-            return Visibility(
-              visible: viewModel.taskData != null,
-              child: IconButton(
-              icon: const Icon(Icons.more_horiz),
-              onPressed: () {
-                showModalBottomSheet(context: context, builder: (BuildContext builderContext) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      InkWell(
-                        child: Container(
-                          height: 70,
-                          alignment: Alignment.center,
-                          child: const Text(
-                            'このタスクを削除する',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,)
-                          ),
+          Visibility(
+            visible: Provider.of<TaskAddViewModel>(context, listen: false).taskData != null,
+            child: IconButton(
+            icon: const Icon(Icons.more_horiz),
+            onPressed: () {
+              showModalBottomSheet(context: context, builder: (BuildContext builderContext) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      child: Container(
+                        height: 70,
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'このタスクを削除する',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.red,)
                         ),
-                        onTap: () => viewModel.taskDelete(context),
                       ),
-                    ],
-                  );
-                });
-              },
-              )
-            );
-          })
+                      onTap: () => Provider.of<TaskAddViewModel>(context, listen: false).taskDelete(context),
+                    ),
+                  ],
+                );
+              });
+            },
+            )
+          ),
         ],
       ),
       body: SingleChildScrollView(

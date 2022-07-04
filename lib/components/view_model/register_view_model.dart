@@ -26,7 +26,7 @@ class RegisterViewModel extends ChangeNotifier{
       await _userService.setNickname(nickname, uid);
       dismissLoadingCircle(context);
       NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
-        pageBuilder: (_) => SplashPage(),
+        pageBuilder: (_) => const SplashPage(),
         viewModelBuilder: (_) => SplashViewModel(),
       );
     } on Exception catch(_){

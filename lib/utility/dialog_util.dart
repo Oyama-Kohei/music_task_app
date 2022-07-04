@@ -27,6 +27,7 @@ class DialogUtil {
             TextButton(
               child: const Text(
                 "OK",
+                style: TextStyle(color: Colors.black),
               ),
               onPressed: onPressed ?? () {
                 Navigator.pop(context);
@@ -70,7 +71,7 @@ class DialogUtil {
             textAlign: TextAlign.center,
           ),
           onPressed: () => {
-            Navigator.pop(context, DialogAnswer.no)
+            // Navigator.pop(context, DialogAnswer.no)
           },
         ),
         SimpleDialogOption(
@@ -79,7 +80,7 @@ class DialogUtil {
             textAlign: TextAlign.center,
           ),
           onPressed: () => {
-            Navigator.pop(context, DialogAnswer.yes)
+            // Navigator.pop(context, DialogAnswer.yes)
           },
         ),
       ],

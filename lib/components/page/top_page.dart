@@ -1,3 +1,4 @@
+import 'package:askMu/components/models/album_data.dart';
 import 'package:askMu/components/page/popup_terms_page.dart';
 import 'package:askMu/components/view_model/popup_terms_view_model.dart';
 import 'package:askMu/main.dart';
@@ -9,7 +10,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:askMu/components/view_model/top_view_model.dart';
 import 'package:askMu/components/wiget/album_list_item.dart';
-import 'package:askMu/components/wiget/common_colors.dart';
 import 'package:askMu/components/wiget/task_list_item.dart';
 
 class TopPage extends StatefulWidget {
@@ -21,7 +21,6 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> with RouteAware{
 
   static const pageViewHeight = 200.0;
-  late BannerAd myBanner;
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
   final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey();
   bool _isOpen = false;
@@ -33,38 +32,19 @@ class _TopPageState extends State<TopPage> with RouteAware{
   }
 
   @override
-  void initState() {
-    super.initState();
-    myBanner = _createBanner(AdSize.banner);
-  }
-
-  @override
   void dispose() {
-    myBanner.dispose();
     routeObserver.unsubscribe(this);
     super.dispose();
   }
 
   @override
-  void didPopNext() {
-    super.didPopNext();
-    Provider.of<TopViewModel>(context, listen: false).getAlbumDataList(context);
-    Provider.of<TopViewModel>(context, listen: false).getTaskDataList(context);
+  Future<void> didPopNext() async {
+    Future(() async {
+      await Provider.of<TopViewModel>(context, listen: false).getAlbumDataList(context);
+      await Provider.of<TopViewModel>(context, listen: false).getTaskDataList(context);
+    });
     _closeMenu();
-  }
-
-  BannerAd _createBanner(AdSize size) {
-    return BannerAd(
-      size: size,
-      adUnitId: 'ca-app-pub-8754541206691079/4153658345',
-      listener: BannerAdListener(
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          myBanner.dispose();
-          _createBanner(size);
-        },
-      ),
-      request: const AdRequest(),
-    )..load();
+    super.didPopNext();
   }
 
   @override
@@ -72,207 +52,154 @@ class _TopPageState extends State<TopPage> with RouteAware{
     final queryData = MediaQuery.of(context);
     final width = queryData.size.width;
     final height = queryData.size.height;
-    return Consumer<TopViewModel>(builder: (context, viewModel, child) {
-      // ignore: avoid_print
-      print('トップページ更新');
       return Scaffold(
         key: scaffoldKey,
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              const DrawerHeader(
-                child: Text(
-                  'MenuBar',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
+        drawer: Consumer<TopViewModel>(builder: (context, viewModel, child)
+            => MenuDrawer(viewModel, context)),
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Consumer<TopViewModel>(builder: (context, viewModel, child) {
+            return viewModel.albumDataList.isEmpty
+              ? Column(
+                children: [
+                  SizedBox(height: height * 0.1),
+                  Text('Welcome to .askMu...',
+                    style: GoogleFonts.caveat(fontSize: 40, color: Colors.black),
                   ),
+                  Image.asset(
+                    'images/hokemi1.jpeg',
+                    width: width * 0.9,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: Text('現在曲が未登録です\nまずは下のボタンから『NewMusic』を選択して曲のカードを追加しましょう',
+                      style: GoogleFonts.sawarabiMincho(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
+                ],
+              )
+              : CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  elevation: 0.0,
+                  expandedHeight: pageViewHeight + kToolbarHeight + 20,
+                  pinned: true,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.white,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text('Task List', style: GoogleFonts.caveat(fontSize: 16, color: Colors.black)),
+                    background: Column(
+                      children:[
+                        SizedBox(height: height * 0.06),
+                        SizedBox(
+                          height: pageViewHeight,
+                          child: PageView(
+                            controller: viewModel.albumPageController,
+                            onPageChanged: (value) =>
+                            viewModel.onAlbumPageChanged(context, value),
+                            children: viewModel.albumDataList
+                                .map(
+                              (e) =>
+                              AlbumListItem(
+                                data: e,
+                                onTapCard: (data) =>
+                                  viewModel.onTapAlbumListItem(
+                                  context, data),
+                                onTapVideo: (data) =>
+                                  viewModel.onTapVideoPlayItem(
+                                  context, data),
+                              ),
+                            ).toList(),
+                          )
+                        ),
+                      ],
+                    ),
+                  ),
+              ),
+              if(viewModel.taskDataList != null)
+                listView(width, height, context, viewModel),
+              ]
+            );
+          }
+        )
+      ),
+      floatingActionButton: FloatingButton(width, height),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  Widget FloatingButton(
+      double width,
+      double height){
+      return Builder(
+        builder: (context) =>
+          FabCircularMenu(
+            key: fabKey,
+            alignment: Alignment.bottomRight,
+            ringColor: const Color(0xff696969),
+            ringDiameter: width * 1.0,
+            ringWidth: width * 0.35,
+            fabSize: 80.0,
+            fabIconBorder: const CircleBorder(),
+            fabColor: const Color(0xff696969),
+            fabOpenIcon: const Icon(Icons.menu, color: Colors.white),
+            fabCloseIcon: const Icon(Icons.close, color: Colors.white),
+            animationDuration: const Duration(milliseconds: 800),
+            animationCurve: Curves.easeInOutCirc,
+            onDisplayChange: (bool isOpen) {
+              setState(() {
+                _isOpen = isOpen;
+              });
+            },
+            children: <Widget>[
+              TextButton.icon(
+                onPressed: () => Provider.of<TopViewModel>(context, listen: false).onTapAddAlbum(context),
+                icon: const Icon(
+                    Icons.add_to_photos_rounded,
+                    size: 35,
+                    color: Colors.white),
+                label: Text(
+                    'NewMusic',
+                    style: GoogleFonts.caveat(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey,
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  Provider.of<TopViewModel>(context, listen: false).onTapAddList(
+                      context, Provider.of<TopViewModel>(context, listen: false).albumPageNotifier.value);
+                },
+                icon: const Icon(
+                    Icons.add_task,
+                    size: 35,
+                    color: Colors.white),
+                label: Text(
+                    'NewTask',
+                    style: GoogleFonts.caveat(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)
                 ),
               ),
-              ListTile(
-                title: const Text('利用規約・プライバシーポリシー'),
-                onTap: () {
-                  NavigationHelper().pushNonMaterialRoute<PopupTermsViewModel>(
-                    context: context,
-                    pageBuilder: (_) => PopupTermsPage(),
-                    viewModelBuilder: (context) => PopupTermsViewModel(agreeFlag: false),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('ログアウト'),
-                onTap: () {
-                  viewModel.onTapLogout(context);
-                },
-              ),
-              ListTile(
-                title: const Text('退会'),
-                onTap: () {
-                  viewModel.onTapUnsubscribe(context);
-                },
+              TextButton.icon(
+                // onPressed: () => viewModel.onTapLogout(context),
+                onPressed: () => scaffoldKey.currentState?.openDrawer(),
+                icon: const Icon(
+                    Icons.menu,
+                    size: 35,
+                    color: Colors.white),
+                label: Text(
+                    'Menu',
+                    style: GoogleFonts.caveat(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)
+                ),
               ),
             ],
           ),
-        ),
-        backgroundColor: CommonColors.customSwatch.shade50,
-        body: Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: height * 0.06),
-                viewModel.albumDataList.isNotEmpty ?
-                SizedBox(
-                  height: pageViewHeight,
-                  child: PageView(
-                    controller: viewModel.albumPageController,
-                    onPageChanged: (value) => viewModel.onAlbumPageChanged(context, value),
-                    children: viewModel.albumDataList
-                      .map(
-                        (e) => AlbumListItem(
-                          data:  e,
-                          onTapCard: (data) => viewModel.onTapAlbumListItem(context, data),
-                          onTapVideo: (data) => viewModel.onTapVideoPlayItem(context, data),
-                        ),
-                      ).toList(),
-                  )
-                ) :
-                Container(
-                  height: height * 0.6,
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'New Music',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.orbitron(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: height * 0.05),
-                              Text(
-                                'まずは画面下のボタンから\n'
-                                    'アルバムを追加',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.orbitron(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          )
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white, width: 3),
-                          ),
-                          child: ClipRRect(
-                            child: Image.asset(
-                              'images/Tutorial1.png',
-                              width: width * 0.45,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        )
-                      ]
-                  ),
-                ),
-                const SizedBox(height: 20),
-                viewModel.taskDataList != null ?
-                listView(viewModel, width, height, context, myBanner) : const SizedBox(height: 0,),
-              ]
-            ),
-        ),
-        floatingActionButton: FloatingButton(viewModel, width, height),
-      );
-    }
-    );
-  }
-  // ignore: non_constant_identifier_names
-  Widget FloatingButton(
-      TopViewModel viewModel,
-      double width,
-      double height){
-    return Builder(
-      builder: (context) => FabCircularMenu(
-        key: fabKey,
-        alignment: Alignment.bottomRight,
-        ringColor: CommonColors.customSwatch.shade300,
-        ringDiameter: width * 1.0,
-        ringWidth: width * 0.35,
-        fabSize: 65.0,
-        fabIconBorder: const CircleBorder(),
-        fabColor: Colors.white,
-        fabOpenIcon: const Icon(Icons.menu, color: Colors.blueGrey),
-        fabCloseIcon: const Icon(Icons.close, color: Colors.blueGrey),
-        animationDuration: const Duration(milliseconds: 800),
-        animationCurve: Curves.easeInOutCirc,
-        onDisplayChange: (bool isOpen) {
-          setState(() {
-            _isOpen = isOpen;
-          });
-        },
-        children: <Widget>[
-          TextButton.icon(
-            onPressed: () => viewModel.onTapAddAlbum(context),
-            icon: const Icon(
-                Icons.add_to_photos_rounded,
-                size: 35,
-                color: Colors.white),
-            label: const Text(
-                'NewMusic',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white)
-            ),
-          ),
-          TextButton.icon(
-            onPressed: () {
-              viewModel.onTapAddList(context, viewModel.albumPageNotifier.value);
-            },
-            icon: const Icon(
-                Icons.add_task,
-                size: 35,
-                color: Colors.white),
-            label: const Text(
-                'NewTask',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white)
-            ),
-          ),
-          TextButton.icon(
-            // onPressed: () => viewModel.onTapLogout(context),
-            onPressed: () => scaffoldKey.currentState?.openDrawer(),
-            icon: const Icon(
-                Icons.menu,
-                size: 35,
-                color: Colors.white),
-            label: const Text(
-                'Menu',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white)
-            ),
-          ),
-        ],
-      ),
     );
   }
   void _closeMenu() {
@@ -282,63 +209,127 @@ class _TopPageState extends State<TopPage> with RouteAware{
   }
 }
 
+// ignore: non_constant_identifier_names
+Widget MenuDrawer(TopViewModel viewModel, BuildContext context) {
+  return Drawer(
+    child: ListView(
+      children: <Widget>[
+        // DrawerHeader(
+        //   child: Text(
+        //     'Menu',
+        //     style: GoogleFonts.caveat(
+        //       fontSize: 30,
+        //       color: Colors.white,
+        //     ),
+        //   ),
+        //   decoration: const BoxDecoration(
+        //     color: Colors.grey,
+        //   ),
+        // ),
+        ListTile(
+          title: const Text('利用規約・プライバシーポリシー'),
+          onTap: () {
+            NavigationHelper().pushNonMaterialRoute<PopupTermsViewModel>(
+              context: context,
+              pageBuilder: (_) => const PopupTermsPage(),
+              viewModelBuilder: (context) => PopupTermsViewModel(agreeFlag: false),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text('ログアウト'),
+          onTap: () {
+            viewModel.onTapLogout(context);
+          },
+        ),
+        ListTile(
+          title: const Text('退会'),
+          onTap: () {
+            viewModel.onTapUnsubscribe(context);
+          },
+        ),
+      ],
+    ),
+  );
+}
+
 Widget listView(
-    TopViewModel viewModel,
     double width,
     double height,
     BuildContext context,
-    BannerAd myBanner) {
+    TopViewModel viewModel) {
   final List<Widget> taskListWidget = [];
+  BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-8754541206691079/4153658345',
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: const BannerAdListener(),
+  )..load();
   var movementNum = 0;
-  for (final data in viewModel.taskDataList!) {
-    if(movementNum != data.movementNum){
-      movementNum = data.movementNum;
-      taskListWidget.add(
-        Container(
-          alignment: Alignment.centerLeft,
-          height: 20,
-          width: width * 0.9,
-          child: Text(
-            TopViewModel.movementList[movementNum],
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+  if(viewModel.acquireStatus == AcquireStatus.hasData)
+    // ignore: curly_braces_in_flow_control_structures
+    for (final data in viewModel.taskDataList!) {
+      if(movementNum != data.movementNum){
+        movementNum = data.movementNum;
+        taskListWidget.add(
+          Container(
+            alignment: Alignment.centerLeft,
+            height: 20,
+            width: width * 0.9,
+            child: Text(
+              TopViewModel.movementList[movementNum],
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
+        );
+      }
+      taskListWidget.add(
+        TaskListItem(
+          data: data,
+          onPress: (data) => viewModel.onTapListItem(
+            context,
+            data,
+            viewModel.albumPageNotifier.value,
+          ),
+          width: width * 0.8,
+          height: 69,
         ),
+      );
+    } else {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          Column(
+            children: [
+              Container(
+                height: 70,
+                width: 70,
+                padding: const EdgeInsets.all(10),
+                child: viewModel.acquireStatus.getStatus(),
+              ),
+            ],
+          )
+        ]),
       );
     }
     taskListWidget.add(
-      TaskListItem(
-        data: data,
-        onPress: (data) => viewModel.onTapListItem(
-          context,
-          data,
-          viewModel.albumPageNotifier.value,
-        ),
-        width: width * 0.8,
-        height: 69,
+      bannerAdWidget(myBanner, width),
+    );
+    taskListWidget.add(
+      Container(
+        height: height * 0.2
       ),
     );
-  }
-  taskListWidget.add(
-    bannerAdWidget(myBanner, width),
-  );
-  taskListWidget.add(
-    Container(
-      height: height * 0.2
-    ),
-  );
-  return SizedBox(
-    height: height * 0.6,
-    width: width,
-    child: SingleChildScrollView(
-      child: Column(
-        children: taskListWidget,
-      ),
-    ),
-  );
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Column(
+          children: taskListWidget,
+        )
+      ]),
+    );
 }
 
 Widget bannerAdWidget(myBanner, double width) {

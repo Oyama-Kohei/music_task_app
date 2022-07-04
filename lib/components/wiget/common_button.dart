@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:askMu/components/wiget/common_colors.dart';
 
 class CommonButton extends StatelessWidget{
 
@@ -30,11 +28,11 @@ class CommonButton extends StatelessWidget{
         child: OutlinedButton(
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
-            backgroundColor: CommonColors.customSwatch.shade300,
+            backgroundColor: Colors.black54,
             shape: const StadiumBorder(),
-            side: BorderSide(
+            side: const BorderSide(
               width: 2,
-              color: CommonColors.customSwatch.shade300,
+              color: Colors.white,
             ),
           ),
           child: Row(

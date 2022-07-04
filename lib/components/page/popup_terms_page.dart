@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PopupTermsPage extends StatelessWidget {
+  const PopupTermsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context){

@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:askMu/components/models/album_data.dart';
 import 'package:marquee/marquee.dart';
 
-import 'common_colors.dart';
-
 class AlbumListItem extends StatelessWidget {
   const AlbumListItem({
     required this.data,
@@ -28,8 +26,9 @@ class AlbumListItem extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: CommonColors.customSwatch.shade100,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(style: BorderStyle.solid),
         ),
         margin: const EdgeInsets.only(left: 5, right: 5),
         child: InkWell(
@@ -40,10 +39,10 @@ class AlbumListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'title',
+                  'Title',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.sawarabiMincho(
-                    fontSize: 12,
+                  style: GoogleFonts.caveat(
+                    fontSize: 15,
                     color: Colors.black54,
                     fontWeight: FontWeight.normal,
                   ),
@@ -63,10 +62,10 @@ class AlbumListItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'composer',
+                  'Composer',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.sawarabiMincho(
-                    fontSize: 12,
+                  style: GoogleFonts.caveat(
+                    fontSize: 15,
                     color: Colors.black54,
                     fontWeight: FontWeight.normal,
                   ),
@@ -111,18 +110,18 @@ class AlbumListItem extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Icon(
+                        children: [
+                          const Icon(
                             Icons.smart_display_rounded,
                             size: 27,
-                            color: Colors.white54,
+                            color: Colors.white,
                           ),
                           Text(
-                              '参考演奏未設定',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white54
-                              )
+                            '参考演奏未設定',
+                            style: GoogleFonts.caveat(
+                              fontSize: 10,
+                              color: Colors.white
+                            )
                           )
                         ],
                       )
@@ -135,10 +134,10 @@ class AlbumListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '参考演奏',
+                            'Sample Performance',
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.sawarabiMincho(
-                              fontSize: 12,
+                            style: GoogleFonts.caveat(
+                              fontSize: 16,
                               color: Colors.black54,
                               fontWeight: FontWeight.normal,
                             ),
@@ -167,7 +166,7 @@ class AlbumListItem extends StatelessWidget {
                             style: GoogleFonts.sawarabiMincho(
                               fontSize: 14,
                               color: Colors.black54,
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],

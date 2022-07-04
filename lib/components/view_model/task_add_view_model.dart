@@ -81,23 +81,14 @@ class TaskAddViewModel extends ChangeNotifier{
         comment: comment,
         imageUrl: imageUrl);
       dismissLoadingCircle(context);
-      showDialog(
+      DialogUtil.showPreventPopDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-            content: Text(taskData == null ? 'タスクを追加しました' : 'タスクを更新しました'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () async {
-                  notifyListeners();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                }
-              ),
-            ],
-          );
-        },
+        content: taskData == null ? 'タスクを追加しました' : 'タスクを更新しました',
+        onPressed: () async {
+          notifyListeners();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       );
     } catch(e) {
       dismissLoadingCircle(context);
@@ -112,37 +103,23 @@ class TaskAddViewModel extends ChangeNotifier{
     try {
       showLoadingCircle(context);
       final taskService = getIt<TaskService>();
-
       await taskService.deleteTask(taskData!);
       dismissLoadingCircle(context);
-      showDialog(
+      DialogUtil.showPreventPopDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-            content: const Text('タスクを削除しました'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () async {
-                  notifyListeners();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                }
-              ),
-            ],
-          );
-        },
+        content: 'タスクを削除しました',
+        onPressed: () async {
+          notifyListeners();
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       );
     } catch(e){
       dismissLoadingCircle(context);
-      showDialog(
+      DialogUtil.showPreventPopErrorDialog(
         context: context,
-        builder: (_) {
-          return const AlertDialog(
-            title: Text('タスクの削除に失敗しました'),
-          );
-        },
+        content: 'タスクの削除に失敗しました',
       );
     }
   }

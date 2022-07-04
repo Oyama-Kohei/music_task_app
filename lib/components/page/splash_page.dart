@@ -5,6 +5,8 @@ import 'package:route_observer_mixin/route_observer_mixin.dart';
 import 'package:askMu/components/view_model/splash_view_model.dart';
 
 class SplashPage extends StatefulWidget{
+  const SplashPage({Key? key}) : super(key: key);
+
   @override
   _SplashPageState createState() => _SplashPageState();
 }

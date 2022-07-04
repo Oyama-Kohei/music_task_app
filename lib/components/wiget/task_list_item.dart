@@ -50,7 +50,7 @@ class TaskListItem extends StatelessWidget{
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             fontSize: 15,
-            color: Colors.white,
+            color: Colors.black,
             // fontWeight: FontWeight.bold,
           ),
         ),
@@ -59,12 +59,12 @@ class TaskListItem extends StatelessWidget{
           textAlign: TextAlign.start,
           style: const TextStyle(
             fontSize: 11,
-            color: Colors.white,
+            color: Colors.black,
             // fontWeight: FontWeight.bold,
           ),
         ),
         const Divider(
-          color: Colors.grey,)
+          color: Colors.black,)
       ],
     );
   }
@@ -80,7 +80,7 @@ class TaskListItem extends StatelessWidget{
           textAlign: TextAlign.end,
           style: const TextStyle(
             fontSize: 12,
-            color: Colors.white,
+            color: Colors.black,
             // fontWeight: FontWeight.bold,
           ),
         ),

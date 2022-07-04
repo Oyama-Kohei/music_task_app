@@ -18,6 +18,26 @@ import 'package:askMu/components/view_model/webview_view_model.dart';
 import 'package:askMu/utility/dialog_util.dart';
 import 'package:askMu/utility/locator.dart';
 import 'package:askMu/utility/navigation_helper.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+enum AcquireStatus{
+  loading,
+  hasData,
+  noData,
+}
+
+extension AcquireStatusExtension on AcquireStatus{
+  Widget getStatus() {
+    switch(this) {
+      case AcquireStatus.loading:
+        return const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.black54));
+      case AcquireStatus.hasData:
+        return const Text('');
+      case AcquireStatus.noData:
+        return Text('No Task Setting', style: GoogleFonts.caveat(fontSize: 20));
+    }
+  }
+}
 
 class TopViewModel extends ChangeNotifier{
   TopViewModel({
@@ -39,6 +59,8 @@ class TopViewModel extends ChangeNotifier{
 
   final albumPageNotifier = ValueNotifier<int>(0);
 
+  AcquireStatus acquireStatus = AcquireStatus.hasData;
+
   Future<void> onAlbumPageChanged(BuildContext context, int index) async {
     albumPageNotifier.value = index;
     await getTaskDataList(context);
@@ -47,37 +69,38 @@ class TopViewModel extends ChangeNotifier{
 
   Future<void> onTapLogout(BuildContext context) async {
     try{
-      showDialog(
+      DialogUtil.showPreventPopDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: const Text('ログアウトしますか？'),
-            actions: <Widget>[
-              // ボタン領域
-              TextButton(
-                  child: const Text('キャンセル'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }
-              ),
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () async {
-                  showLoadingCircle(context);
-                  final _authService = getIt<AuthService>();
-                  await _authService.signOut();
-                  dismissLoadingCircle(context);
-                  // ignore: avoid_print
-                  print('ログアウト');
-                  NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
-                    pageBuilder: (_) => SplashPage(),
-                    viewModelBuilder: (_) => SplashViewModel(),
-                  );
-                }
-              ),
-            ],
-          );
-        },
+        content: 'ログアウトしますか？',
+        actions: <Widget>[
+          SimpleDialogOption(
+            child: const Text(
+              "Cancel",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () => {
+              Navigator.pop(context)
+            },
+          ),
+          SimpleDialogOption(
+            child: const Text(
+              "OK",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: ()  async {
+              showLoadingCircle(context);
+              final _authService = getIt<AuthService>();
+              await _authService.signOut();
+              dismissLoadingCircle(context);
+              // ignore: avoid_print
+              print('ログアウト');
+              NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
+                pageBuilder: (_) => const SplashPage(),
+                viewModelBuilder: (_) => SplashViewModel(),
+              );
+            },
+          ),
+        ],
       );
     } catch(e) {
       dismissLoadingCircle(context);
@@ -90,39 +113,40 @@ class TopViewModel extends ChangeNotifier{
 
   Future<void> onTapUnsubscribe(BuildContext context) async {
     try{
-      showDialog(
+      DialogUtil.showPreventPopDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: const Text('退会しますか？'),
-            actions: <Widget>[
-              // ボタン領域
-              TextButton(
-                  child: const Text('キャンセル'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }
-              ),
-              TextButton(
-                  child: const Text('OK'),
-                  onPressed: () async {
-                    showLoadingCircle(context);
-                    final UserService userService = getIt<UserService>();
-                    final currentUserId = await userService.getUserId();
-                    final _authService = getIt<AuthService>();
-                    await _authService.unSubscribe(currentUserId);
-                    dismissLoadingCircle(context);
-                    // ignore: avoid_print
-                    print('退会');
-                    NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
-                      pageBuilder: (_) => SplashPage(),
-                      viewModelBuilder: (_) => SplashViewModel(),
-                    );
-                  }
-              ),
-            ],
-          );
-        },
+        content: '退会しますか？',
+        actions: <Widget>[
+          SimpleDialogOption(
+            child: const Text(
+              "Cancel",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () => {
+              Navigator.pop(context)
+            },
+          ),
+          SimpleDialogOption(
+            child: const Text(
+              "OK",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: ()  async {
+              showLoadingCircle(context);
+              final UserService userService = getIt<UserService>();
+              final currentUserId = await userService.getUserId();
+              final _authService = getIt<AuthService>();
+              await _authService.unSubscribe(currentUserId);
+              dismissLoadingCircle(context);
+              // ignore: avoid_print
+              print('退会');
+              NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
+                pageBuilder: (_) => const SplashPage(),
+                viewModelBuilder: (_) => SplashViewModel(),
+              );
+            },
+          ),
+        ],
       );
     } catch(_) {
       dismissLoadingCircle(context);
@@ -133,7 +157,7 @@ class TopViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> onTapAddList(BuildContext context, int currentIndex) async {
+  void onTapAddList(BuildContext context, int currentIndex) {
     if(albumDataList.isNotEmpty) {
       NavigationHelper().push<TaskAddViewModel>(
         context: context,
@@ -151,7 +175,7 @@ class TopViewModel extends ChangeNotifier{
     print('リスト追加をタップ');
   }
 
-  Future<void> onTapAddAlbum(BuildContext context) async {
+  void onTapAddAlbum(BuildContext context) {
     NavigationHelper().push<AlbumAddViewModel>(
       context: context,
       pageBuilder: (_) => const AlbumAddPage(),
@@ -161,6 +185,9 @@ class TopViewModel extends ChangeNotifier{
 
   Future<void> getTaskDataList(BuildContext context) async {
     try{
+      acquireStatus = AcquireStatus.loading;
+      notifyListeners();
+
       final UserService _userService = getIt<UserService>();
       final currentUserId = await _userService.getUserId();
 
@@ -168,6 +195,11 @@ class TopViewModel extends ChangeNotifier{
       taskDataList = await _taskService.getTaskList(currentUserId, albumDataList[albumPageNotifier.value].albumId);
       // ignore: avoid_print
       print('タスクデータ取得');
+      if(taskDataList != null){
+        acquireStatus = AcquireStatus.hasData;
+      } else {
+        acquireStatus = AcquireStatus.noData;
+      }
     } catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('タスクデータの取得に失敗しました。通信環境等をご確認ください。')));
@@ -191,7 +223,7 @@ class TopViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> onTapAlbumListItem(BuildContext context, AlbumData data) async {
+  void onTapAlbumListItem(BuildContext context, AlbumData data) {
     // ignore: avoid_print
     print('アルバムタップ');
     NavigationHelper().push<AlbumAddViewModel>(
@@ -203,7 +235,7 @@ class TopViewModel extends ChangeNotifier{
     );
   }
 
-  Future<void> onTapListItem(BuildContext context, TaskData taskData, int currentIndex) async {
+  void onTapListItem(BuildContext context, TaskData taskData, int currentIndex) {
     NavigationHelper().push<TaskAddViewModel>(
       context: context,
       pageBuilder: (_) => const TaskAddPage(),
@@ -214,7 +246,7 @@ class TopViewModel extends ChangeNotifier{
     );
   }
 
-  Future<void> onTapVideoPlayItem(BuildContext context, AlbumData data) async {
+  void onTapVideoPlayItem(BuildContext context, AlbumData data) {
     if(data.youtubeUrl != null) {
       DialogUtil.showPreventPopSelectDialog(
         context: context,
