@@ -15,13 +15,14 @@ class NavigationHelper {
     required BuildContext context,
     required WidgetBuilder pageBuilder,
     required ValueBuilder<T> viewModelBuilder,
-  }) async{
-    Navigator.of(context).push(MaterialPageRoute<Widget>(builder: (context){
-      return ChangeNotifierProvider<T>(
-        create: viewModelBuilder,
-        child: pageBuilder(context),
-      );
-    }),
+  }) async {
+    Navigator.of(context).push(
+      MaterialPageRoute<Widget>(builder: (context) {
+        return ChangeNotifierProvider<T>(
+          create: viewModelBuilder,
+          child: pageBuilder(context),
+        );
+      }),
     );
   }
 
@@ -32,15 +33,13 @@ class NavigationHelper {
   }) async {
     context ??= navigatorKey.currentState!.overlay!.context;
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<Widget>(
-            builder: (context) {
-              return ChangeNotifierProvider<T>(
-                create: viewModelBuilder,
-                child: pageBuilder(context),
-              );
-            }
-        ),
-        (_) => false,
+      MaterialPageRoute<Widget>(builder: (context) {
+        return ChangeNotifierProvider<T>(
+          create: viewModelBuilder,
+          child: pageBuilder(context),
+        );
+      }),
+      (_) => false,
     );
   }
 
@@ -53,7 +52,7 @@ class NavigationHelper {
       context,
       PageRouteBuilder<Widget>(
         opaque: false,
-        pageBuilder: (context, animation1, animation2){
+        pageBuilder: (context, animation1, animation2) {
           return ChangeNotifierProvider<T>(
             create: viewModelBuilder,
             child: pageBuilder(context),

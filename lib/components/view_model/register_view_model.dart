@@ -8,17 +8,12 @@ import 'package:askMu/utility/loading_circle.dart';
 import 'package:askMu/utility/locator.dart';
 import 'package:askMu/utility/navigation_helper.dart';
 
-class RegisterViewModel extends ChangeNotifier{
-
+class RegisterViewModel extends ChangeNotifier {
   final AuthService _authService = getIt<AuthService>();
   final UserService _userService = getIt<UserService>();
 
   Future<void> signUp(
-      String email,
-      String password,
-      String nickname,
-      context
-      ) async {
+      String email, String password, String nickname, context) async {
     try {
       showLoadingCircle(context);
       var user = await _authService.signUp(email, password);
@@ -29,7 +24,7 @@ class RegisterViewModel extends ChangeNotifier{
         pageBuilder: (_) => const SplashPage(),
         viewModelBuilder: (_) => SplashViewModel(),
       );
-    } on Exception catch(_){
+    } on Exception catch (_) {
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,

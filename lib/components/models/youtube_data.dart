@@ -1,4 +1,4 @@
-class YoutubeData{
+class YoutubeData {
   YoutubeData({
     required this.title,
     required this.thumbnailUrl,

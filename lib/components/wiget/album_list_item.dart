@@ -23,18 +23,18 @@ class AlbumListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final thumbnailUrl = data.thumbnailUrl;
     return Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(style: BorderStyle.solid),
-        ),
-        margin: const EdgeInsets.only(left: 5, right: 5),
-        child: InkWell(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-            child: Column(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(style: BorderStyle.solid),
+      ),
+      margin: const EdgeInsets.only(left: 5, right: 5),
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+          child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -89,43 +89,38 @@ class AlbumListItem extends StatelessWidget {
                   children: [
                     thumbnailUrl != null
                         ? InkWell(
-                      child: ClipRRect(
-                        child: Image.network(
-                          thumbnailUrl,
-                          height: imageHeight,
-                          width: imageWidth,
-                          fit: BoxFit.fill,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      onTap: () => onTapVideo(data),
-                    )
-                      : Container(
-                      height: imageHeight,
-                      width: imageWidth,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.smart_display_rounded,
-                            size: 27,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            '参考演奏未設定',
-                            style: GoogleFonts.caveat(
-                              fontSize: 10,
-                              color: Colors.white
-                            )
+                            child: ClipRRect(
+                              child: Image.network(
+                                thumbnailUrl,
+                                height: imageHeight,
+                                width: imageWidth,
+                                fit: BoxFit.fill,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            onTap: () => onTapVideo(data),
                           )
-                        ],
-                      )
-                    ),
+                        : Container(
+                            height: imageHeight,
+                            width: imageWidth,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.smart_display_rounded,
+                                  size: 27,
+                                  color: Colors.white,
+                                ),
+                                Text('参考演奏未設定',
+                                    style: GoogleFonts.caveat(
+                                        fontSize: 10, color: Colors.white))
+                              ],
+                            )),
                     const SizedBox(width: 10),
                     SizedBox(
                       width: 160,
@@ -143,40 +138,40 @@ class AlbumListItem extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          data.youtubeTitle != null ?
-                          InkWell(
-                            onTap: () => onTapVideo(data),
-                            child: SizedBox(
-                              height: 40,
-                              width: 160,
-                              child: Marquee(
-                                text: data.youtubeTitle!,
-                                blankSpace: 20,
-                                velocity: 40,
-                                style: GoogleFonts.sawarabiMincho(
-                                  fontSize: 13,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.bold,
+                          data.youtubeTitle != null
+                              ? InkWell(
+                                  onTap: () => onTapVideo(data),
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 160,
+                                    child: Marquee(
+                                      text: data.youtubeTitle!,
+                                      blankSpace: 20,
+                                      velocity: 40,
+                                      style: GoogleFonts.sawarabiMincho(
+                                        fontSize: 13,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  '未設定',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.sawarabiMincho(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ) : Text(
-                            '未設定',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.sawarabiMincho(
-                              fontSize: 14,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ],
                       ),
                     )
                   ],
                 )
-              ]
-            ),
-          ),
+              ]),
+        ),
         onTap: () => onTapCard(data),
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,

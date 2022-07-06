@@ -6,24 +6,30 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:askMu/components/models/task_data.dart';
 import 'package:askMu/components/service/service.dart';
 
-class TaskService extends Service{
-
+class TaskService extends Service {
   List<TaskData>? taskDataList;
 
   String generateFileName(int length) {
-    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
-    final randomStr =  List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+    final randomStr =
+        List.generate(length, (_) => charset[random.nextInt(charset.length)])
+            .join();
     return randomStr;
   }
 
-  Future<List<TaskData>?> getTaskList(String uid, String albumId) async{
-    try{
-      final QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('tasks')
-              .where('userId', isEqualTo: uid)
-              .where('albumId', isEqualTo: albumId).orderBy('movementNum').orderBy('measureNum').get();
-      final List<TaskData> taskDataList = snapshot.docs.map((DocumentSnapshot document) {
+  Future<List<TaskData>?> getTaskList(String uid, String albumId) async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('tasks')
+          .where('userId', isEqualTo: uid)
+          .where('albumId', isEqualTo: albumId)
+          .orderBy('movementNum')
+          .orderBy('measureNum')
+          .get();
+      final List<TaskData> taskDataList =
+          snapshot.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         final String userId = data['userId'];
         final String albumId = data['albumId'];
@@ -45,7 +51,7 @@ class TaskService extends Service{
             createAt: createAt);
       }).toList();
       return taskDataList;
-    } catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -59,7 +65,7 @@ class TaskService extends Service{
     String? comment,
     String? imageUrl,
   }) async {
-    try{
+    try {
       var id = FirebaseFirestore.instance.collection('_').doc().id;
       await FirebaseFirestore.instance.collection('tasks').doc(id).set({
         'taskId': id,
@@ -72,7 +78,7 @@ class TaskService extends Service{
         'imageUrl': imageUrl,
         'createAt': DateTime.now(),
       });
-    } catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -87,7 +93,7 @@ class TaskService extends Service{
     String? comment,
     String? imageUrl,
   }) async {
-    try{
+    try {
       // ignore: avoid_print
       print('updateTask');
       await FirebaseFirestore.instance.collection('tasks').doc(id).update({
@@ -101,32 +107,39 @@ class TaskService extends Service{
         'imageUrl': imageUrl,
         'createAt': DateTime.now(),
       });
-    } catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
+
   Future<void> deleteTask(TaskData data) async {
-    try{
+    try {
       // ignore: avoid_print
       print('deleteTask');
-      await FirebaseFirestore.instance.collection('tasks').doc(data.taskId).delete();
-      if(data.imageUrl != null) {
+      await FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(data.taskId)
+          .delete();
+      if (data.imageUrl != null) {
         await _deletePhotoData(data.imageUrl!);
       }
-    } catch(e) {
+    } catch (e) {
       rethrow;
     }
   }
 
   Future<String> uploadPhotoData(String filePath) async {
-    try{
+    try {
       // ignore: avoid_print
       print('uploadPhotoData');
       final ref = FirebaseStorage.instance.ref();
-      final storedImage = await ref.child('images').child(generateFileName(16)).putFile(File(filePath));
+      final storedImage = await ref
+          .child('images')
+          .child(generateFileName(16))
+          .putFile(File(filePath));
       final photoUrl = await storedImage.ref.getDownloadURL();
       return photoUrl.toString();
-    } catch(e) {
+    } catch (e) {
       rethrow;
     }
   }

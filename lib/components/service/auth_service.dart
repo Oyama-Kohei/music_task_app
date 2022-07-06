@@ -2,47 +2,48 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:askMu/components/service/service.dart';
 
-class AuthService extends Service{
-
+class AuthService extends Service {
   final firebaseAuthService = FirebaseAuth.instance;
 
-  Future signUp(String email, String password) async{
+  Future signUp(String email, String password) async {
     // ignore: avoid_print
     print('signUp');
-    try{
-      UserCredential _userCredential = await firebaseAuthService.createUserWithEmailAndPassword(email: email, password: password);
-      if(_userCredential.user != null){
+    try {
+      UserCredential _userCredential = await firebaseAuthService
+          .createUserWithEmailAndPassword(email: email, password: password);
+      if (_userCredential.user != null) {
         return _userCredential.user;
       }
-    }on Exception catch(e){
+    } on Exception catch (e) {
       rethrow;
     }
   }
 
-  Future<bool> signIn(String email, String password) async{
-    try{
+  Future<bool> signIn(String email, String password) async {
+    try {
       // ignore: avoid_print
       print('signIn');
-      await firebaseAuthService.signInWithEmailAndPassword(email: email, password: password);
-    }on Exception catch(e){
+      await firebaseAuthService.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on Exception catch (e) {
       rethrow;
     }
     return true;
   }
 
-  Future<bool> signOut() async{
-    try{
+  Future<bool> signOut() async {
+    try {
       // ignore: avoid_print
       print('signOut');
       await firebaseAuthService.signOut();
-    }on FirebaseAuthException catch(e){
+    } on FirebaseAuthException catch (e) {
       rethrow;
     }
     return true;
   }
 
-  Future<bool> unSubscribe(String userId) async{
-    try{
+  Future<bool> unSubscribe(String userId) async {
+    try {
       // ignore: avoid_print
       print('unSubscribe');
       // ユーザデータに紐づいているアルバムを削除
@@ -64,8 +65,7 @@ class AuthService extends Service{
       FirebaseFirestore.instance.collection('users').doc(userId).delete();
       await firebaseAuthService.currentUser?.delete();
       await firebaseAuthService.signOut();
-
-    }on Exception catch(_){
+    } on Exception catch (_) {
       rethrow;
     }
     return true;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:askMu/components/models/task_data.dart';
 
-class TaskListItem extends StatelessWidget{
+class TaskListItem extends StatelessWidget {
   const TaskListItem({
     required this.data,
     required this.onPress,
@@ -64,7 +64,8 @@ class TaskListItem extends StatelessWidget{
           ),
         ),
         const Divider(
-          color: Colors.black,)
+          color: Colors.black,
+        )
       ],
     );
   }

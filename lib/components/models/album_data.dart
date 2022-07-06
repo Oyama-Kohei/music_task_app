@@ -1,4 +1,4 @@
-class AlbumData{
+class AlbumData {
   AlbumData({
     required this.albumId,
     required this.userId,
@@ -8,7 +8,7 @@ class AlbumData{
     this.youtubeUrl,
     this.thumbnailUrl,
     this.youtubeTitle,
-});
+  });
 
   final String albumId;
 
@@ -17,7 +17,7 @@ class AlbumData{
   final String albumName;
 
   final String composer;
-  
+
   final String? comment;
 
   final String? youtubeUrl;

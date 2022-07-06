@@ -20,17 +20,18 @@ import 'package:askMu/utility/locator.dart';
 import 'package:askMu/utility/navigation_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-enum AcquireStatus{
+enum AcquireStatus {
   loading,
   hasData,
   noData,
 }
 
-extension AcquireStatusExtension on AcquireStatus{
+extension AcquireStatusExtension on AcquireStatus {
   Widget getStatus() {
-    switch(this) {
+    switch (this) {
       case AcquireStatus.loading:
-        return const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.black54));
+        return const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(Colors.black54));
       case AcquireStatus.hasData:
         return const Text('');
       case AcquireStatus.noData:
@@ -39,7 +40,7 @@ extension AcquireStatusExtension on AcquireStatus{
   }
 }
 
-class TopViewModel extends ChangeNotifier{
+class TopViewModel extends ChangeNotifier {
   TopViewModel({
     List<Service>? services,
     required this.albumDataList,
@@ -52,10 +53,22 @@ class TopViewModel extends ChangeNotifier{
 
   List<AlbumData> albumDataList = [];
 
-  static const List<String> movementList = ['楽章なし', '1楽章', '2楽章', '3楽章', '4楽章', '5楽章', '6楽章', '7楽章', '8楽章', '9楽章', '10楽章'];
+  static const List<String> movementList = [
+    '楽章なし',
+    '1楽章',
+    '2楽章',
+    '3楽章',
+    '4楽章',
+    '5楽章',
+    '6楽章',
+    '7楽章',
+    '8楽章',
+    '9楽章',
+    '10楽章'
+  ];
 
   final PageController albumPageController =
-    PageController(viewportFraction: 0.85);
+      PageController(viewportFraction: 0.85);
 
   final albumPageNotifier = ValueNotifier<int>(0);
 
@@ -68,7 +81,7 @@ class TopViewModel extends ChangeNotifier{
   }
 
   Future<void> onTapLogout(BuildContext context) async {
-    try{
+    try {
       DialogUtil.showPreventPopDialog(
         context: context,
         content: 'ログアウトしますか？',
@@ -78,16 +91,14 @@ class TopViewModel extends ChangeNotifier{
               "Cancel",
               textAlign: TextAlign.center,
             ),
-            onPressed: () => {
-              Navigator.pop(context)
-            },
+            onPressed: () => {Navigator.pop(context)},
           ),
           SimpleDialogOption(
             child: const Text(
               "OK",
               textAlign: TextAlign.center,
             ),
-            onPressed: ()  async {
+            onPressed: () async {
               showLoadingCircle(context);
               final _authService = getIt<AuthService>();
               await _authService.signOut();
@@ -102,7 +113,7 @@ class TopViewModel extends ChangeNotifier{
           ),
         ],
       );
-    } catch(e) {
+    } catch (e) {
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
@@ -112,7 +123,7 @@ class TopViewModel extends ChangeNotifier{
   }
 
   Future<void> onTapUnsubscribe(BuildContext context) async {
-    try{
+    try {
       DialogUtil.showPreventPopDialog(
         context: context,
         content: '退会しますか？',
@@ -122,16 +133,14 @@ class TopViewModel extends ChangeNotifier{
               "Cancel",
               textAlign: TextAlign.center,
             ),
-            onPressed: () => {
-              Navigator.pop(context)
-            },
+            onPressed: () => {Navigator.pop(context)},
           ),
           SimpleDialogOption(
             child: const Text(
               "OK",
               textAlign: TextAlign.center,
             ),
-            onPressed: ()  async {
+            onPressed: () async {
               showLoadingCircle(context);
               final UserService userService = getIt<UserService>();
               final currentUserId = await userService.getUserId();
@@ -148,7 +157,7 @@ class TopViewModel extends ChangeNotifier{
           ),
         ],
       );
-    } catch(_) {
+    } catch (_) {
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
@@ -158,11 +167,12 @@ class TopViewModel extends ChangeNotifier{
   }
 
   void onTapAddList(BuildContext context, int currentIndex) {
-    if(albumDataList.isNotEmpty) {
+    if (albumDataList.isNotEmpty) {
       NavigationHelper().push<TaskAddViewModel>(
         context: context,
         pageBuilder: (_) => const TaskAddPage(),
-        viewModelBuilder: (context) => TaskAddViewModel(albumData: albumDataList[currentIndex]),
+        viewModelBuilder: (context) =>
+            TaskAddViewModel(albumData: albumDataList[currentIndex]),
       );
     } else {
       DialogUtil.showPreventPopErrorDialog(
@@ -184,7 +194,7 @@ class TopViewModel extends ChangeNotifier{
   }
 
   Future<void> getTaskDataList(BuildContext context) async {
-    try{
+    try {
       acquireStatus = AcquireStatus.loading;
       notifyListeners();
 
@@ -192,15 +202,16 @@ class TopViewModel extends ChangeNotifier{
       final currentUserId = await _userService.getUserId();
 
       final TaskService _taskService = getIt<TaskService>();
-      taskDataList = await _taskService.getTaskList(currentUserId, albumDataList[albumPageNotifier.value].albumId);
+      taskDataList = await _taskService.getTaskList(
+          currentUserId, albumDataList[albumPageNotifier.value].albumId);
       // ignore: avoid_print
       print('タスクデータ取得');
-      if(taskDataList != null){
+      if (taskDataList != null) {
         acquireStatus = AcquireStatus.hasData;
       } else {
         acquireStatus = AcquireStatus.noData;
       }
-    } catch(e) {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('タスクデータの取得に失敗しました。通信環境等をご確認ください。')));
     }
@@ -208,7 +219,7 @@ class TopViewModel extends ChangeNotifier{
   }
 
   Future<void> getAlbumDataList(BuildContext context) async {
-    try{
+    try {
       final UserService _userService = getIt<UserService>();
       final currentUserId = await _userService.getUserId();
 
@@ -216,7 +227,7 @@ class TopViewModel extends ChangeNotifier{
       albumDataList = (await _albumService.getAlbumList(currentUserId))!;
       // ignore: avoid_print
       print('アルバムリスト取得');
-    } catch(e) {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('アルバムの取得に失敗しました。通信環境等をご確認ください。')));
     }
@@ -235,7 +246,8 @@ class TopViewModel extends ChangeNotifier{
     );
   }
 
-  void onTapListItem(BuildContext context, TaskData taskData, int currentIndex) {
+  void onTapListItem(
+      BuildContext context, TaskData taskData, int currentIndex) {
     NavigationHelper().push<TaskAddViewModel>(
       context: context,
       pageBuilder: (_) => const TaskAddPage(),
@@ -247,7 +259,7 @@ class TopViewModel extends ChangeNotifier{
   }
 
   void onTapVideoPlayItem(BuildContext context, AlbumData data) {
-    if(data.youtubeUrl != null) {
+    if (data.youtubeUrl != null) {
       DialogUtil.showPreventPopSelectDialog(
         context: context,
         content: '参考演奏を再生しますか？',
@@ -256,14 +268,12 @@ class TopViewModel extends ChangeNotifier{
           NavigationHelper().push<WebviewViewModel>(
             context: context,
             pageBuilder: (_) => const WebviewPage(),
-            viewModelBuilder: (context) =>
-                WebviewViewModel(
-                  youtubeUrl: data.youtubeUrl!,
-                ),
+            viewModelBuilder: (context) => WebviewViewModel(
+              youtubeUrl: data.youtubeUrl!,
+            ),
           );
         }
-      }
-    );
+      });
     } else {
       DialogUtil.showPreventPopErrorDialog(
         context: context,

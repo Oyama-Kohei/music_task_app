@@ -23,12 +23,9 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]);
   runApp(
-      MultiProvider(
-        providers: [
-          RouteObserverProvider(),
-        ],
-        child: const MyApp()
-      ),
+    MultiProvider(providers: [
+      RouteObserverProvider(),
+    ], child: const MyApp()),
   );
 }
 
@@ -37,40 +34,32 @@ final RouteObserver routeObserver = RouteObserver();
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<TaskService>(
-            create: (_) => TaskService()),
-        Provider<AuthService>(
-            create: (_) => AuthService()),
-        Provider<UserService>(
-            create: (_) => UserService()),
-        Provider<AlbumService>(
-            create: (_) => AlbumService()),
-      ],
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'askMu',
-      theme: ThemeData(
-        backgroundColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(foregroundColor: Colors.black),
-        textTheme: GoogleFonts.notoSansTextTheme(
-          Theme
-              .of(context)
-              .textTheme,
-        ),
-      ),
-      home: ChangeNotifierProvider(
-        create: (_) => SplashViewModel(),
-        child: const SplashPage(),
-      ),
-      navigatorObservers: [routeObserver],
-      navigatorKey: NavigationHelper.navigatorKey,
-    )
-    );
+        providers: [
+          Provider<TaskService>(create: (_) => TaskService()),
+          Provider<AuthService>(create: (_) => AuthService()),
+          Provider<UserService>(create: (_) => UserService()),
+          Provider<AlbumService>(create: (_) => AlbumService()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'askMu',
+          theme: ThemeData(
+            backgroundColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: const AppBarTheme(foregroundColor: Colors.black),
+            textTheme: GoogleFonts.notoSansTextTheme(
+              Theme.of(context).textTheme,
+            ),
+          ),
+          home: ChangeNotifierProvider(
+            create: (_) => SplashViewModel(),
+            child: const SplashPage(),
+          ),
+          navigatorObservers: [routeObserver],
+          navigatorKey: NavigationHelper.navigatorKey,
+        ));
   }
 }

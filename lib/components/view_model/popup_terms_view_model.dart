@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PopupTermsViewModel extends ChangeNotifier{
+class PopupTermsViewModel extends ChangeNotifier {
   PopupTermsViewModel({
     required this.agreeFlag,
   });

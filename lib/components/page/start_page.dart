@@ -15,8 +15,8 @@ class StartPage extends StatefulWidget {
   @override
   _StartPageState createState() => _StartPageState();
 }
-class _StartPageState extends State<StartPage> {
 
+class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     final queryData = MediaQuery.of(context);
@@ -27,202 +27,188 @@ class _StartPageState extends State<StartPage> {
       return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: height * 0.05),
-              Text('.askMu...',
-                style: GoogleFonts.caveat(fontSize: 50, color: Colors.black),
-              ),
-              SizedBox(height: height * 0.01),
-              SizedBox(
-                height: 30,
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      '楽器/歌の課題管理をシステム化',
-                      textAlign: TextAlign.end,
-                      textStyle: GoogleFonts.caveat(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      speed: const Duration(milliseconds: 200),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: height * 0.01),
-              SizedBox(
-                  height: height * 0.53,
-                  child: PageView(
-                    controller: viewModel.startPageController,
-                    onPageChanged: (value) => viewModel.onStartPageChanged(value),
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(right: 15),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'New Music',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.caveat(
-                                      color: Colors.black,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: height * 0.05),
-                                  Text(
-                                    '画面下のボタンから\n'
-                                        'アルバムを追加\n\n'
-                                        '参考演奏も設定可能\n',
-                                    textAlign: TextAlign.start,
-                                    style: GoogleFonts.caveat(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ),
-                            ClipRRect(
-                              child: Image.asset(
-                                'images/Tutorial1.png',
-                                width: width * 0.45,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ]
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                  padding: const EdgeInsets.only(right: 15),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'New Task',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.caveat(
-                                          color: Colors.black,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: height * 0.05),
-                                      Text(
-                                        '画面下のボタンから\n'
-                                            '課題を追加\n\n'
-                                            '譜面への書き込みを\n'
-                                            '減らしてコンパクトに',
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.orbitron(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              ClipRRect(
-                                child: Image.asset(
-                                  'images/Tutorial2.png',
-                                  width: width * 0.45,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ]
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                  padding: const EdgeInsets.only(right: 15),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Manage',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.caveat(
-                                          color: Colors.black,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: height * 0.05),
-                                      Text(
-                                        '譜面や情景を追加し\n'
-                                            '曲の理解度を向上\n\n'
-                                            '画像追加機能を\n'
-                                            '自由に活用しよう',
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.caveat(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              ClipRRect(
-                                child: Image.asset(
-                                  'images/Tutorial3.png',
-                                  width: width * 0.45,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ]
-                        ),
-                      ),
-                    ],
+          child: Column(children: <Widget>[
+            SizedBox(height: height * 0.02 + queryData.padding.top * 0.9),
+            Text(
+              '.askMu...',
+              style: GoogleFonts.caveat(fontSize: 50, color: Colors.black),
+            ),
+            SizedBox(
+              height: 32,
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    '楽器/歌の課題管理をシステム化',
+                    textAlign: TextAlign.end,
+                    textStyle: GoogleFonts.caveat(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    speed: const Duration(milliseconds: 200),
                   )
+                ],
               ),
-              const SizedBox(height: 10),
-              CirclePageIndicator(
+            ),
+            SizedBox(
+              height: height * 0.59,
+              child: PageView(
+                controller: viewModel.startPageController,
+                onPageChanged: (value) => viewModel.onStartPageChanged(value),
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 5, right: 5),
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Music',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.caveat(
+                                    color: Colors.black,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '楽曲を追加してカードを表示\n参考演奏の登録/再生も可能\n',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.sawarabiMincho(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ClipRRect(
+                            child: Image.asset(
+                              'images/Tutorial1.png',
+                              width: width * 0.9,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Task',
+                                style: GoogleFonts.caveat(
+                                  color: Colors.black,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '楽曲ごとに課題を登録\n楽章/小説番号の順で課題を管理\n',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.sawarabiMincho(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ClipRRect(
+                          child: Image.asset(
+                            'images/Tutorial2.png',
+                            width: width * 0.9,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 5, right: 5),
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Photo',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.caveat(
+                                    color: Colors.black,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'タスクに写真を登録\n楽譜/曲の場面/情景などを写真で追加\n',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.sawarabiMincho(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ClipRRect(
+                            child: Image.asset(
+                              'images/Tutorial3.png',
+                              width: width * 0.9,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            CirclePageIndicator(
                 size: 10,
                 selectedSize: 12,
                 currentPageNotifier: viewModel.startPageNotifier,
-                selectedDotColor: Colors.black,
+                selectedDotColor: Colors.lightBlueAccent,
                 dotColor: Colors.grey,
                 itemCount: 3),
-              const SizedBox(height: 20),
-              if(viewModel.startPageNotifier.value == 2)
+            const SizedBox(height: 10),
+            if (viewModel.startPageNotifier.value == 2)
               CommonButton(
                 text: 'アカウント作成はこちら',
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
@@ -235,10 +221,10 @@ class _StartPageState extends State<StartPage> {
                   );
                 },
               ),
-              if(viewModel.startPageNotifier.value == 2)
+            if (viewModel.startPageNotifier.value == 2)
               CommonButton(
                 text: 'ログインはこちら',
-                padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+                padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                 useIcon: true,
                 onPressed: () async {
                   NavigationHelper().push<LoginViewModel>(
@@ -248,11 +234,9 @@ class _StartPageState extends State<StartPage> {
                   );
                 },
               ),
-            ]
-          ),
+          ]),
         ),
       );
-    }
-    );
+    });
   }
 }

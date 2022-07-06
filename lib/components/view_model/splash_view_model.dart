@@ -17,12 +17,12 @@ import 'package:askMu/components/view_model/top_view_model.dart';
 import 'package:askMu/utility/locator.dart';
 import 'package:askMu/utility/navigation_helper.dart';
 
-class SplashViewModel extends ChangeNotifier{
+class SplashViewModel extends ChangeNotifier {
   Future<void> initApp(BuildContext context) async {
     gotoNextScreen(context);
   }
 
-  void showStartPage(BuildContext context){
+  void showStartPage(BuildContext context) {
     NavigationHelper().pushAndRemoveUntilRoot<StartViewModel>(
       context: context,
       pageBuilder: (_) => StartPage(),
@@ -33,7 +33,7 @@ class SplashViewModel extends ChangeNotifier{
   }
 
   Future<void> showTopPage(BuildContext context) async {
-    try{
+    try {
       showLoadingCircle(context);
       final UserService _userService = getIt<UserService>();
       final currentUserId = await _userService.getUserId();
@@ -44,9 +44,9 @@ class SplashViewModel extends ChangeNotifier{
       final List<TaskData>? taskList;
 
       final TaskService _taskService = getIt<TaskService>();
-      if(albumList!.isNotEmpty) {
-        taskList = await _taskService.getTaskList(
-            currentUserId, albumList[0].albumId);
+      if (albumList!.isNotEmpty) {
+        taskList =
+            await _taskService.getTaskList(currentUserId, albumList[0].albumId);
       } else {
         taskList = null;
       }
@@ -65,7 +65,7 @@ class SplashViewModel extends ChangeNotifier{
           );
         },
       );
-    } on Exception catch(_) {
+    } on Exception catch (_) {
       dismissLoadingCircle(context);
       DialogUtil.showPreventPopErrorDialog(
         context: context,
@@ -75,15 +75,12 @@ class SplashViewModel extends ChangeNotifier{
   }
 
   Future<void> gotoNextScreen(BuildContext context) async {
-    Future.delayed(
-      const Duration(milliseconds: 3000),
-        () async{
-          if (FirebaseAuth.instance.currentUser != null) {
-            showTopPage(context);
-          } else{
-            showStartPage(context);
-          }
-        }
-    );
+    Future.delayed(const Duration(milliseconds: 3000), () async {
+      if (FirebaseAuth.instance.currentUser != null) {
+        showTopPage(context);
+      } else {
+        showStartPage(context);
+      }
+    });
   }
 }

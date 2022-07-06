@@ -1,4 +1,4 @@
-class TaskData{
+class TaskData {
   TaskData({
     required this.taskId,
     required this.userId,
@@ -9,7 +9,7 @@ class TaskData{
     this.comment,
     this.imageUrl,
     required this.createAt,
-});
+  });
 
   final String taskId;
 

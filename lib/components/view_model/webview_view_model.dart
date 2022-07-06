@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class WebviewViewModel extends ChangeNotifier{
+class WebviewViewModel extends ChangeNotifier {
   WebviewViewModel({
     required this.youtubeUrl,
   });

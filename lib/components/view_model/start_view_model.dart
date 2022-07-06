@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class StartViewModel extends ChangeNotifier{
+class StartViewModel extends ChangeNotifier {
   final PageController startPageController =
-  PageController(viewportFraction: 0.95);
+      PageController(viewportFraction: 0.95);
 
   final startPageNotifier = ValueNotifier<int>(0);
 
-  void onStartPageChanged(int index){
+  void onStartPageChanged(int index) {
     startPageNotifier.value = index;
     notifyListeners();
   }

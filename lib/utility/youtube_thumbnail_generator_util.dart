@@ -19,9 +19,9 @@ class YoutubeThumbnailGeneratorUtil {
     title = document.head!.getElementsByTagName('title')[0].innerHtml;
     // ヘッダー内のmetaタグをすべて取得
     var metas = document.head!.getElementsByTagName('meta');
-    for(var meta in metas) {
+    for (var meta in metas) {
       // metaタグの中からname属性がdescriptionであるものを探す
-      if(meta.attributes['property'] == 'og:image') {
+      if (meta.attributes['property'] == 'og:image') {
         imageUrl = meta.attributes['content']!;
       }
     }
