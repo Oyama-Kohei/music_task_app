@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:askMu/components/models/album_data.dart';
 import 'package:askMu/components/service/service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AlbumService extends Service {
   List<AlbumData>? albumDataList;
@@ -111,6 +112,11 @@ class AlbumService extends Service {
           .get();
       for (var doc in query.docs) {
         await doc.reference.delete();
+        if (doc.get('imageUrl') != null) {
+          final storageReference =
+              FirebaseStorage.instance.refFromURL(doc.get('imageUrl'));
+          await storageReference.delete();
+        }
       }
     } catch (e) {
       rethrow;

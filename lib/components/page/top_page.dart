@@ -72,7 +72,7 @@ class _TopPageState extends State<TopPage> with RouteAware {
                             fontSize: 40, color: Colors.black),
                       ),
                       Image.asset(
-                        'images/hokemi1.jpeg',
+                        'images/Splash.png',
                         width: width * 0.9,
                       ),
                       Container(
@@ -89,38 +89,58 @@ class _TopPageState extends State<TopPage> with RouteAware {
                     slivers: <Widget>[
                       SliverAppBar(
                         elevation: 0.0,
-                        expandedHeight: pageViewHeight + kToolbarHeight + 20,
+                        expandedHeight: pageViewHeight + kToolbarHeight + 50,
                         pinned: true,
                         automaticallyImplyLeading: false,
                         backgroundColor: Colors.white,
                         flexibleSpace: FlexibleSpaceBar(
-                          title: Text('Task List',
-                              style: GoogleFonts.caveat(
-                                  fontSize: 16, color: Colors.black)),
+                          title: const SizedBox(height: 0),
                           background: Column(
                             children: [
                               SizedBox(height: height * 0.06),
-                              SizedBox(
-                                height: pageViewHeight,
-                                child: PageView(
-                                  controller: viewModel.albumPageController,
-                                  onPageChanged: (value) => viewModel
-                                      .onAlbumPageChanged(context, value),
-                                  children: viewModel.albumDataList
-                                      .map(
-                                        (e) => AlbumListItem(
-                                          data: e,
-                                          onTapCard: (data) =>
-                                              viewModel.onTapAlbumListItem(
-                                                  context, data),
-                                          onTapVideo: (data) =>
-                                              viewModel.onTapVideoPlayItem(
-                                                  context, data),
+                              Stack(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      const Image(
+                                        image: AssetImage('images/Header.png'),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '.askMu...',
+                                          style: GoogleFonts.caveat(
+                                              fontSize: 40,
+                                              color: Colors.black54),
                                         ),
-                                      )
-                                      .toList(),
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 60),
+                                    height: pageViewHeight + 60,
+                                    child: PageView(
+                                      controller: viewModel.albumPageController,
+                                      onPageChanged: (value) => viewModel
+                                          .onAlbumPageChanged(context, value),
+                                      children: viewModel.albumDataList
+                                          .map(
+                                            (e) => AlbumListItem(
+                                              data: e,
+                                              onTapCard: (data) =>
+                                                  viewModel.onTapAlbumListItem(
+                                                      context, data),
+                                              onTapVideo: (data) =>
+                                                  viewModel.onTapVideoPlayItem(
+                                                      context, data),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                ],
                               ),
+                              SizedBox(height: height * 0.03),
                             ],
                           ),
                         ),
@@ -162,7 +182,7 @@ class _TopPageState extends State<TopPage> with RouteAware {
             onPressed: () => Provider.of<TopViewModel>(context, listen: false)
                 .onTapAddAlbum(context),
             icon: const Icon(Icons.add_to_photos_rounded,
-                size: 35, color: Colors.white),
+                size: 34, color: Colors.white),
             label: Text(
               'NewMusic',
               style: GoogleFonts.caveat(
@@ -174,24 +194,30 @@ class _TopPageState extends State<TopPage> with RouteAware {
           TextButton.icon(
             onPressed: () {
               Provider.of<TopViewModel>(context, listen: false).onTapAddList(
-                  context,
-                  Provider.of<TopViewModel>(context, listen: false)
-                      .albumPageNotifier
-                      .value);
+                context,
+                Provider.of<TopViewModel>(context, listen: false)
+                    .albumPageNotifier
+                    .value,
+              );
             },
-            icon: const Icon(Icons.add_task, size: 35, color: Colors.white),
+            icon: const Icon(
+              Icons.add_task,
+              size: 34,
+              color: Colors.white,
+            ),
             label: Text(
               'NewTask',
               style: GoogleFonts.caveat(
-                  fontSize: 22,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+                fontSize: 22,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           TextButton.icon(
             // onPressed: () => viewModel.onTapLogout(context),
             onPressed: () => scaffoldKey.currentState?.openDrawer(),
-            icon: const Icon(Icons.menu, size: 35, color: Colors.white),
+            icon: const Icon(Icons.menu, size: 34, color: Colors.white),
             label: Text(
               'Menu',
               style: GoogleFonts.caveat(
@@ -217,18 +243,6 @@ Widget MenuDrawer(TopViewModel viewModel, BuildContext context) {
   return Drawer(
     child: ListView(
       children: <Widget>[
-        // DrawerHeader(
-        //   child: Text(
-        //     'Menu',
-        //     style: GoogleFonts.caveat(
-        //       fontSize: 30,
-        //       color: Colors.white,
-        //     ),
-        //   ),
-        //   decoration: const BoxDecoration(
-        //     color: Colors.grey,
-        //   ),
-        // ),
         ListTile(
           title: const Text('利用規約・プライバシーポリシー'),
           onTap: () {

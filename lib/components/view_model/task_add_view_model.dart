@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:askMu/utility/dialog_util.dart';
 import 'package:flutter/material.dart';
 import 'package:askMu/components/models/album_data.dart';
@@ -8,7 +6,11 @@ import 'package:askMu/components/service/task_service.dart';
 import 'package:askMu/components/service/user_service.dart';
 import 'package:askMu/utility/loading_circle.dart';
 import 'package:askMu/utility/locator.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class TaskAddViewModel extends ChangeNotifier {
   TaskAddViewModel({
@@ -61,41 +63,84 @@ class TaskAddViewModel extends ChangeNotifier {
       final currentUserId = await userService.getUserId();
       final taskService = getIt<TaskService>();
 
-      final String? imageUrl;
+      String? imageUrl;
 
       if (setFilePath != null) {
         imageUrl = await taskService.uploadPhotoData(setFilePath!);
+        if (taskData != null && taskData!.imageUrl != null) {
+          await taskService.deletePhotoData(taskData!.imageUrl!);
+        }
+      } else if (taskData!.imageUrl != null) {
+        imageUrl = taskData!.imageUrl!;
       } else {
         imageUrl = null;
       }
 
-      taskData == null
-          ? await taskService.addTask(
-              title: title,
-              uid: currentUserId,
-              albumId: albumData.albumId,
-              movementNum: movementNum,
-              measureNum: measure,
-              comment: comment,
-              imageUrl: imageUrl,
-            )
-          : await taskService.updateTask(
-              id: taskData!.taskId,
-              title: title,
-              uid: currentUserId,
-              albumId: albumData.albumId,
-              movementNum: movementNum,
-              measureNum: measure,
-              comment: comment,
-              imageUrl: imageUrl);
+      if (taskData == null) {
+        await taskService.addTask(
+          title: title,
+          uid: currentUserId,
+          albumId: albumData.albumId,
+          movementNum: movementNum,
+          measureNum: measure,
+          comment: comment,
+          imageUrl: imageUrl,
+        );
+      } else {
+        await taskService.updateTask(
+          id: taskData!.taskId,
+          title: title,
+          uid: currentUserId,
+          albumId: albumData.albumId,
+          movementNum: movementNum,
+          measureNum: measure,
+          comment: comment,
+          imageUrl: imageUrl,
+        );
+      }
       dismissLoadingCircle(context);
-      DialogUtil.showPreventPopDialog(
+      showDialog(
           context: context,
-          content: taskData == null ? 'タスクを追加しました' : 'タスクを更新しました',
-          onPressed: () async {
-            notifyListeners();
-            Navigator.pop(context);
-            Navigator.pop(context);
+          builder: (BuildContext context) {
+            return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 50),
+              title: Column(
+                children: [
+                  Text(
+                    'Successful addition',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.caveat(fontSize: 30),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    taskData == null ? 'タスクの追加が完了しました' : 'タスクの更新が完了しました',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.caveat(fontSize: 16),
+                  ),
+                  Text(
+                    '引き続き練習頑張ってください！',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.caveat(fontSize: 16),
+                  ),
+                ],
+              ),
+              content: Image.asset(
+                'images/Success.png',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onPressed: () {
+                    notifyListeners();
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
           });
     } catch (e) {
       dismissLoadingCircle(context);
@@ -131,41 +176,76 @@ class TaskAddViewModel extends ChangeNotifier {
   }
 
   Future<void> getImage(context) async {
-    var selectType = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text(selectIcon),
-            children: selectIconOption.asMap().entries.map((e) {
-              return SimpleDialogOption(
-                child: ListTile(
-                  title: Text(e.value),
-                ),
-                onPressed: () => Navigator.of(context).pop(e.key),
-              );
-            }).toList(),
-          );
-        });
-    final imagePicker = ImagePicker();
-    // ignore: non_constant_identifier_names
-    final ImageSource? ImgSrc;
-    //カメラで撮影
-    if (selectType == camera) {
-      ImgSrc = ImageSource.camera;
-    }
-    //ギャラリーから選択
-    else if (selectType == gallery) {
-      ImgSrc = ImageSource.gallery;
-    } else {
-      ImgSrc = null;
-    }
-    if (ImgSrc != null) {
-      final pickedFile = await imagePicker.pickImage(source: ImgSrc);
-      if (pickedFile != null) {
-        imageFile = Image.file(File(pickedFile.path));
-        setFilePath = pickedFile.path;
-        notifyListeners();
+    try {
+      final selectType = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: const Text(selectIcon),
+              children: selectIconOption.asMap().entries.map((e) {
+                return SimpleDialogOption(
+                  child: ListTile(
+                    title: Text(e.value),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(e.key),
+                );
+              }).toList(),
+            );
+          });
+      final imagePicker = ImagePicker();
+      // ignore: non_constant_identifier_names
+      final ImageSource? ImgSrc;
+      //カメラで撮影
+      if (selectType == camera) {
+        ImgSrc = ImageSource.camera;
       }
+      //ギャラリーから選択
+      else if (selectType == gallery) {
+        ImgSrc = ImageSource.gallery;
+      } else {
+        ImgSrc = null;
+      }
+      if (ImgSrc != null) {
+        final pickedFile = await imagePicker.pickImage(source: ImgSrc);
+        if (pickedFile != null) {
+          final tmpDir = await getTemporaryDirectory();
+          final timestamp = DateTime.now().toString();
+          final targetPath = '${tmpDir.path}/$timestamp.jpg';
+          final result = await FlutterImageCompress.compressAndGetFile(
+            pickedFile.path,
+            targetPath,
+            minWidth: 1536,
+            minHeight: 1536,
+            quality: 60,
+          );
+          imageFile = Image.file(result!);
+          setFilePath = result.path;
+          notifyListeners();
+        }
+      }
+    } catch (_) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title:
+                  const Text('写真の追加に失敗しました\nカメラや写真の使用には端末設定からのアクセス許可が必要になります', style: TextStyle(fontSize: 16),),
+              children: <Widget>[
+                SimpleDialogOption(
+                  onPressed: () async {
+                    await openAppSettings();
+                  },
+                  child: const Text("設定画面へ移動する"),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('キャンセル'),
+                ),
+              ],
+            );
+          });
     }
   }
 }

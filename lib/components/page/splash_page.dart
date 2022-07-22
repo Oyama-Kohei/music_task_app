@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,11 +17,16 @@ class _SplashPageState extends State<SplashPage>
     with RouteAware, RouteObserverMixin {
   @override
   Widget build(BuildContext context) {
+    final intValue = Random().nextInt(3);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         body: Center(
-          child: Image.asset('images/Splash.png'),
+          child: Image.asset(intValue == 0
+              ? 'images/Splash.png'
+              : intValue == 1
+                  ? 'images/Splash1.png'
+                  : 'images/Splash2.png'),
         ),
       ),
     );

@@ -72,18 +72,14 @@ class DialogUtil {
             "Cancel",
             textAlign: TextAlign.center,
           ),
-          onPressed: () => {
-            // Navigator.pop(context, DialogAnswer.no)
-          },
+          onPressed: () => {Navigator.pop(context, DialogAnswer.no)},
         ),
         SimpleDialogOption(
           child: const Text(
             "OK",
             textAlign: TextAlign.center,
           ),
-          onPressed: () => {
-            // Navigator.pop(context, DialogAnswer.yes)
-          },
+          onPressed: () => {Navigator.pop(context, DialogAnswer.yes)},
         ),
       ],
     );

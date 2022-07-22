@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:askMu/components/service/service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AuthService extends Service {
   final firebaseAuthService = FirebaseAuth.instance;
@@ -61,6 +62,11 @@ class AuthService extends Service {
           .get();
       for (var doc in queryTask.docs) {
         await doc.reference.delete();
+        if (doc.get('imageUrl') != null) {
+          final storageReference =
+              FirebaseStorage.instance.refFromURL(doc.get('imageUrl'));
+          await storageReference.delete();
+        }
       }
       FirebaseFirestore.instance.collection('users').doc(userId).delete();
       await firebaseAuthService.currentUser?.delete();

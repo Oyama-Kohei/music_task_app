@@ -14,6 +14,7 @@ import 'package:askMu/components/service/user_service.dart';
 import 'package:askMu/utility/dialog_util.dart';
 import 'package:askMu/utility/loading_circle.dart';
 import 'package:askMu/utility/locator.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AlbumAddViewModel extends ChangeNotifier {
   AlbumAddViewModel({
@@ -112,13 +113,48 @@ class AlbumAddViewModel extends ChangeNotifier {
               youtubeTitle: youtubeData?.title,
             );
       dismissLoadingCircle(context);
-      DialogUtil.showPreventPopErrorDialog(
+      showDialog(
           context: context,
-          content: albumData == null ? 'アルバムを追加しました' : 'アルバムを更新しました',
-          onPressed: () async {
-            notifyListeners();
-            Navigator.pop(context);
-            Navigator.pop(context);
+          builder: (BuildContext context) {
+            return AlertDialog(
+              titlePadding: const EdgeInsets.only(top: 50),
+              title: Column(
+                children: [
+                  Text(
+                    'Successful addition',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.caveat(fontSize: 30),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    albumData == null ? '曲の追加が完了しました' : '曲の更新が完了しました',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.caveat(fontSize: 16),
+                  ),
+                  Text(
+                    '引き続き練習頑張ってください！',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.caveat(fontSize: 16),
+                  ),
+                ],
+              ),
+              content: Image.asset(
+                'images/Success.png',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onPressed: () {
+                    notifyListeners();
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
           });
     } on Exception catch (_) {
       dismissLoadingCircle(context);

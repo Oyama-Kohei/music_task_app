@@ -121,7 +121,7 @@ class TaskService extends Service {
           .doc(data.taskId)
           .delete();
       if (data.imageUrl != null) {
-        await _deletePhotoData(data.imageUrl!);
+        await deletePhotoData(data.imageUrl!);
       }
     } catch (e) {
       rethrow;
@@ -144,7 +144,7 @@ class TaskService extends Service {
     }
   }
 
-  Future<void> _deletePhotoData(String url) async {
+  Future<void> deletePhotoData(String url) async {
     try {
       // ignore: avoid_print
       print('_deletePhotoData');

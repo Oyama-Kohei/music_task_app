@@ -1,5 +1,6 @@
 import 'package:askMu/components/view_model/album_add_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:askMu/components/wiget/common_button.dart';
 import 'package:askMu/utility/validator/title_validator.dart';
@@ -55,6 +56,7 @@ class _AlbumAddPageState extends State<AlbumAddPage> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0.0,
+            title: Text('Music Page',style: GoogleFonts.caveat(fontSize: 30),),
             actions: [
               Consumer<AlbumAddViewModel>(builder: (context, viewModel, child) {
                 // ignore: avoid_print
@@ -72,7 +74,7 @@ class _AlbumAddPageState extends State<AlbumAddPage> {
                                 children: [
                                   InkWell(
                                     child: Container(
-                                      height: 70,
+                                      height: 90,
                                       alignment: Alignment.center,
                                       child: const Text('このアルバムを削除する',
                                           style: TextStyle(

@@ -53,29 +53,31 @@ class _RegisterPageState extends State<RegisterPage> with RouteAware {
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     return ChangeNotifierProvider<RegisterViewModel>(
-        create: (_) => RegisterViewModel(),
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-            ),
-            body: Center(child: Consumer<RegisterViewModel>(
-                builder: (context, viewModel, child) {
+      create: (_) => RegisterViewModel(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+        ),
+        body: Center(
+          child: Consumer<RegisterViewModel>(
+            builder: (context, viewModel, child) {
               final size = MediaQuery.of(context).size;
               final deviceHeight = size.height;
               return Form(
-                  key: _formKey,
-                  child: Stack(children: <Widget>[
+                key: _formKey,
+                child: Stack(
+                  children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(left: 24, right: 24),
                       child: SingleChildScrollView(
                         child: GestureDetector(
-                            onTap: () => FocusScope.of(context).unfocus(),
-                            child: Column(children: [
-                              SizedBox(
-                                height: deviceHeight * 0.40,
-                                child: const Image(
-                                  image: AssetImage('images/HeadPhoneBoy.png'),
+                          onTap: () => FocusScope.of(context).unfocus(),
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                child: Image(
+                                  image: AssetImage('images/Metronom.png'),
                                 ),
                               ),
                               SizedBox(
@@ -132,10 +134,18 @@ class _RegisterPageState extends State<RegisterPage> with RouteAware {
                                   ],
                                 ),
                               ),
-                            ])),
+                            ],
+                          ),
+                        ),
                       ),
-                    )
-                  ]));
-            }))));
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
