@@ -32,7 +32,9 @@ class _TaskAddPageState extends State<TaskAddPage> {
           backgroundColor: Colors.white,
           elevation: 0.0,
           title: Text(
-            Provider.of<TaskAddViewModel>(context, listen: false).albumData.albumName,
+            Provider.of<TaskAddViewModel>(context, listen: false)
+                .albumData
+                .albumName,
             style: GoogleFonts.sawarabiMincho(
               fontSize: 17,
               color: Colors.black,
@@ -189,6 +191,7 @@ class _TaskAddPageState extends State<TaskAddPage> {
                                         fontSize: 14,
                                       ),
                                       validator: TitleValidator.validator(),
+                                      enableInteractiveSelection: false,
                                       keyboardType: TextInputType.number,
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,

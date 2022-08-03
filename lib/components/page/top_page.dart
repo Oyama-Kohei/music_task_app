@@ -31,6 +31,11 @@ class _TopPageState extends State<TopPage> with RouteAware {
   }
 
   @override
+  void didPush() {
+    Provider.of<TopViewModel>(context).initApp(context);
+  }
+
+  @override
   void dispose() {
     routeObserver.unsubscribe(this);
     super.dispose();
@@ -38,12 +43,16 @@ class _TopPageState extends State<TopPage> with RouteAware {
 
   @override
   Future<void> didPopNext() async {
-    Future(() async {
-      await Provider.of<TopViewModel>(context, listen: false)
-          .getAlbumDataList(context);
-      await Provider.of<TopViewModel>(context, listen: false)
-          .getTaskDataList(context);
-    });
+    final viewModel = Provider.of<TopViewModel>(context, listen: false);
+    if (!viewModel.nonUpdateFlag) {
+      viewModel.initAllTaskDataList();
+      final index = viewModel.albumPageNotifier.value;
+      Future(() async {
+        await viewModel.getAlbumDataList(context);
+        await viewModel.getTaskDataList(context, index);
+        viewModel.fetchTaskList();
+      });
+    }
     _closeMenu();
     super.didPopNext();
   }
@@ -53,6 +62,7 @@ class _TopPageState extends State<TopPage> with RouteAware {
     final queryData = MediaQuery.of(context);
     final width = queryData.size.width;
     final height = queryData.size.height;
+    final viewModel = Provider.of<TopViewModel>(context, listen: false);
     return Scaffold(
       key: scaffoldKey,
       drawer: Consumer<TopViewModel>(
@@ -60,97 +70,95 @@ class _TopPageState extends State<TopPage> with RouteAware {
               MenuDrawer(viewModel, context)),
       backgroundColor: Colors.white,
       body: Center(
-        child: Consumer<TopViewModel>(
-          builder: (context, viewModel, child) {
-            return viewModel.albumDataList.isEmpty
-                ? Column(
-                    children: [
-                      SizedBox(height: height * 0.1),
-                      Text(
-                        'Welcome to .askMu...',
-                        style: GoogleFonts.caveat(
-                            fontSize: 40, color: Colors.black),
-                      ),
-                      Image.asset(
-                        'images/Splash.png',
-                        width: width * 0.9,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 40, right: 40),
-                        child: Text(
-                          '現在楽曲が未登録です\n下のボタンから『NewMusic』を選択して曲のカードを追加しよう',
-                          style: GoogleFonts.sawarabiMincho(
-                              fontSize: 16, color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  )
-                : CustomScrollView(
-                    slivers: <Widget>[
-                      SliverAppBar(
-                        elevation: 0.0,
-                        expandedHeight: pageViewHeight + kToolbarHeight + 50,
-                        pinned: true,
-                        automaticallyImplyLeading: false,
-                        backgroundColor: Colors.white,
-                        flexibleSpace: FlexibleSpaceBar(
-                          title: const SizedBox(height: 0),
-                          background: Column(
+        child: viewModel.albumDataList.isEmpty
+            ? Column(
+                children: [
+                  SizedBox(height: height * 0.1),
+                  Text(
+                    'Welcome to .askMu...',
+                    style:
+                        GoogleFonts.caveat(fontSize: 40, color: Colors.black),
+                  ),
+                  Image.asset(
+                    'images/Splash.png',
+                    width: width * 0.9,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      '現在楽曲が未登録です\n下のボタンから『NewMusic』を選択して曲のカードを追加しよう',
+                      style: GoogleFonts.sawarabiMincho(
+                          fontSize: 16, color: Colors.black),
+                    ),
+                  ),
+                ],
+              )
+            : CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    elevation: 0.0,
+                    expandedHeight: pageViewHeight + kToolbarHeight + 50,
+                    pinned: true,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.white,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: const SizedBox(height: 0),
+                      background: Column(
+                        children: [
+                          SizedBox(height: height * 0.06),
+                          Stack(
                             children: [
-                              SizedBox(height: height * 0.06),
                               Stack(
                                 children: [
-                                  Stack(
-                                    children: [
-                                      const Image(
-                                        image: AssetImage('images/Header.png'),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '.askMu...',
-                                          style: GoogleFonts.caveat(
-                                              fontSize: 40,
-                                              color: Colors.black54),
-                                        ),
-                                      ),
-                                    ],
+                                  const Image(
+                                    image: AssetImage('images/Header.png'),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.only(top: 60),
-                                    height: pageViewHeight + 60,
-                                    child: PageView(
-                                      controller: viewModel.albumPageController,
-                                      onPageChanged: (value) => viewModel
-                                          .onAlbumPageChanged(context, value),
-                                      children: viewModel.albumDataList
-                                          .map(
-                                            (e) => AlbumListItem(
-                                              data: e,
-                                              onTapCard: (data) =>
-                                                  viewModel.onTapAlbumListItem(
-                                                      context, data),
-                                              onTapVideo: (data) =>
-                                                  viewModel.onTapVideoPlayItem(
-                                                      context, data),
-                                            ),
-                                          )
-                                          .toList(),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '.askMu...',
+                                      style: GoogleFonts.caveat(
+                                          fontSize: 40, color: Colors.black54),
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: height * 0.03),
+                              Container(
+                                padding: const EdgeInsets.only(top: 60),
+                                height: pageViewHeight + 60,
+                                child: PageView(
+                                  controller: viewModel.albumPageController,
+                                  onPageChanged: (value) => viewModel
+                                      .onAlbumPageChanged(context, value),
+                                  children: viewModel.albumDataList
+                                      .map(
+                                        (e) => AlbumListItem(
+                                          data: e,
+                                          onTapCard: (data) =>
+                                              viewModel.onTapAlbumListItem(
+                                                  context, data),
+                                          onTapVideo: (data) =>
+                                              viewModel.onTapVideoPlayItem(
+                                                  context, data),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
+                          SizedBox(height: height * 0.03),
+                        ],
                       ),
-                      if (viewModel.taskDataList != null)
-                        listView(width, height, context, viewModel),
-                    ],
-                  );
-          },
-        ),
+                    ),
+                  ),
+                  if (viewModel.taskDataList != null)
+                    Consumer<TopViewModel>(
+                        builder: (context, viewModel, child) {
+                      return listView(width, height, context, viewModel);
+                    })
+                ],
+              ),
       ),
       floatingActionButton: FloatingButton(width, height),
     );
@@ -248,7 +256,7 @@ Widget MenuDrawer(TopViewModel viewModel, BuildContext context) {
           onTap: () {
             NavigationHelper().pushNonMaterialRoute<PopupTermsViewModel>(
               context: context,
-              pageBuilder: (_) => const PopupTermsPage(),
+              pageBuilder: (_) => PopupTermsPage(),
               viewModelBuilder: (context) =>
                   PopupTermsViewModel(agreeFlag: false),
             );
@@ -274,12 +282,6 @@ Widget MenuDrawer(TopViewModel viewModel, BuildContext context) {
 Widget listView(
     double width, double height, BuildContext context, TopViewModel viewModel) {
   final List<Widget> taskListWidget = [];
-  BannerAd myBanner = BannerAd(
-    adUnitId: 'ca-app-pub-8754541206691079/4153658345',
-    size: AdSize.banner,
-    request: const AdRequest(),
-    listener: const BannerAdListener(),
-  )..load();
   var movementNum = 0;
   if (viewModel.acquireStatus == AcquireStatus.hasData)
     // ignore: curly_braces_in_flow_control_structures
@@ -334,7 +336,7 @@ Widget listView(
     );
   }
   taskListWidget.add(
-    bannerAdWidget(myBanner, width),
+    bannerAdWidget(viewModel.myBanner, width),
   );
   taskListWidget.add(
     Container(height: height * 0.2),
@@ -353,7 +355,8 @@ Widget listView(
 Widget bannerAdWidget(myBanner, double width) {
   return StatefulBuilder(
     builder: (context, setState) => Container(
-      height: 50.0,
+      height: 100.0,
+      padding: const EdgeInsets.only(top: 10),
       width: width * 0.8,
       child: AdWidget(ad: myBanner),
       alignment: Alignment.center,

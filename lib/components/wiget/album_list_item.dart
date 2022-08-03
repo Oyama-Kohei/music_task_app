@@ -73,7 +73,7 @@ class AlbumListItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(left: 7, right: 7),
                   child: Text(
-                    data.composer,
+                    data.composer ?? '未設定',
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -90,12 +90,30 @@ class AlbumListItem extends StatelessWidget {
                     thumbnailUrl != null
                         ? InkWell(
                             child: ClipRRect(
-                              child: Image.network(
-                                thumbnailUrl,
-                                height: imageHeight,
-                                width: imageWidth,
-                                fit: BoxFit.fill,
-                              ),
+                              child: Image.network(thumbnailUrl,
+                                  height: imageHeight,
+                                  width: imageWidth,
+                                  fit: BoxFit.fill, loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                return loadingProgress == null
+                                    ? child
+                                    : Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 10),
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                              }, errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.broken_image_outlined);
+                              }),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             onTap: () => onTapVideo(data),

@@ -23,7 +23,22 @@ class AlbumAddViewModel extends ChangeNotifier {
     if (albumData != null) {
       if (albumData!.thumbnailUrl != null) {
         final thumbnailUrl = albumData!.thumbnailUrl;
-        youtubeThumbnailImage = Image.network(thumbnailUrl!);
+        youtubeThumbnailImage = Image.network(thumbnailUrl!,
+            loadingBuilder: (context, child, loadingProgress) {
+          return loadingProgress == null
+              ? child
+              : Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+        }, errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image_outlined);
+        });
       }
       if (albumData!.youtubeUrl != null) {
         urlTextController.text = albumData!.youtubeUrl!;
@@ -51,7 +66,18 @@ class AlbumAddViewModel extends ChangeNotifier {
           await YoutubeThumbnailGeneratorUtil().youtubeThumbnailUrl(youtubeUrl);
       final thumbnailUrl = youtubeData.thumbnailUrl;
       youtubeThumbnailImage = Image.network(thumbnailUrl,
-          errorBuilder: (context, error, stackTrace) {
+          loadingBuilder: (context, child, loadingProgress) {
+        return loadingProgress == null
+            ? child
+            : Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+      }, errorBuilder: (context, error, stackTrace) {
         return Center(
             child: Container(
                 height: deviceHeight * 0.25,
@@ -80,7 +106,7 @@ class AlbumAddViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> albumAdd(String albumName, String composer, String? comment,
+  Future<void> albumAdd(String albumName, String? composer, String? comment,
       String? youtubeUrl, BuildContext context) async {
     try {
       showLoadingCircle(context);
@@ -175,10 +201,6 @@ class AlbumAddViewModel extends ChangeNotifier {
           context: context,
           content: 'アルバムを削除しました',
           onPressed: () async {
-            // notifyListeners();
-            // Navigator.pop(context);
-            // Navigator.pop(context);
-            // Navigator.pop(context);
             showLoadingCircle(context);
             final UserService _userService = getIt<UserService>();
             final currentUserId = await _userService.getUserId();
@@ -207,6 +229,7 @@ class AlbumAddViewModel extends ChangeNotifier {
                   ],
                   albumDataList: albumList,
                   taskDataList: taskList,
+                  initialPage: 0,
                 );
               },
             );

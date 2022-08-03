@@ -21,7 +21,7 @@ class AlbumService extends Service {
         final String albumId = data['albumId'];
         final String userId = data['userId'];
         final String albumName = data['albumName'];
-        final String composer = data['composer'];
+        final String? composer = data['composer'];
         final String? comment = data['comment'];
         final String? youtubeUrl = data['youtubeUrl'];
         final String? thumbnailUrl = data['thumbnailUrl'];
@@ -45,7 +45,7 @@ class AlbumService extends Service {
   Future<void> addAlbum({
     required String uid,
     required String albumName,
-    required String composer,
+    String? composer,
     String? comment,
     String? youtubeUrl,
     String? thumbnailUrl,
@@ -74,7 +74,7 @@ class AlbumService extends Service {
     required String id,
     required String albumName,
     required String uid,
-    required String composer,
+    String? composer,
     String? comment,
     String? youtubeUrl,
     String? thumbnailUrl,

@@ -33,22 +33,22 @@ class _StartPageState extends State<StartPage> {
               '.askMu...',
               style: GoogleFonts.caveat(fontSize: 50, color: Colors.black),
             ),
-            SizedBox(
-              height: 32,
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    '楽器/歌の課題管理をシステム化',
-                    textAlign: TextAlign.end,
-                    textStyle: GoogleFonts.caveat(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    speed: const Duration(milliseconds: 200),
-                  )
-                ],
-              ),
+            const SizedBox(
+              height: 15,
+              // child: AnimatedTextKit(
+              //   animatedTexts: [
+              //     TypewriterAnimatedText(
+              //       '楽器/歌の課題管理をシステム化',
+              //       textAlign: TextAlign.end,
+              //       textStyle: GoogleFonts.caveat(
+              //         color: Colors.black,
+              //         fontSize: 18,
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //       speed: const Duration(milliseconds: 200),
+              //     )
+              //   ],
+              // ),
             ),
             SizedBox(
               height: height * 0.59,

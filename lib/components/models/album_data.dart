@@ -16,7 +16,7 @@ class AlbumData {
 
   final String albumName;
 
-  final String composer;
+  final String? composer;
 
   final String? comment;
 

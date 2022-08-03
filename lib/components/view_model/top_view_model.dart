@@ -19,6 +19,7 @@ import 'package:askMu/utility/dialog_util.dart';
 import 'package:askMu/utility/locator.dart';
 import 'package:askMu/utility/navigation_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 enum AcquireStatus {
   loading,
@@ -45,6 +46,7 @@ class TopViewModel extends ChangeNotifier {
     List<Service>? services,
     required this.albumDataList,
     required this.taskDataList,
+    required this.initialPage,
   });
 
   List<Service>? services;
@@ -53,31 +55,109 @@ class TopViewModel extends ChangeNotifier {
 
   List<AlbumData> albumDataList = [];
 
+  List<List<TaskData>?> allTaskDataList = []..length = 50;
+
+  final int initialPage;
+
+  BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-8754541206691079/4153658345',
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: const BannerAdListener(),
+  )..load();
+
+  int albumPageChangedCount = 0;
+  int reloadCount = 0;
+
+  bool nonUpdateFlag = false;
+
   static const List<String> movementList = [
-    '楽章なし',
-    '1楽章',
-    '2楽章',
-    '3楽章',
-    '4楽章',
-    '5楽章',
-    '6楽章',
-    '7楽章',
-    '8楽章',
-    '9楽章',
-    '10楽章'
+    'なし',
+    '練習番号A',
+    '練習番号B',
+    '練習番号C',
+    '練習番号D',
+    '練習番号E',
+    '練習番号F',
+    '練習番号G',
+    '練習番号H',
+    '練習番号I',
+    '練習番号J',
+    '練習番号K',
+    '練習番号L',
+    '練習番号M',
+    '練習番号N',
+    '練習番号O',
+    '練習番号P',
+    '練習番号Q',
+    '練習番号R',
+    '練習番号S',
+    '練習番号T',
+    '練習番号U',
   ];
 
-  final PageController albumPageController =
-      PageController(viewportFraction: 0.85);
+  PageController albumPageController = PageController(viewportFraction: 0.85);
 
   final albumPageNotifier = ValueNotifier<int>(0);
 
   AcquireStatus acquireStatus = AcquireStatus.hasData;
 
+  Future<void> initApp(BuildContext context) async {
+    albumPageController = PageController(viewportFraction: 0.85, initialPage: initialPage);
+  }
+
   Future<void> onAlbumPageChanged(BuildContext context, int index) async {
     albumPageNotifier.value = index;
-    await getTaskDataList(context);
-    notifyListeners();
+    if (allTaskDataList[index] == null) {
+      await getTaskDataList(context, index);
+    }
+    fetchTaskList();
+    if (albumPageChangedCount == 10) {
+      nonUpdateFlag = true;
+      showLoadingCircle(context);
+      if (reloadCount == 5) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                titlePadding: const EdgeInsets.only(top: 50),
+                title: Column(
+                  children: [
+                    Text(
+                      'Now reloading...',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.caveat(fontSize: 30),
+                    ),
+                    Text(
+                      '画面再読み込み中です。\n少々お待ちください。',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.caveat(fontSize: 16),
+                    ),
+                  ],
+                ),
+                content: Image.asset(
+                  'images/Metronom.png',
+                ),
+              );
+            });
+        await Future.delayed(const Duration(seconds: 4), () {
+          dismissLoadingCircle(context);
+          NavigationHelper().pushAndRemoveUntilRoot<SplashViewModel>(
+            pageBuilder: (_) => const SplashPage(),
+            viewModelBuilder: (_) => SplashViewModel(initialPage: index),
+          );
+        });
+      } else {
+        await Future.delayed(const Duration(seconds: 2), () {
+          dismissLoadingCircle(context);
+          myBanner.load();
+          albumPageChangedCount = 0;
+          reloadCount++;
+        });
+        nonUpdateFlag = false;
+      }
+    }
+    albumPageChangedCount++;
   }
 
   Future<void> onTapLogout(BuildContext context) async {
@@ -126,7 +206,7 @@ class TopViewModel extends ChangeNotifier {
     try {
       DialogUtil.showPreventPopDialog(
         context: context,
-        content: '退会しますか？',
+        content: '退会しますか？\n退会する場合は少々時間がかかる場合があります。',
         actions: <Widget>[
           SimpleDialogOption(
             child: const Text(
@@ -193,29 +273,49 @@ class TopViewModel extends ChangeNotifier {
     );
   }
 
-  Future<void> getTaskDataList(BuildContext context) async {
+  void fetchTaskList() {
+    taskDataList = allTaskDataList[albumPageNotifier.value];
+    notifyListeners();
+  }
+
+  void initAllTaskDataList() {
+    for (int i = 0; i < 50; i++) {
+      allTaskDataList[i] = null;
+    }
+    myBanner.load();
+    albumPageChangedCount = 0;
+  }
+
+  Future<void> getTaskDataList(BuildContext context, int index) async {
     try {
-      acquireStatus = AcquireStatus.loading;
-      notifyListeners();
+      if (albumDataList.isNotEmpty) {
+        acquireStatus = AcquireStatus.loading;
+        notifyListeners();
 
-      final UserService _userService = getIt<UserService>();
-      final currentUserId = await _userService.getUserId();
+        final UserService _userService = getIt<UserService>();
+        final currentUserId = await _userService.getUserId();
 
-      final TaskService _taskService = getIt<TaskService>();
-      taskDataList = await _taskService.getTaskList(
-          currentUserId, albumDataList[albumPageNotifier.value].albumId);
-      // ignore: avoid_print
-      print('タスクデータ取得');
-      if (taskDataList != null) {
-        acquireStatus = AcquireStatus.hasData;
-      } else {
-        acquireStatus = AcquireStatus.noData;
+        final TaskService _taskService = getIt<TaskService>();
+        List<TaskData>? result = await _taskService.getTaskList(
+            currentUserId, albumDataList[index].albumId);
+        // ignore: avoid_print
+        print('タスクデータ取得');
+        if (result != null) {
+          acquireStatus = AcquireStatus.hasData;
+          if (result.isNotEmpty) {
+            allTaskDataList[index] = result;
+          } else {
+            allTaskDataList[index] = [];
+          }
+        } else {
+          acquireStatus = AcquireStatus.noData;
+          allTaskDataList[index] = [];
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('タスクデータの取得に失敗しました。通信環境等をご確認ください。')));
     }
-    notifyListeners();
   }
 
   Future<void> getAlbumDataList(BuildContext context) async {

@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class PopupTermsPage extends StatelessWidget {
-  const PopupTermsPage({Key? key}) : super(key: key);
+class PopupTermsPage extends StatefulWidget {
+  @override
+  _PopupTermsPageState createState() => _PopupTermsPageState();
+}
+
+class _PopupTermsPageState extends State<PopupTermsPage> {
+  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -15,25 +20,29 @@ class PopupTermsPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Container(
         color: Colors.black45,
-        child: Center(child:
-            Consumer<PopupTermsViewModel>(builder: (context, viewModel, child) {
-          return Container(
-              width: width * 0.9,
-              height: height * 0.9,
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  )),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _title(viewModel),
-                  _webview(viewModel, width * 0.8, height * 0.6),
-                  _agreeButton(viewModel, context),
-                ],
-              ));
-        })),
+        child: Center(
+          child: Consumer<PopupTermsViewModel>(
+            builder: (context, viewModel, child) {
+              return Container(
+                width: width * 0.9,
+                height: height * 0.9,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    )),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _title(viewModel),
+                    _webview(viewModel, width * 0.8, height * 0.6),
+                    _agreeButton(viewModel, context),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -51,15 +60,28 @@ class PopupTermsPage extends StatelessWidget {
 
   Widget _webview(PopupTermsViewModel viewModel, double width, double height) {
     return Container(
-      width: width,
-      height: height,
-      decoration: const BoxDecoration(color: Colors.black),
-      child: const WebView(
-        initialUrl:
-            'https://firebasestorage.googleapis.com/v0/b/tuskmum-flutter.appspot.com/o/terms%2Fterms_privacy_policyhtml.html?alt=media&token=bd887e99-542b-482b-8b2c-38630b1ae350',
-        javascriptMode: JavascriptMode.unrestricted,
-      ),
-    );
+        width: width,
+        height: height,
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Stack(
+          children: [
+            WebView(
+              initialUrl:
+                  'https://firebasestorage.googleapis.com/v0/b/tuskmum-flutter.appspot.com/o/terms%2Fterms_privacy_policyhtml.html?alt=media&token=bd887e99-542b-482b-8b2c-38630b1ae350',
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (_) {
+                setState(
+                  () {
+                    _isLoading = false;
+                  },
+                );
+              },
+            ),
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : const SizedBox.shrink()
+          ],
+        ));
   }
 
   Widget _agreeButton(PopupTermsViewModel viewModel, BuildContext context) {

@@ -1,7 +1,5 @@
-import 'package:askMu/components/models/youtube_data.dart';
 import 'package:askMu/utility/dialog_util.dart';
 import 'package:askMu/utility/loading_circle.dart';
-import 'package:askMu/utility/youtube_thumbnail_generator_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:askMu/components/models/task_data.dart';
@@ -18,6 +16,11 @@ import 'package:askMu/utility/locator.dart';
 import 'package:askMu/utility/navigation_helper.dart';
 
 class SplashViewModel extends ChangeNotifier {
+  SplashViewModel({
+    this.initialPage,
+  });
+  int? initialPage;
+
   Future<void> initApp(BuildContext context) async {
     gotoNextScreen(context);
   }
@@ -46,7 +49,7 @@ class SplashViewModel extends ChangeNotifier {
       final TaskService _taskService = getIt<TaskService>();
       if (albumList!.isNotEmpty) {
         taskList =
-            await _taskService.getTaskList(currentUserId, albumList[0].albumId);
+            await _taskService.getTaskList(currentUserId, albumList[initialPage ?? 0].albumId);
       } else {
         taskList = null;
       }
@@ -62,6 +65,7 @@ class SplashViewModel extends ChangeNotifier {
             ],
             albumDataList: albumList,
             taskDataList: taskList,
+            initialPage: initialPage ?? 0,
           );
         },
       );

@@ -18,7 +18,27 @@ class TaskAddViewModel extends ChangeNotifier {
     this.taskData,
   }) : super() {
     if (taskData != null && taskData!.imageUrl != null) {
-      imageFile = Image.network(taskData!.imageUrl!);
+      imageFile = Image.network(
+        taskData!.imageUrl!,
+        loadingBuilder: (context, child, loadingProgress) {
+          return loadingProgress == null
+              ? child
+              : Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  ),
+                );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image_outlined);
+        },
+      );
     }
   }
 
@@ -30,17 +50,28 @@ class TaskAddViewModel extends ChangeNotifier {
   static const String selectIcon = '画像の選択方法';
   static const List<String> selectIconOption = ['写真から選択', '写真を撮影'];
   static const List<String> movementList = [
-    '楽章なし',
-    '1楽章',
-    '2楽章',
-    '3楽章',
-    '4楽章',
-    '5楽章',
-    '6楽章',
-    '7楽章',
-    '8楽章',
-    '9楽章',
-    '10楽章'
+    '練習番号なし',
+    '練習番号A',
+    '練習番号B',
+    '練習番号C',
+    '練習番号D',
+    '練習番号E',
+    '練習番号F',
+    '練習番号G',
+    '練習番号H',
+    '練習番号I',
+    '練習番号J',
+    '練習番号K',
+    '練習番号L',
+    '練習番号M',
+    '練習番号N',
+    '練習番号O',
+    '練習番号P',
+    '練習番号Q',
+    '練習番号R',
+    '練習番号S',
+    '練習番号T',
+    '練習番号U',
   ];
   static const int gallery = 0;
   static const int camera = 1;
@@ -70,7 +101,7 @@ class TaskAddViewModel extends ChangeNotifier {
         if (taskData != null && taskData!.imageUrl != null) {
           await taskService.deletePhotoData(taskData!.imageUrl!);
         }
-      } else if (taskData!.imageUrl != null) {
+      } else if (taskData != null && taskData!.imageUrl != null) {
         imageUrl = taskData!.imageUrl!;
       } else {
         imageUrl = null;
@@ -214,9 +245,9 @@ class TaskAddViewModel extends ChangeNotifier {
           final result = await FlutterImageCompress.compressAndGetFile(
             pickedFile.path,
             targetPath,
-            minWidth: 1536,
-            minHeight: 1536,
-            quality: 60,
+            minWidth: 500,
+            minHeight: 0,
+            quality: 80,
           );
           imageFile = Image.file(result!);
           setFilePath = result.path;
@@ -228,8 +259,10 @@ class TaskAddViewModel extends ChangeNotifier {
           context: context,
           builder: (BuildContext context) {
             return SimpleDialog(
-              title:
-                  const Text('写真の追加に失敗しました\nカメラや写真の使用には端末設定からのアクセス許可が必要になります', style: TextStyle(fontSize: 16),),
+              title: const Text(
+                '写真の追加に失敗しました\nカメラや写真の使用には端末設定からのアクセス許可が必要になります',
+                style: TextStyle(fontSize: 16),
+              ),
               children: <Widget>[
                 SimpleDialogOption(
                   onPressed: () async {
