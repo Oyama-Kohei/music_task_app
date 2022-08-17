@@ -60,7 +60,7 @@ class TopViewModel extends ChangeNotifier {
   final int initialPage;
 
   BannerAd myBanner = BannerAd(
-    adUnitId: 'ca-app-pub-8754541206691079/4153658345',
+    adUnitId: 'ca-app-pub-8754541206691079/6762182762',
     size: AdSize.banner,
     request: const AdRequest(),
     listener: const BannerAdListener(),
@@ -73,27 +73,27 @@ class TopViewModel extends ChangeNotifier {
 
   static const List<String> movementList = [
     'なし',
-    '練習番号A',
-    '練習番号B',
-    '練習番号C',
-    '練習番号D',
-    '練習番号E',
-    '練習番号F',
-    '練習番号G',
-    '練習番号H',
-    '練習番号I',
-    '練習番号J',
-    '練習番号K',
-    '練習番号L',
-    '練習番号M',
-    '練習番号N',
-    '練習番号O',
-    '練習番号P',
-    '練習番号Q',
-    '練習番号R',
-    '練習番号S',
-    '練習番号T',
-    '練習番号U',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
   ];
 
   PageController albumPageController = PageController(viewportFraction: 0.85);
@@ -148,7 +148,7 @@ class TopViewModel extends ChangeNotifier {
           );
         });
       } else {
-        await Future.delayed(const Duration(seconds: 2), () {
+        await Future.delayed(const Duration(seconds: 1), () {
           dismissLoadingCircle(context);
           myBanner.load();
           albumPageChangedCount = 0;

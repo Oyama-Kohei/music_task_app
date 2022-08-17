@@ -282,6 +282,8 @@ Widget MenuDrawer(TopViewModel viewModel, BuildContext context) {
 Widget listView(
     double width, double height, BuildContext context, TopViewModel viewModel) {
   final List<Widget> taskListWidget = [];
+  taskListWidget.add(
+    const SizedBox(height: 10));
   var movementNum = 0;
   if (viewModel.acquireStatus == AcquireStatus.hasData)
     // ignore: curly_braces_in_flow_control_structures
@@ -291,14 +293,22 @@ Widget listView(
         taskListWidget.add(
           Container(
             alignment: Alignment.centerLeft,
-            height: 20,
-            width: width * 0.85,
-            child: Text(
-              TopViewModel.movementList[movementNum],
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            padding: const EdgeInsets.only(left: 18),
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              height: 30,
+              width: 50,
+              child: Text(
+                TopViewModel.movementList[movementNum],
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
